@@ -40,7 +40,7 @@ Un'applicazione desktop sviluppata in Flutter per gestire e tenere traccia delle
 ```bash
 git clone https://github.com/tuo-username/manage_applications.git
 cd manage_applications
-
+```
 
 ### 2. Abilita il supporto desktop 
 
