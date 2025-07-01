@@ -61,13 +61,13 @@ class ContractDeleteUndoNotifier
     debugPrint('__LastDeleted => $lastDeletedContract');
 
     state = await AsyncValue.guard(() async {
-      final lastId = await repository.createContract(
-        lastDeletedContract.toJson(),
+      final result = await repository.createContract(
+        lastDeletedContract,
       );
 
       contractsNotifier.addContract(
         ContractUI(
-          id: lastId,
+          id: result.id,
           type: lastDeletedContract.type,
           contractDuration: lastDeletedContract.contractDuration,
           isTrialContract: lastDeletedContract.isTrialContract,

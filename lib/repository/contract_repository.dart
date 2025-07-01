@@ -29,33 +29,46 @@ class ContractRepository {
     }
   }
 
-  Future<int> createContract(Map<String, dynamic> json) async {
-    return await _instance.create(table: contractTable, json: json);
+  Future<Contract> createContract(Contract contract) async {
+    try {
+      final lastId = await _instance.create(
+        table: contractTable,
+        json: contract.toJson(),
+      );
+      return contract.copyWith(id: lastId);
+    } catch (e, stackTrace) {
+      throw SaveError(error: e, stackTrace: stackTrace);
+    }
   }
 
-  Future<int> updateContract(Map<String, dynamic> json, int id) async {
-    return await _instance.update(
-      table: contractTable,
-      json: json,
-      where: "${ContractTableColumns.id} = ?",
-      whereArgs: [id],
-    );
+  Future<void> updateContract(Contract contract) async {
+    try {
+      final result = await _instance.update(
+        table: contractTable,
+        json: contract.toJson(),
+        where: "${ContractTableColumns.id} = ?",
+        whereArgs: [contract.id],
+      );
+
+      if (result == 0) throw ItemNotFound();
+    } catch (e, stackTrace) {
+      if (e is ItemNotFound) rethrow;
+      throw DataLoadingError(error: e, stackTrace: stackTrace);
+    }
   }
 
-  Future<int> updateRemuneration(Map<String, dynamic> json, int id) async {
-    return await _instance.update(
-      table: contractTable,
-      json: json,
-      where: "${ContractTableColumns.id} = ?",
-      whereArgs: [id],
-    );
-  }
+  Future<void> deleteContract(int idContract) async {
+    try {
+      final result = await _instance.delete(
+        table: contractTable,
+        where: "${ContractTableColumns.id} = ?",
+        whereArgs: [idContract],
+      );
 
-  Future<int> deleteContract(int idContract) async {
-    return await _instance.delete(
-      table: contractTable,
-      where: "${ContractTableColumns.id} = ?",
-      whereArgs: [idContract],
-    );
+      if (result == 0) throw ItemNotFound();
+    } catch (e, stackTrace) {
+      if (e is ItemNotFound) rethrow;
+      throw DataLoadingError(error: e, stackTrace: stackTrace);
+    }
   }
 }

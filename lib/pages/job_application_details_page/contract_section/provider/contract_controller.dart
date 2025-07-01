@@ -31,11 +31,11 @@ class ContractController
   Future<void> createContract(Contract contract) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final lastId = await _repository.createContract(contract.toJson());
+      final result = await _repository.createContract(contract);
 
       _contractsNotifier.addContract(
         ContractUI(
-          id: lastId,
+          id: result.id,
           type: contract.type,
           contractDuration: contract.contractDuration,
           workPlaceAddress: contract.workPlaceAddress,
@@ -45,7 +45,7 @@ class ContractController
         ),
       );
 
-      return contract.copyWith(id: lastId);
+      return contract.copyWith(id: result.id);
     });
 
     debugPrint('__Dopo Update => $state');
@@ -55,7 +55,7 @@ class ContractController
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      await _repository.updateContract(contract.toJson(), contract.id!);
+      await _repository.updateContract(contract);
 
       _contractsNotifier.updateContract(
         ContractUI(
