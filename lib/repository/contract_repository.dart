@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/db/db_helper.dart';
+import 'package:manage_applications/models/shared/operation_result.dart';
 
 final contractRepositoryProvider = Provider(
   (_) => ContractRepository(DbHelper.instance),
@@ -12,15 +13,20 @@ class ContractRepository {
   ContractRepository(final DbHelper instance) : _instance = instance;
 
   Future<Contract> getContract(int contractId) async {
-    final result = await _instance.readSingleItem(
-      table: contractTable,
-      where: "${ContractTableColumns.id} = ?",
-      whereArgs: [contractId],
-    );
+    try {
+      final result = await _instance.readSingleItem(
+        table: contractTable,
+        where: "${ContractTableColumns.id} = ?",
+        whereArgs: [contractId],
+      );
 
-    print(result);
+      if (result.isEmpty) throw ItemNotFound();
 
-    return Contract.fromJson(result);
+      return Contract.fromJson(result);
+    } catch (e, stackTrace) {
+      if (e is ItemNotFound) rethrow;
+      throw DataLoadingError(error: e, stackTrace: stackTrace);
+    }
   }
 
   Future<int> createContract(Map<String, dynamic> json) async {
@@ -36,7 +42,7 @@ class ContractRepository {
     );
   }
 
-   Future<int> updateRemuneration(Map<String, dynamic> json, int id) async {
+  Future<int> updateRemuneration(Map<String, dynamic> json, int id) async {
     return await _instance.update(
       table: contractTable,
       json: json,
