@@ -43,3 +43,25 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Desktop build directories
+windows/runner/Release/
+windows/runner/Debug/
+windows/flutter/ephemeral/
+macos/Runner.xcworkspace/
+macos/build/
+linux/flutter/ephemeral/
+linux/build/
+
+# SQLite DB files (se sono generati localmente e non vuoi tracciarli)
+*.db
+*.db-shm
+*.db-wal
+
+# IDE settings (se usi anche VS Code o altri editor)
+.vscode/
+
+# Flutter tool config
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages

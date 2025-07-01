@@ -1,0 +1,170 @@
+
+/* class AsyncJobApplicationsNotifier
+    extends AsyncNotifier<List<JobApplicationUi>> {
+  @override
+  FutureOr<List<JobApplicationUi>> build() async {
+    final repository = ref.read(jobDataRepositoryProvider);
+
+    final result = await repository.fetchJobApplicationsWithCompany();
+
+    return result;
+  }
+
+  void addJobApplication(JobApplicationUi jobApplication) {
+    state = state.whenData((value) => [...value, jobApplication]);
+  }
+
+  void updateJobApplication(JobApplicationUi jobApplication) {
+    state = state.whenData((value) {
+      final index = value.indexWhere((el) => el.id == jobApplication.id);
+      if (index == -1) return value;
+
+      final updatedList = List.of(value);
+      updatedList[index] = updatedList[index].copyWith(
+        position: jobApplication.position,
+        applicationStatus: jobApplication.applicationStatus,
+        applyDate: jobApplication.applyDate,
+        link: jobApplication.link,
+      );
+      return updatedList;
+    });
+  }
+
+  Future<OperationResult> deleteJobApplication(int id) async {
+    final currentList = state.value ?? [];
+    final repository = ref.read(jobDataRepositoryProvider);
+
+    state = const AsyncLoading();
+
+    try {
+      await repository.deleteJobData(id);
+
+      currentList.removeWhere((element) => element.id == id);
+
+      state = AsyncData(currentList);
+
+      return Success<bool>(data: true, message: SuccessMessage.deleteMessage);
+    } catch (e, stackTrace) {
+      return mapToFailure(e, stackTrace);
+    }
+  }
+
+  void updateCompanyRef({required int id, required CompanyRef companyRef}) {
+    state = state.whenData((value) {
+      final index = value.indexWhere((el) => el.id == id);
+      if (index == -1) return value;
+
+      final updatedList = List.of(value);
+      updatedList[index] = updatedList[index].copyWith(companyRef: companyRef);
+      return updatedList;
+    });
+  }
+
+  void updateCompanyNameForCompany(CompanyRef companyRef) {
+    state = state.whenData((value) {
+      return [
+        for (final c in value)
+          if (c.companyRef!.id == companyRef.id)
+            c.copyWith(companyRef: companyRef)
+          else
+            c,
+      ];
+    });
+
+    print(state);
+  }
+}
+
+final asyncJobApplicationsProvider =
+    AsyncNotifierProvider<AsyncJobApplicationsNotifier, List<JobApplicationUi>>(
+      () => AsyncJobApplicationsNotifier(),
+    );
+ */
+
+
+
+/* class AsyncCompaniesNotifier extends AutoDisposeAsyncNotifier<List<Company>> {
+  Future<List<Company>> _getAllCompaniesRows() async => await ref
+      .read(companyRepositoryProvider)
+      .getAllCompaniesRows(
+        columns: [
+          CompanyTableColumns.id,
+          CompanyTableColumns.name,
+          CompanyTableColumns.address,
+          CompanyTableColumns.city,
+          CompanyTableColumns.website,
+          CompanyTableColumns.phoneNumber,
+          CompanyTableColumns.email,
+        ],
+      );
+
+  @override
+  FutureOr<List<Company>> build() {
+    return _getAllCompaniesRows();
+  }
+
+  void addCompany(Company company) {
+    state = state.whenData((value) => [...value, company]);
+  }
+
+  void updateCompany(Company company) {
+    if (state.valueOrNull != null) {
+      final newList = [
+        for (final el in state.valueOrNull!)
+          if (el.id == company.id) company else el,
+      ];
+
+      state = AsyncData(newList);
+    }
+  }
+
+  void deleteCompany(int id) {
+    if (state.valueOrNull != null) {
+      final newList = [
+        for (final el in state.valueOrNull!)
+          if (el.id != id) el,
+      ];
+
+      state = AsyncData(newList);
+    }
+  }
+} */
+
+/* final filterProvider = StateProvider((_) => ApplicationFilter.all);
+
+final filterListProvider = Provider<List<JobApplicationUi>>((ref) {
+  final filter = ref.watch(filterProvider);
+  //asyncJoBApplications
+  final hasValue = ref.watch(paginatorApplicationsUIProvider).hasValue;
+  final list =
+      hasValue
+          ? ref.watch(paginatorApplicationsUIProvider).valueOrNull!.items
+          : List<JobApplicationUi>.from([]);
+
+  switch (filter) {
+    case ApplicationFilter.all:
+      return list;
+    case ApplicationFilter.bookmark:
+      return _filteredList(list: list, filter: ApplicationFilter.bookmark.name);
+    case ApplicationFilter.apply:
+      return _filteredList(list: list, filter: ApplicationFilter.apply.name);
+    case ApplicationFilter.interview:
+      return _filteredList(
+        list: list,
+        filter: ApplicationFilter.interview.name,
+      );
+    case ApplicationFilter.pendingResponse:
+      // TODO: Handle this case.
+      throw UnimplementedError();
+  }
+});
+
+List<JobApplicationUi> _filteredList({
+  required List<JobApplicationUi> list,
+  required String filter,
+}) {
+  return list
+      .where((element) => element.applicationStatus.name == filter)
+      .toList();
+}
+ */

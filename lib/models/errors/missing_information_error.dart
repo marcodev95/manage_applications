@@ -1,0 +1,1 @@
+//class MissingInformationError implements Exception {}
