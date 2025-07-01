@@ -1,16 +1,67 @@
-# manage_applications
+# manage-applications
 
-A new Flutter project.
+# 🗂️ Flutter Manage Applications
 
-## Getting Started
+Un'applicazione desktop sviluppata in Flutter per gestire e tenere traccia delle candidature di lavoro.
 
-This project is a starting point for a Flutter application.
+## ✨ Funzionalità principali
 
-A few resources to get you started if this is your first Flutter project:
+- Aggiunta e modifica delle candidature
+- Stato dell'invio (candidato, in attesa, ecc.)
+- Note personalizzate
+- Gestione delle aziende
+  - Visualizzazione delle aziende registrate
+  - Collegamento delle candidature a una specifica azienda
+  - Dettaglio delle candidature per ciascuna azienda
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## ⚙️ Tecnologie usate
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [Flutter](https://flutter.dev)
+- Dart
+- SQLite
+
+---
+
+## 🖥️ Requisiti
+
+- [Flutter SDK](https://docs.flutter.dev/get-started/install)
+- Un editor come **VS Code** o **Android Studio**
+- Un sistema operativo supportato:
+  - Windows
+  - macOS
+  - Linux
+
+---
+
+## 🚀 Come avviare il progetto
+
+### 1. Clona il repository
+
+```bash
+git clone https://github.com/tuo-username/manage_applications.git
+cd manage_applications
+```
+
+### 2. Abilita il supporto desktop 
+
+```bash
+flutter config --enable-windows-desktop
+flutter config --enable-macos-desktop
+flutter config --enable-linux-desktop
+```
+
+### 3. Installa le dipendenze
+
+```bash
+flutter pub get
+```
+
+### 4. Avvia il progetto
+
+```bash
+flutter run -d windows   # oppure -d macos o -d linux a seconda del tuo sistema
+```
+
+
+
+>>>>>>> 40ce0ccd095756f130c7ad2a4e2464ba2679c1a9
