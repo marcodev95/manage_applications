@@ -1,11 +1,13 @@
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/company/company.dart';
+import 'package:manage_applications/widgets/components/button/associate_button_widget.dart';
 import 'package:manage_applications/widgets/components/errors_widget/errors_widget.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/applied_company_section/applied_company_form_controller.dart';
 import 'package:manage_applications/pages/job_applications_page/job_applications_table/job_applications_table_barrel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/repository/company_repository.dart';
+import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
@@ -54,42 +56,52 @@ class _CompanyTable extends ConsumerWidget {
 
     return asyncCompanies.when(
       data:
-          (companies) => TableWidget(
-            columns: const [
-              DataColumn(label: Text("Nome")),
-              DataColumn(label: Text("Indirizzo")),
-              DataColumn(label: Text("")),
-            ],
-            dataRow: buildColoredRow(
-              list: companies,
-              cells:
-                  (company, _) => [
-                    DataCell(
-                      SizedBox(
-                        width: 150.0,
-                        child: Text(
-                          company.name,
-                          style: const TextStyle(
-                            overflow: TextOverflow.ellipsis,
+          (companies) => AppCard(
+            child: TableWidget(
+              columns: [
+                dataColumnWidget('Nome'),
+                dataColumnWidget('Indirizzo'),
+                dataColumnWidget('Associa'),
+              ],
+              dataRow: buildColoredRow(
+                list: companies,
+                cells:
+                    (company, index) => [
+                      DataCell(
+                        SizedBox(
+                          width: 150.0,
+                          child: Text(
+                            company.name,
+                            style: const TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              fontSize: AppStyle.tableTextFontSize,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    DataCell(Text("${company.city}, ${company.address}")),
-                    DataCell(
-                      TextButton(
-                        onPressed: () => onPressedSelectCompany(company),
-                        child: Text('Associa'),
+                      DataCell(
+                        Text(
+                          "${company.city}, ${company.address}",
+                          style: TextStyle(
+                            fontSize: AppStyle.tableTextFontSize,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                      DataCell(
+                        AssociateButtonWidget(
+                          () => onPressedSelectCompany(company),
+                          color: index.isOdd ? Colors.white : Colors.blue,
+                        ),
+                      ),
+                    ],
+              ),
             ),
           ),
       error:
           (_, __) => DataLoadErrorScreenWidget(
             onPressed: () => ref.invalidate(_fetchCompaniesProvider),
           ),
-      loading: () => Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 }
