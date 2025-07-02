@@ -60,10 +60,10 @@ class _CompanyTable extends ConsumerWidget {
               DataColumn(label: Text("Indirizzo")),
               DataColumn(label: Text("")),
             ],
-            dataRow: createDataRowFromList(
+            dataRow: buildColoredRow(
               list: companies,
               cells:
-                  (company) => [
+                  (company, _) => [
                     DataCell(
                       SizedBox(
                         width: 150.0,
