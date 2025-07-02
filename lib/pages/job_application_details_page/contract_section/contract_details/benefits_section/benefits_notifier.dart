@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:manage_applications/models/contract/benefit.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/contract_section/provider/get_contract_details_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/provider/get_contract_details_provider.dart';
 import 'package:manage_applications/repository/benefit_repository.dart';
 import 'package:riverpod/riverpod.dart';
 
