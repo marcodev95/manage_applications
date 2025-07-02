@@ -4,67 +4,6 @@ import 'package:manage_applications/models/company/company_referent.dart';
 import 'package:manage_applications/models/db/db_helper.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 
-class Repository<T> {
-  final DbHelper db;
-  final String table;
-
-  Repository({required this.table}) : db = DbHelper.instance;
-
-  Future<List<T>> getAllRows({
-    String? where,
-    String? orderBy,
-    List<Object?>? whereArgs,
-    List<String>? columns,
-    required T Function(Map<String, Object?>) rowMapper,
-  }) async {
-    final result = await db.readAllItems(
-      table: table,
-      where: where,
-      columns: columns,
-      whereArgs: whereArgs,
-    );
-
-    return List<T>.from(result.map((e) => rowMapper(e)));
-  }
-
-  Future<T> getSingleRow({
-    List<String>? columns,
-    String? where,
-    List<Object?>? whereArgs,
-    required T Function(Map<String, Object?>) rowMapper,
-  }) async {
-    final result = await db.readSingleItem(
-      table: table,
-      columns: columns,
-      where: where,
-      whereArgs: whereArgs,
-    );
-
-    return rowMapper(result);
-  }
-
-  Future<int> addRow(Map<String, Object?> json) async {
-    return db.create(table: table, json: json);
-  }
-
-  Future<int> updateRow({
-    required Map<String, Object?> json,
-    String? where,
-    List<Object?>? whereArgs,
-  }) async {
-    return db.update(
-      table: table,
-      json: json,
-      where: where,
-      whereArgs: whereArgs,
-    );
-  }
-
-  Future<int> deleteRow({String? where, List<Object?>? whereArgs}) async {
-    return db.delete(table: table, where: where, whereArgs: whereArgs);
-  }
-}
-
 final companyReferentRepositoryProvider = Provider(
   (_) => CompanyReferentRepository(DbHelper.instance),
 );
