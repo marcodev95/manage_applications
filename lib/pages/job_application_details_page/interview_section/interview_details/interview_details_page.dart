@@ -1,5 +1,5 @@
 import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/widgets/components/errors_widget/errors_widget.dart';
+import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/get_interview_details_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_data_form.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_details.dart';
@@ -28,7 +28,7 @@ class InterviewDetailsPage extends ConsumerWidget {
       length: _tabs.length,
       child: Scaffold(
         appBar: AppBar(
-          actions: [ErrorsWidget()],
+          actions: [ErrorsPanelButtonWidget ()],
           title: const Text('Dettagli del colloquio'),
           bottom: TabBar(
             onTap: (int? index) {

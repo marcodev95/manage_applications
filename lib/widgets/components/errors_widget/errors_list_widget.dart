@@ -3,42 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/widgets/components/errors_widget/errors_notifier.dart';
-import 'package:manage_applications/widgets/components/errors_widget/icon_with_badge_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
-class ErrorsWidget extends ConsumerWidget {
-  const ErrorsWidget({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Stack(
-      clipBehavior: Clip.none, // Allows the badge to overflow the button
-      children: [
-        ElevatedButton(
-          onPressed: () async {
-            await showDialog(
-              context: context,
-              builder:
-                  (context) => const AlertDialog(
-                    title: Text('Lista degli errori'),
-                    content: SizedBox(
-                      width: 800.0,
-                      height: 600.0,
-                      child: ErrosListBody(),
-                    ),
-                  ),
-            );
-          },
-          child: Text('Pannello degli errori'),
-        ),
-        IconWithBadgeWidget(icon: SizedBox.shrink()),
-      ],
-    );
-  }
-}
-
-class ErrosListBody extends ConsumerWidget {
-  const ErrosListBody({super.key});
+class ErrorsListWidget extends ConsumerWidget {
+  const ErrorsListWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

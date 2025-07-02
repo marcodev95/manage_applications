@@ -17,7 +17,7 @@ class CompanyReferentSection extends StatelessWidget {
       title: "Lista referenti",
       trailing: _CompanyReferentTrailing(),
       body: SizedBox(
-        height: 545.0,
+        height: 546.0,
         child: SingleChildScrollView(
           primary: false,
           child: CompanyReferentTable(),

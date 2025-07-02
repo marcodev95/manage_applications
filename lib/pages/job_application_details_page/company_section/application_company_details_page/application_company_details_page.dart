@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/widgets/components/errors_widget/errors_widget.dart';
+import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/applied_company_section/applied_company_form.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/client_company_section/client_company_form.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/form/company_referent_form.dart';
@@ -15,7 +15,7 @@ class ApplicationCompanyDetailsPage extends ConsumerWidget {
       length: _tabs.length,
       child: Scaffold(
         appBar: AppBar(
-          actions: [ErrorsWidget()],
+          actions: [ErrorsPanelButtonWidget ()],
           title: const Text('Dettagli azienda'),
           bottom: TabBar(
             onTap: (int? index) {

@@ -18,37 +18,48 @@ class CompanySection extends ConsumerWidget {
     final screen =
         ref.watch(companyChangeScreenProvider).screen as CompanyScreen;
 
-    return SingleChildScrollView(
-      primary: false,
-      child: Column(
-        children: [
-          Offstage(
-            offstage: screen != CompanyScreen.initial,
-            child: _InitialSection(),
-          ),
-          Visibility(
-            visible: screen == CompanyScreen.mainCompanyForm,
-            child: _CardCompanySections(
-              AppliedCompanyForm(),
-              'Dati azienda annuncio',
+    return LayoutBuilder(
+      builder: (_, constraints) {
+        return SingleChildScrollView(
+          primary: false,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
+              minWidth: double.infinity,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Offstage(
+                  offstage: screen != CompanyScreen.initial,
+                  child: _InitialSection(),
+                ),
+                Visibility(
+                  visible: screen == CompanyScreen.mainCompanyForm,
+                  child: _CardCompanySections(
+                    AppliedCompanyForm(),
+                    'Dati azienda annuncio',
+                  ),
+                ),
+                Visibility(
+                  visible: screen == CompanyScreen.clientCompanyForm,
+                  child: _CardCompanySections(
+                    ClientCompanyForm(),
+                    'Dati azienda cliente',
+                  ),
+                ),
+                Visibility(
+                  visible: screen == CompanyScreen.referentForm,
+                  child: _CardCompanySections(
+                    CompanyReferentForm(),
+                    'Dettagli referente',
+                  ),
+                ),
+              ],
             ),
           ),
-          Visibility(
-            visible: screen == CompanyScreen.clientCompanyForm,
-            child: _CardCompanySections(
-              ClientCompanyForm(),
-              'Dati azienda cliente',
-            ),
-          ),
-          Visibility(
-            visible: screen == CompanyScreen.referentForm,
-            child: _CardCompanySections(
-              CompanyReferentForm(),
-              'Dettagli referente',
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -59,12 +70,15 @@ class _InitialSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 730.0,
+      height: 750,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Flexible(
+          Expanded(
             flex: 2,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [AppliedCompanyCard(), ClientCompanyCard()],
             ),
           ),

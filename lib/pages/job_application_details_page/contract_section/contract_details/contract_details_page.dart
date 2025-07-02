@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/provider/get_contract_details_provider.dart';
-import 'package:manage_applications/widgets/components/errors_widget/errors_widget.dart';
+import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/benefits_section/benefits_section.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_form/contract_form_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
@@ -27,7 +27,7 @@ class ContractDetailsPage extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Dettagli del contratto'),
-          actions: const [ErrorsWidget()],
+          actions: const [ErrorsPanelButtonWidget ()],
           bottom: TabBar(tabs: _tabs),
         ),
         body: contractAsync.when(

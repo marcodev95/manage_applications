@@ -1,7 +1,7 @@
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/widgets/components/button/associate_button_widget.dart';
-import 'package:manage_applications/widgets/components/errors_widget/errors_widget.dart';
+import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/applied_company_section/applied_company_form_controller.dart';
 import 'package:manage_applications/pages/job_applications_page/job_applications_table/job_applications_table_barrel.dart';
 import 'package:flutter/material.dart';
@@ -21,19 +21,22 @@ class SelectCompanyPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Selezione l'azienda"),
-        actions: const [ErrorsWidget()],
+        actions: const [ErrorsPanelButtonWidget ()],
       ),
       body: Padding(
         padding: const EdgeInsets.all(AppStyle.pad24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Flexible(
-              child: SingleChildScrollView(
+        child: LayoutBuilder(
+          builder: (_, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                  minWidth: double.infinity,
+                ),
                 child: _CompanyTable(onPressedSelectCompany),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
@@ -97,6 +100,7 @@ class _CompanyTable extends ConsumerWidget {
               ),
             ),
           ),
+
       error:
           (_, __) => DataLoadErrorScreenWidget(
             onPressed: () => ref.invalidate(_fetchCompaniesProvider),

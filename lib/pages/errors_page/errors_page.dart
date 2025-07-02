@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/widgets/components/errors_widget/errors_widget.dart';
+import 'package:manage_applications/widgets/components/errors_widget/errors_list_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 
 class ErrorsPage extends ConsumerWidget {
@@ -14,7 +14,7 @@ class ErrorsPage extends ConsumerWidget {
       child: Column(
         children: [
           SectionTitle('Elenco degli errori'),
-          Expanded(child: ErrosListBody()),
+          Expanded(child: ErrorsListWidget()),
         ],
       ),
     );

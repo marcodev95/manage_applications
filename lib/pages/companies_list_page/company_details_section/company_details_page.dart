@@ -3,7 +3,7 @@ import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/pages/companies_list_page/company_details_section/company_details_form/company_details_form.dart';
 import 'package:manage_applications/pages/companies_list_page/company_details_section/delete_company_button.dart';
 import 'package:manage_applications/pages/companies_list_page/company_details_section/providers/get_company_details_provider.dart';
-import 'package:manage_applications/widgets/components/errors_widget/errors_widget.dart';
+import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
@@ -34,7 +34,7 @@ class CompanyDetailsPage extends ConsumerWidget {
           actions: const [
             DeleteCompanyButton(),
             SizedBox(width: 20.0),
-            ErrorsWidget(),
+            ErrorsPanelButtonWidget (),
           ],
           bottom: TabBar(
             onTap: (int index) {

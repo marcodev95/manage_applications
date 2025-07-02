@@ -1,7 +1,7 @@
 import 'package:manage_applications/pages/job_application_details_page/job_application_details_component/job_application_details_component_barrel.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/are_job_application_id_and_company_id_present.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
-import 'package:manage_applications/widgets/components/errors_widget/errors_widget.dart';
+import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_application_sections_barrel.dart';
 import 'package:manage_applications/widgets/components/side_navigation_rail_widget.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class JobApplicationDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: const _PageTitle(),
         leading: const JobApplicationDetailsBackButton(),
-        actions: const [ErrorsWidget()],
+        actions: const [ErrorsPanelButtonWidget ()],
       ),
       body: const _JobApplicationDetailsPageBody(),
     );
