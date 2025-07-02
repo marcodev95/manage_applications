@@ -24,7 +24,7 @@ class Success<T> extends OperationResult<T> {
   }
 }
 
-class Failure<T> extends OperationResult with EquatableMixin implements Exception {
+class Failure<T> extends OperationResult<T> with EquatableMixin implements Exception {
   final String id;
   final Object? error;
   final StackTrace stackTrace;
@@ -117,7 +117,7 @@ extension OperationResultX<T> on OperationResult<T> {
   }
 }
 
-class SaveError extends Failure {
+class SaveError<T> extends Failure<T> {
   SaveError({
     super.message = ErrorsMessage.saveMessage,
     required super.error,
@@ -125,7 +125,7 @@ class SaveError extends Failure {
   });
 }
 
-class DataLoadingError extends Failure {
+class DataLoadingError<T> extends Failure<T> {
   DataLoadingError({
     super.error,
     super.message = ErrorsMessage.dataLoading,
@@ -133,7 +133,7 @@ class DataLoadingError extends Failure {
   });
 }
 
-class DeleteError extends Failure {
+class DeleteError<T> extends Failure<T> {
   DeleteError({
     super.message = ErrorsMessage.deleteMessage,
     required super.error,
@@ -141,7 +141,7 @@ class DeleteError extends Failure {
   });
 }
 
-class ItemNotFound extends Failure {
+class ItemNotFound<T> extends Failure<T>{
   ItemNotFound({
     super.message = ErrorsMessage.itemNotFound,
     super.error,

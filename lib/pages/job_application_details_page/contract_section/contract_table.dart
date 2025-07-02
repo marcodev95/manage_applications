@@ -2,92 +2,104 @@ import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_details_page.dart';
-import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_form/contract_form_utlity.dart';
+import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_form/contract_form_utlity.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/provider/contracts_notifier.dart';
-import 'package:manage_applications/pages/job_application_details_page/contract_section/provider/contract_delete_undo_notifier.dart';
+import 'package:manage_applications/pages/job_application_details_page/contract_section/provider/contract_delete_undo_provider.dart';
 import 'package:manage_applications/widgets/components/table_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
+import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
 class ContractTable extends ConsumerWidget {
   const ContractTable({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contracts = ref.watch(contractsProvider);
+    final contractsAsync = ref.watch(contractsProvider);
 
-    return TableWidget(
-      columns: [
-        dataColumnWidget('Tipo'),
-        dataColumnWidget('Durata'),
-        dataColumnWidget('Prova'),
-        dataColumnWidget('RAL'),
-        dataColumnWidget('Sede di lavoro'),
-        dataColumnWidget('Azioni'),
-      ],
-      dataRow: buildColoredRow(
-        list: contracts,
-        cells: (contract, _) {
-          return [
-            DataCell(
-              Text(
-                contract.type.displayName,
-                style: TextStyle(fontSize: AppStyle.tableTextFontSize),
-              ),
-            ),
-            DataCell(
-              SizedBox(
-                width: 100.0,
-                child: Tooltip(
-                  message: contract.contractDuration ?? '',
-                  child: TextOverflowEllipsisWidget(
-                    contract.contractDuration ?? '',
+    return contractsAsync.when(
+      skipError: true,
+      skipLoadingOnReload: true,
+      data:
+          (contracts) => TableWidget(
+            columns: [
+              dataColumnWidget('Tipo'),
+              dataColumnWidget('Durata'),
+              dataColumnWidget('Prova'),
+              dataColumnWidget('RAL'),
+              dataColumnWidget('Sede di lavoro'),
+              dataColumnWidget('Azioni'),
+            ],
+            dataRow: buildColoredRow(
+              list: contracts,
+              cells: (contract, _) {
+                return [
+                  DataCell(
+                    Text(
+                      contract.type.displayName,
+                      style: const TextStyle(fontSize: AppStyle.tableTextFontSize),
+                    ),
                   ),
-                ),
-              ),
-            ),
-            DataCell(
-              SizedBox(
-                width: 30.0,
-                child: Text(
-                  contract.trialContractLabel,
-                  style: TextStyle(fontSize: AppStyle.tableTextFontSize),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            DataCell(
-              SizedBox(
-                width: 150.0,
-                child: Text(
-                  contract.ral ?? '',
-                  style: TextStyle(fontSize: AppStyle.tableTextFontSize),
-                ),
-              ),
-            ),
-            DataCell(
-              SizedBox(
-                width: 200.0,
-                child: Tooltip(
-                  message: contract.workPlaceAddress,
-                  child: TextOverflowEllipsisWidget(
-                    contract.workPlaceAddress ?? '',
+                  DataCell(
+                    SizedBox(
+                      width: 100.0,
+                      child: Tooltip(
+                        message: contract.contractDuration ?? '',
+                        child: TextOverflowEllipsisWidget(
+                          contract.contractDuration ?? '',
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                  DataCell(
+                    SizedBox(
+                      width: 30.0,
+                      child: Text(
+                        contract.trialContractLabel,
+                        style: const TextStyle(fontSize: AppStyle.tableTextFontSize),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    SizedBox(
+                      width: 150.0,
+                      child: Text(
+                        contract.ral ?? '',
+                        style: const TextStyle(fontSize: AppStyle.tableTextFontSize),
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    SizedBox(
+                      width: 200.0,
+                      child: Tooltip(
+                        message: contract.workPlaceAddress ?? '',
+                        child: TextOverflowEllipsisWidget(
+                          contract.workPlaceAddress ?? '',
+                        ),
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    TableButtonsWidget(
+                      buttons: [
+                        EditContractButtonWidget(contract.id!),
+                        RemoveContractButtonWidget(contract: contract),
+                      ],
+                    ),
+                  ),
+                ];
+              },
             ),
-            DataCell(
-              TableButtonsWidget(
-                buttons: [
-                  EditContractButtonWidget(contract.id!),
-                  RemoveContractButtonWidget(contract: contract),
-                ],
-              ),
-            ),
-          ];
-        },
-      ),
+          ),
+      error: (_, __) {
+        return DataLoadErrorScreenWidget(
+          onPressed: () => ref.invalidate(contractsProvider),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 }
@@ -122,10 +134,10 @@ class RemoveContractButtonWidget extends ConsumerWidget {
     final isLoading = ref.watch(contractDeleteUndoProvider).isLoading;
 
     return isLoading
-        ? CircularProgressIndicator()
+        ? const CircularProgressIndicator()
         : IconButton(
           onPressed: isLoading ? () {} : () => _delete(ref, context),
-          icon: Icon(Icons.delete, color: Colors.red),
+          icon: const Icon(Icons.delete, color: Colors.red),
         );
   }
 

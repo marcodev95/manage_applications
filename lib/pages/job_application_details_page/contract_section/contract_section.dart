@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_details_page.dart';
-import 'package:manage_applications/pages/job_application_details_page/contract_section/provider/contract_delete_undo_notifier.dart';
+import 'package:manage_applications/pages/job_application_details_page/contract_section/provider/contract_delete_undo_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/are_job_application_id_and_company_id_present.dart';
 import 'package:manage_applications/widgets/components/button/text_button_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
@@ -18,7 +18,7 @@ class ContractSection extends StatelessWidget {
       title: "Elenco contratti",
       trailing: Row(
         spacing: 20.0,
-        children: [_GoToFormButton(), _RestoreLastDeletedContractButton()],
+        children: [_DetailsPageButton(), _RestoreLastDeletedContractButton()],
       ),
       body: SizedBox(
         height: 440.0,
@@ -28,8 +28,8 @@ class ContractSection extends StatelessWidget {
   }
 }
 
-class _GoToFormButton extends ConsumerWidget {
-  const _GoToFormButton();
+class _DetailsPageButton extends ConsumerWidget {
+  const _DetailsPageButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

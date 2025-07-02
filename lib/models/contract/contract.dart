@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:manage_applications/models/contract/benefit.dart';
 import 'package:manage_applications/models/contract/remuneration.dart';
-import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_form/contract_form_utlity.dart';
+import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_form/contract_form_utlity.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class Contract {
@@ -18,7 +17,6 @@ class Contract {
   final String? workPlaceAddress;
 
   final Remuneration? remuneration;
-  final List<Benefit> benefits;
   final int? jobDataId;
 
   Contract({
@@ -32,7 +30,6 @@ class Contract {
     this.workingHour = '40',
     this.remuneration,
     this.workPlaceAddress,
-    this.benefits = const [],
     this.jobDataId,
   });
 
@@ -51,20 +48,18 @@ class Contract {
       workPlace = getWorkPlaceFromString(json[ContractTableColumns.workPlace]),
       workPlaceAddress = json[ContractTableColumns.workPlaceAddress],
       remuneration = Remuneration.fromJson(json),
-      benefits =
-          json['benefits'] ?? [],
       jobDataId = json[ContractTableColumns.jobDataId];
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
 
-    json[ContractTableColumns.type] = type.displayName;
+    json[ContractTableColumns.type] = type.name;
     json[ContractTableColumns.contractDuration] = contractDuration;
     json[ContractTableColumns.ccnl] = ccnl;
     json[ContractTableColumns.isTrialContract] = fromBoolToInt(isTrialContract);
     json[ContractTableColumns.notes] = notes;
     json[ContractTableColumns.workingHour] = workingHour;
-    json[ContractTableColumns.workPlace] = workPlace.displayName;
+    json[ContractTableColumns.workPlace] = workPlace.name;
     json[ContractTableColumns.jobDataId] = jobDataId;
 
     json[ContractTableColumns.workPlaceAddress] = workPlaceAddress;
@@ -88,15 +83,26 @@ class Contract {
     int? ral,
     int? salary,
     String? contractDuration,
+    String? ccnl,
+    bool? isTrialContract,
+    String? notes,
+    String? workingHour,
     WorkPlace? workPlace,
+    String? workPlaceAddress,
     Remuneration? remuneration,
   }) {
     return Contract(
       id: id ?? this.id,
-      workPlace: workPlace ?? this.workPlace,
       type: type ?? this.type,
+      workPlace: workPlace ?? this.workPlace,
+      workPlaceAddress: workPlaceAddress ?? this.workPlaceAddress,
       remuneration: remuneration ?? this.remuneration,
       contractDuration: contractDuration ?? this.contractDuration,
+      ccnl: ccnl ?? this.ccnl,
+      isTrialContract: isTrialContract ?? this.isTrialContract,
+      notes: notes ?? this.notes,
+      workingHour: workingHour ?? this.workingHour,
+      jobDataId: jobDataId,
     );
   }
 
@@ -218,4 +224,18 @@ class ContractUI extends Equatable {
 
 extension ContractUIX on ContractUI {
   String get trialContractLabel => isTrialContract ? 'Si' : 'No';
+}
+
+extension ContractX on Contract {
+  ContractUI toUI({String? ral, int? jobDataId}) {
+    return ContractUI(
+      id: id,
+      type: type,
+      contractDuration: contractDuration,
+      isTrialContract: isTrialContract,
+      ral: ral,
+      workPlaceAddress: workPlaceAddress,
+      jobApplicationId: jobDataId,
+    );
+  }
 }

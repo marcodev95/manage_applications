@@ -1,43 +1,50 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
 
-class ContractsNotifier extends AutoDisposeNotifier<List<ContractUI>> {
+class ContractsNotifier extends AutoDisposeAsyncNotifier<List<ContractUI>> {
   @override
-  List<ContractUI> build() {
-    final contracts =
-        ref.watch(fetchJobApplicationDetailsProvider).value?.contracts;
+  FutureOr<List<ContractUI>> build() async {
+    final details = await ref.watch(fetchJobApplicationDetailsProvider.future);
 
-    return contracts ?? [];
+    return details.contracts;
   }
 
   void addContract(ContractUI contract) {
-    state = [...state, contract];
+    state = state.whenData((value) => [...value, contract]);
   }
 
   void updateContract(ContractUI contract) {
-    state = [
-      for (final el in state)
-        if (el == contract) contract else el,
-    ];
+    state = state.whenData((value) {
+      return [
+        for (final el in value)
+          if (el == contract) contract else el,
+      ];
+    });
   }
 
   void updateRAL(String ral, int id) {
-    state = [
-      for (final el in state)
-        if (el.id == id) el.copyWith(ral: ral) else el,
-    ];
+    state = state.whenData((value) {
+      return [
+        for (final el in value)
+          if (el.id == id) el.copyWith(ral: ral) else el,
+      ];
+    });
   }
 
   void deleteContract(ContractUI contract) async {
-    state = [
-      for (final el in state)
-        if (el != contract) el,
-    ];
+    state = state.whenData((value) {
+      return [
+        for (final el in value)
+          if (el != contract) el,
+      ];
+    });
   }
 }
 
 final contractsProvider =
-    AutoDisposeNotifierProvider<ContractsNotifier, List<ContractUI>>(
+    AutoDisposeAsyncNotifierProvider<ContractsNotifier, List<ContractUI>>(
       ContractsNotifier.new,
     );
