@@ -18,13 +18,13 @@ class CompanyDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routeID = getRouteArg<int?>(context);
+    final routeArg = getRouteArg<int?>(context);
     ref.listenOnErrorWithoutSnackbar(
-      provider: getCompanyDetailsProvider(routeID),
+      provider: getCompanyDetailsProvider(routeArg),
       context: context,
     );
 
-    final companyDetailsAsync = ref.watch(getCompanyDetailsProvider(routeID));
+    final companyDetailsAsync = ref.watch(getCompanyDetailsProvider(routeArg));
 
     return DefaultTabController(
       length: _tabs.length,

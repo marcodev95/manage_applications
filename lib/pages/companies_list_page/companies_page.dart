@@ -17,10 +17,10 @@ class CompaniesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final paginator = ref.watch(asyncCompaniesProvider);
+    final paginator = ref.watch(companiesPaginatorProvider);
 
-    ref.listenOnErrorWithSnackbar(
-      provider: asyncCompaniesProvider,
+    ref.listenOnErrorWithoutSnackbar(
+      provider: companiesPaginatorProvider,
       context: context,
     );
 
@@ -56,7 +56,7 @@ class CompaniesPage extends ConsumerWidget {
           ),
       error: (e, stackTrace) {
         return DataLoadErrorScreenWidget(
-          onPressed: () => ref.invalidate(asyncCompaniesProvider),
+          onPressed: () => ref.invalidate(companiesPaginatorProvider),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -64,9 +64,9 @@ class CompaniesPage extends ConsumerWidget {
   }
 
   void _previousPage(WidgetRef ref) =>
-      ref.read(asyncCompaniesProvider.notifier).goBack();
+      ref.read(companiesPaginatorProvider.notifier).goBack();
   void _nextPage(WidgetRef ref) =>
-      ref.read(asyncCompaniesProvider.notifier).nextPage();
+      ref.read(companiesPaginatorProvider.notifier).nextPage();
 }
 
 class CompaniesList extends ConsumerWidget {

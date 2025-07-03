@@ -39,7 +39,7 @@ class _CompanyDetailsFormState extends ConsumerState<CompanyDetailsForm> {
       final repository = ref.read(companyRepositoryProvider);
       await repository.updateCompany(c);
 
-      await ref.read(asyncCompaniesProvider.notifier).reloadCurrentPage();
+      await ref.read(companiesPaginatorProvider.notifier).reloadCurrentPage();
 
       final bool isCompanyNameChange =
           widget.details.name.trim() != c.name.trim();

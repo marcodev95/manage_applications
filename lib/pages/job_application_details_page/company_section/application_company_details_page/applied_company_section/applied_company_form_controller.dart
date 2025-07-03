@@ -82,7 +82,7 @@ class AppliedCompanyFormController extends AutoDisposeAsyncNotifier<Company> {
   JobDataRepository get _jobDataRepository =>
       ref.read(jobDataRepositoryProvider);
   CompaniesPaginatorNotifier get _companiesNotifier =>
-      ref.read(asyncCompaniesProvider.notifier);
+      ref.read(companiesPaginatorProvider.notifier);
 }
 
 final appliedCompanyFormController =

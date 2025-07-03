@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:manage_applications/models/company/company.dart';
+import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/models/states/paginator_state.dart';
 import 'package:manage_applications/repository/company_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,7 +36,7 @@ class CompaniesPaginatorNotifier
     );
 
     if (currentState == null) return;
-
+    
     await _loadPage(currentState.pageNumber + 1);
   }
 
@@ -61,6 +62,25 @@ class CompaniesPaginatorNotifier
     await _loadPage(currentState.pageNumber);
   }
 
+  Future<OperationResult> deleteCompany(int? companyId) async {
+    try {
+      if (companyId == null) {
+        throw MissingInformationError(error: 'ID_Azienda non presente');
+      }
+
+      final repository = ref.read(companyRepositoryProvider);
+
+      await repository.deleteCompany(companyId);
+
+      await _handleDeleteCompany(companyId);
+
+      return Success(data: true);
+    } catch (e, stackTrace) {
+      _failState(e, stackTrace);
+      return mapToFailure(e, stackTrace);
+    }
+  }
+
   Future<void> handleAddCompany() async {
     final currentState = _currentStateOrFail(
       'Non è stato possibile caricare i dati.',
@@ -75,7 +95,7 @@ class CompaniesPaginatorNotifier
     }
   }
 
-  Future<void> handleDeleteCompany(int companyId) async {
+  Future<void> _handleDeleteCompany(int companyId) async {
     final currentState = _currentStateOrFail(
       'Non è stato possibile caricare i dati.',
     );
@@ -115,7 +135,7 @@ class CompaniesPaginatorNotifier
   }
 }
 
-final asyncCompaniesProvider = AsyncNotifierProvider.autoDispose<
+final companiesPaginatorProvider = AsyncNotifierProvider.autoDispose<
   CompaniesPaginatorNotifier,
   PaginatorState<Company>
 >(CompaniesPaginatorNotifier.new);
