@@ -17,14 +17,9 @@ class CompanyReferentsNotifier
     return details.companyReferents;
   }
 
-  CompanyReferentRepository get _repository =>
-      ref.read(companyReferentRepositoryProvider);
-  int? get _applicationId => ref.read(jobDataProvider).value?.id;
-
   Future<OperationResult> addCompanyReferent(
     CompanyReferentDetails referent,
   ) async {
-    final currentState = state.value ?? [];
     final applicationId = _getApplicationIdOrFailure();
 
     state = const AsyncLoading();
@@ -36,7 +31,7 @@ class CompanyReferentsNotifier
       );
 
       state = AsyncData([
-        ...currentState,
+        ..._currentState,
         CompanyReferentDetails.toUI(lastReferent),
       ]);
 
@@ -51,7 +46,6 @@ class CompanyReferentsNotifier
   Future<OperationResult> updateCompanyReferent(
     CompanyReferentDetails referent,
   ) async {
-    final currentState = state.value ?? [];
     final applicationId = _getApplicationIdOrFailure();
 
     state = const AsyncLoading();
@@ -62,7 +56,7 @@ class CompanyReferentsNotifier
       );
 
       final updateList =
-          currentState
+          _currentState
               .map(
                 (e) =>
                     e.id == referent.id
@@ -82,15 +76,13 @@ class CompanyReferentsNotifier
   }
 
   Future<OperationResult> deleteCompanyReferent(int id) async {
-    final currentState = state.value ?? [];
-
     state = const AsyncLoading();
 
     try {
       await _repository.deleteCompanyReferent(id);
 
       final updateList =
-          currentState.where((element) => element.id != id).toList();
+          _currentState.where((element) => element.id != id).toList();
 
       state = AsyncData(updateList);
 
@@ -108,6 +100,11 @@ class CompanyReferentsNotifier
 
     return _applicationId!;
   }
+
+  CompanyReferentRepository get _repository =>
+      ref.read(companyReferentRepositoryProvider);
+  int? get _applicationId => ref.read(jobDataProvider).value?.id;
+  List<CompanyReferentUi> get _currentState => state.value ?? [];
 }
 
 final companyReferentsProvider = AutoDisposeAsyncNotifierProvider<

@@ -1,4 +1,5 @@
-import 'package:manage_applications/models/errors/ui_message.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_change_screen_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_badge.dart';
@@ -6,8 +7,6 @@ import 'package:manage_applications/pages/job_application_details_page/company_s
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referents_notifier.dart';
 import 'package:manage_applications/widgets/components/pop_up_menu_button_widget.dart';
 import 'package:manage_applications/widgets/components/table_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
 class CompanyReferentTable extends ConsumerWidget {
@@ -57,11 +56,10 @@ class CompanyReferentTable extends ConsumerWidget {
             ),
           ),
       error:
-          (error, stackTrace) => DataLoadErrorScreenWidget(
-            errorMessage: ErrorsMessage.dataLoading,
-            onPressed: () {},
+          (_, __) => DataLoadErrorScreenWidget(
+            onPressed: () => ref.invalidate(companyReferentsProvider),
           ),
-      loading: () => Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 

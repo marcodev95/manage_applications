@@ -13,7 +13,10 @@ class CompanyReferentSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SectionWidget(
-      externalPadding: EdgeInsets.symmetric(vertical: AppStyle.pad16, horizontal: AppStyle.pad24),
+      externalPadding: EdgeInsets.symmetric(
+        vertical: AppStyle.pad16,
+        horizontal: AppStyle.pad24,
+      ),
       title: "Lista referenti",
       trailing: _CompanyReferentTrailing(),
       body: SizedBox(

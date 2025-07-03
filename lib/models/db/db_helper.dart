@@ -125,8 +125,8 @@ class DbHelper {
           ${CompanyReferentTableColumns.jobDataId},
           ${CompanyReferentTableColumns.companyId}
         ) VALUES 
-          ('Referent1', 'email1', '1234556', 'HR', 'M', 1, 1),
-          ('Referent2', 'email2', '1234556', 'DEV', 'C',  1, 2)
+          ('Referent1', 'email1', '1234556', 'hr', 'main', 1, 1),
+          ('Referent2', 'email2', '1234556', 'dev', 'client',  1, 2)
         ''');
   }
 

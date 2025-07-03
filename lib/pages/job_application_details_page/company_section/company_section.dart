@@ -1,13 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/applied_company_section/applied_company_form.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/client_company_section/client_company_form.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_card.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/client_company/client_company_card.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_change_screen_provider.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/form/company_referent_form.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_section.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_card.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/form/company_referent_form.dart';
 import 'package:manage_applications/widgets/components/button/text_button_widget.dart';
-import 'package:flutter/material.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 
 class CompanySection extends ConsumerWidget {

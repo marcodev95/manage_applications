@@ -29,22 +29,13 @@ class CompanyReferent {
     json[CompanyReferentTableColumns.name] = name;
     json[CompanyReferentTableColumns.phoneNumber] = phoneNumber;
     json[CompanyReferentTableColumns.email] = email;
-    json[CompanyReferentTableColumns.role] = role.displaName;
+    json[CompanyReferentTableColumns.role] = role.name;
     json[CompanyReferentTableColumns.jobDataId] = jobDataId;
     json[CompanyReferentTableColumns.companyId] = companyId;
-    json[CompanyReferentTableColumns.companyType] = companyType.displayName;
+    json[CompanyReferentTableColumns.companyType] = companyType.name;
 
     return json;
   }
-
-/*   static CompanyReferent defaultValue() {
-    return CompanyReferent(
-      name: '',
-      role: RoleType.hr,
-      email: '',
-      companyType: CompanyType.main,
-    );
-  } */
 
   @override
   String toString() {
@@ -213,7 +204,7 @@ extension CompanyTypeX on CompanyType {
 
   String get displayName {
     return switch (this) {
-      CompanyType.main => 'M',
+      CompanyType.main => 'P',
       CompanyType.client => 'C',
     };
   }
@@ -223,9 +214,9 @@ extension CompanyTypeX on CompanyType {
 
 CompanyType fromStringToCompanyType(String value) {
   switch (value) {
-    case 'M':
+    case 'main':
       return CompanyType.main;
-    case 'C':
+    case 'client':
       return CompanyType.client;
     default:
       return CompanyType.main;

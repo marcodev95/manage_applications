@@ -1,4 +1,4 @@
-enum RoleType { hr, dev, pm, ceo, cto, ad, altro }
+enum RoleType { hr, dev, pm, ceo, cto, ad, other }
 
 extension RoleTypeX on RoleType {
   String get displaName {
@@ -15,7 +15,7 @@ extension RoleTypeX on RoleType {
         return 'Direttore Tecnico';
       case RoleType.ad:
         return 'Amministratore';
-      case RoleType.altro:
+      case RoleType.other:
         return 'Altro';
     }
   }
@@ -23,21 +23,21 @@ extension RoleTypeX on RoleType {
 
 RoleType roleTypeFromString(String value) {
   switch (value) {
-    case 'Risorse Umane':
+    case 'hr':
       return RoleType.hr;
-    case 'Sviluppatore':
+    case 'dev':
       return RoleType.dev;
-    case 'Project Manager':
+    case 'pm':
       return RoleType.pm;
-    case 'Direttore Generale':
+    case 'ceo':
       return RoleType.ceo;
-    case 'Direttore Tecnico':
+    case 'cto':
       return RoleType.cto;
-    case 'Amministratore':
+    case 'ad':
       return RoleType.ad;
-    case 'Altro':
-      return RoleType.altro;
+    case 'other':
+      return RoleType.other;
     default:
-      return RoleType.altro;
+      return RoleType.other;
   }
 }

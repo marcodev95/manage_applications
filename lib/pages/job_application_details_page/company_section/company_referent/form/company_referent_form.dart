@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/company/company_referent.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_change_screen_provider.dart';
@@ -5,18 +8,14 @@ import 'package:manage_applications/pages/job_application_details_page/company_s
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referents_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/form/referent_company_options_provider.dart';
 import 'package:manage_applications/repository/company_referent_repository.dart';
+import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/dropdown_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
-import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
 final _fetchReferentDetailsProvider = FutureProvider.autoDispose
     .family<CompanyReferentDetails, int>((ref, int id) async {
-      
       final repository = ref.read(companyReferentRepositoryProvider);
 
       return await repository.getCompanyReferentDetails(id);
@@ -75,9 +74,9 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
   void initState() {
     super.initState();
 
-     _referentCompanyController = ValueNotifier(
+    _referentCompanyController = ValueNotifier(
       ref.read(referentCompanyOptionsProvider).first,
-    ); 
+    );
 
     final referent = widget.referent;
 
@@ -118,15 +117,19 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
     );
   }
 
-  Expanded _referentCompany() {
-    return Expanded(
-      child: DropdownWidget(
-        label: "Azienda a cui è associato",
-        items: ref
-            .watch(referentCompanyOptionsProvider)
-            .toDropdownItems((e) => e.companyRef.name),
-        selectedValue: _referentCompanyController,
-      ),
+  Widget _referentCompany() {
+    return Consumer(
+      builder: (_, ref, __) {
+        return Expanded(
+          child: DropdownWidget(
+            label: "Azienda a cui è associato",
+            items: ref
+                .watch(referentCompanyOptionsProvider)
+                .toDropdownItems((e) => e.companyRef.name),
+            selectedValue: _referentCompanyController,
+          ),
+        );
+      },
     );
   }
 
@@ -219,7 +222,7 @@ class _SaveButton extends ConsumerWidget {
     final isLoading = ref.watch(companyReferentsProvider).isLoading;
 
     return isLoading
-        ? CircularProgressIndicator()
+        ? const CircularProgressIndicator()
         : Align(
           alignment: Alignment.centerRight,
           child: SaveButtonWidget(onPressed: callback),
