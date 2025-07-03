@@ -1,0 +1,5 @@
+export 'package:manage_applications/pages/companies_list_page/company_details_section/client_company_applications_section/client_company_applications_section.dart';
+export 'package:manage_applications/pages/companies_list_page/company_details_section/company_details_form/company_details_form.dart';
+export 'package:manage_applications/pages/companies_list_page/company_details_section/main_company_applications_section/main_company_applications_section.dart';
+export 'package:manage_applications/pages/companies_list_page/company_details_section/providers/get_company_details_provider.dart';
+export 'package:manage_applications/pages/companies_list_page/company_details_section/providers/is_company_deletable_provider.dart';

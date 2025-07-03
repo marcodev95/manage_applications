@@ -6,8 +6,8 @@ import 'package:manage_applications/widgets/components/table_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 import 'package:flutter/material.dart';
 
-class RelatedJobApplicationsTableWidget extends StatelessWidget {
-  const RelatedJobApplicationsTableWidget({
+class JobApplicationsForCompanyTableWidget extends StatelessWidget {
+  const JobApplicationsForCompanyTableWidget({
     super.key,
     required this.applications,
     required this.button,

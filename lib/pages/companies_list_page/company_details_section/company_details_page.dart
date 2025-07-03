@@ -1,16 +1,15 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/company/company.dart';
-import 'package:manage_applications/pages/companies_list_page/company_details_section/company_details_form/company_details_form.dart';
-import 'package:manage_applications/pages/companies_list_page/company_details_section/delete_company_button.dart';
-import 'package:manage_applications/pages/companies_list_page/company_details_section/providers/get_company_details_provider.dart';
+import 'package:manage_applications/models/shared/operation_result.dart';
+import 'package:manage_applications/pages/companies_list_page/company_details_section/company_details_barrel.dart';
+import 'package:manage_applications/providers/companies_paginator_notifier.dart';
+import 'package:manage_applications/widgets/components/button/remove_button_widget.dart';
 import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
-import 'package:manage_applications/pages/companies_list_page/company_details_section/client_company_applications_section/client_company_applications_section.dart';
-import 'package:manage_applications/pages/companies_list_page/company_details_section/main_company_applications_section/main_company_applications_section.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
 class CompanyDetailsPage extends ConsumerWidget {
@@ -32,7 +31,7 @@ class CompanyDetailsPage extends ConsumerWidget {
         appBar: AppBar(
           title: const Text('Dettagli azienda'),
           actions: const [
-            DeleteCompanyButton(),
+            _DeleteCompanyButton(),
             SizedBox(width: 20.0),
             ErrorsPanelButtonWidget(),
           ],
@@ -99,3 +98,28 @@ class _PageTabsWidget extends ConsumerWidget {
 }
 
 final _currentIndexProvider = StateProvider.autoDispose((_) => 0);
+
+class _DeleteCompanyButton extends ConsumerWidget {
+  const _DeleteCompanyButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final routeArg = getRouteArg(context);
+    final isVisible = ref.watch(isCompanyDeletableProvider(routeArg));
+
+    return isVisible
+        ? RemoveButtonWidget(
+          onPressed: () async {
+            final notifier = ref.read(companiesPaginatorProvider.notifier);
+            final result = await notifier.deleteCompany(routeArg);
+
+            if (!context.mounted) return;
+
+            result.handleErrorResult(context: context, ref: ref);
+
+            if (result.isSuccess) Navigator.pop(context);
+          },
+        )
+        : const SizedBox();
+  }
+}
