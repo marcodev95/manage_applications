@@ -1,5 +1,3 @@
-# manage-applications
-
 # 🗂️ Flutter Manage Applications
 
 Un'applicazione desktop sviluppata in Flutter per gestire e tenere traccia delle candidature di lavoro.
@@ -38,7 +36,7 @@ Un'applicazione desktop sviluppata in Flutter per gestire e tenere traccia delle
 ### 1. Clona il repository
 
 ```bash
-git clone https://github.com/tuo-username/manage_applications.git
+git clone https://github.com/marcodev95/manage_applications.git
 cd manage_applications
 ```
 
