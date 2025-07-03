@@ -158,8 +158,8 @@ class DbHelper {
           ${JobDataTableColumns.experience},
           ${JobDataTableColumns.companyId},
           ${JobDataTableColumns.clientCompanyId}
-        ) VALUES ('2023-10-11', 'Junior Developer', 'Candidato', 'www.indeed.com', 'hybrid', '3', 'Da 1 a 5 anni', 1, 2), 
-                ('2023-11-10', 'Junior Developer2', 'Colloquio', 'www.indeed.com', 'presence', '5', '', 2, NULL)
+        ) VALUES ('2023-10-11', 'Junior Developer', 'apply', 'www.indeed.com', 'hybrid', '3', 'Da 1 a 5 anni', 1, 2), 
+                ('2023-11-10', 'Junior Developer2', 'interview', 'www.indeed.com', 'onSite', '5', '', 2, NULL)
       ''');
   }
 

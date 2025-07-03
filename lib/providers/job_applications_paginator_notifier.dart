@@ -5,6 +5,7 @@ import 'package:manage_applications/models/job_data/job_application_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/models/states/paginator_state.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_utility.dart';
 import 'package:manage_applications/providers/job_application_filter.dart';
 import 'package:manage_applications/repository/job_data_repository.dart';
 
@@ -48,11 +49,14 @@ class JobApplicationsPaginatorNotifier
       case ApplicationFilter.bookmark:
         return await fetchData(pageNumber, 'Salvato');
       case ApplicationFilter.apply:
-        return await fetchData(pageNumber, 'Candidato');
+        return await fetchData(pageNumber, ApplicationStatus.apply.name);
       case ApplicationFilter.interview:
-        return await fetchData(pageNumber, 'Colloquio');
+        return await fetchData(pageNumber, ApplicationStatus.interview.name);
       case ApplicationFilter.pendingResponse:
-        return await fetchData(pageNumber, 'In attesa');
+        return await fetchData(
+          pageNumber,
+          ApplicationStatus.pendingResponse.name,
+        );
     }
   }
 

@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_application_details_page.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
 import 'package:manage_applications/pages/job_applications_page/job_applications_table/job_applications_table.dart';
-import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
 import 'package:manage_applications/providers/job_application_filter.dart';
+import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
 import 'package:manage_applications/widgets/components/button/text_button_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/components/header_card_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
@@ -79,7 +79,7 @@ class _FlterButtonsWidgetState extends ConsumerState<_FlterButtonsWidget> {
       valueListenable: selectedFilter,
       builder: (_, value, __) {
         return SegmentedButton<ApplicationFilter>(
-          segments: [
+          segments: const [
             ButtonSegment(
               value: ApplicationFilter.all,
               label: Text('Tutti le candidature'),
@@ -109,13 +109,11 @@ class _FlterButtonsWidgetState extends ConsumerState<_FlterButtonsWidget> {
           },
           multiSelectionEnabled: false,
           style: SegmentedButton.styleFrom(
-            backgroundColor: Colors.grey[800], // sfondo dei bottoni
-            foregroundColor: Colors.white70, // testo non selezionato
-            selectedBackgroundColor: _selectedBgColor(
-              value,
-            ), // sfondo selezionato
-            selectedForegroundColor: Colors.white, // testo selezionato
-            side: const BorderSide(color: Colors.white24), // bordo dei bottoni
+            backgroundColor: Colors.grey[800],
+            foregroundColor: Colors.white70,
+            selectedBackgroundColor: _selectedBgColor(value),
+            selectedForegroundColor: Colors.white,
+            side: const BorderSide(color: Colors.white24),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),

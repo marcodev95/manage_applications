@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/pages/job_applications_page/job_applications_table/job_applications_table_barrel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/job_data/job_application_ui.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_utility.dart';
+import 'package:manage_applications/pages/job_applications_page/job_applications_table/job_applications_table_barrel.dart';
 import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
 import 'package:manage_applications/widgets/components/paginator_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
+import 'package:manage_applications/widgets/components/status_chip_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 import 'package:manage_applications/widgets/empty_list_message_widget.dart';
@@ -24,7 +26,7 @@ class JobApplicationsTable extends ConsumerWidget {
 
     return paginatorAsync.when(
       skipLoadingOnReload: true,
-      skipError: true, //Non funziona su errori del AsyncNotifier build
+      skipError: true,
       data:
           (paginator) => Column(
             spacing: 30.0,
@@ -65,7 +67,7 @@ class JobApplicationsTableBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (applicationsUI.isEmpty) {
-      return EmptyListMessageWidget('Nessuna candidatura presente');
+      return const EmptyListMessageWidget('Nessuna candidatura presente');
     }
 
     return TableWidget(
@@ -116,8 +118,9 @@ class JobApplicationsTableBody extends ConsumerWidget {
               DataCell(
                 SizedBox(
                   width: 120.0,
-                  child: JobApplicationStatusChip(
-                    applicationStatus: jobData.applicationStatus,
+                  child: StatusChipWidget(
+                    label: jobData.applicationStatus.displayName,
+                    chipColor: jobData.applicationStatus.displayChipColor,
                   ),
                 ),
               ),

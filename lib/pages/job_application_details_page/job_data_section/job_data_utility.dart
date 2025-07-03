@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:manage_applications/providers/job_application_filter.dart';
 
-enum JobDataWorkType { ibrido, remoto, presenza }
+enum JobDataWorkType { hybrid, remote, onSite }
 
 extension JobDataWorkTypeX on JobDataWorkType {
   String get displayName {
     switch (this) {
-      case JobDataWorkType.ibrido:
+      case JobDataWorkType.hybrid:
         return 'Ibrido';
-      case JobDataWorkType.remoto:
+      case JobDataWorkType.remote:
         return 'Remoto';
-      case JobDataWorkType.presenza:
+      case JobDataWorkType.onSite:
         return 'Presenza';
     }
   }
@@ -18,14 +18,14 @@ extension JobDataWorkTypeX on JobDataWorkType {
 
 JobDataWorkType workTypeFromString(String value) {
   switch (value) {
-    case 'Ibrido':
-      return JobDataWorkType.ibrido;
-    case 'Remoto':
-      return JobDataWorkType.remoto;
-    case 'Presenza':
-      return JobDataWorkType.ibrido;
+    case 'hybrid':
+      return JobDataWorkType.hybrid;
+    case 'remote':
+      return JobDataWorkType.remote;
+    case 'onSite':
+      return JobDataWorkType.onSite;
     default:
-      return JobDataWorkType.ibrido;
+      return JobDataWorkType.hybrid;
   }
 }
 
@@ -33,7 +33,7 @@ enum ApplicationStatus { apply, interview, pendingResponse }
 
 extension ApplicationStatusX on ApplicationStatus {
   String get displayName {
-    switch(this) {
+    switch (this) {
       case ApplicationStatus.apply:
         return 'Candidato';
       case ApplicationStatus.interview:
@@ -43,9 +43,8 @@ extension ApplicationStatusX on ApplicationStatus {
     }
   }
 
-    Color get displayChipColor {
-    switch(this) {
-      
+  Color get displayChipColor {
+    switch (this) {
       case ApplicationStatus.apply:
         return FilterColor.apply;
       case ApplicationStatus.interview:
@@ -55,16 +54,16 @@ extension ApplicationStatusX on ApplicationStatus {
     }
   }
 }
+
 ApplicationStatus applicationStatusFromString(String value) {
   switch (value) {
-    case 'Candidato':
+    case 'apply':
       return ApplicationStatus.apply;
-    case 'Colloquio':
+    case 'interview':
       return ApplicationStatus.interview;
-    case 'In attesa':
+    case 'pendingResponse':
       return ApplicationStatus.pendingResponse;
     default:
       return ApplicationStatus.apply;
   }
 }
-

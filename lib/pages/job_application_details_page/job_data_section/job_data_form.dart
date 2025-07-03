@@ -26,7 +26,7 @@ class _JobAnnouncementFormWidgetState extends ConsumerState<JobDataForm>
   final _dayInOfficeController = TextEditingController();
   final _applyDateNotifier = ValueNotifier<DateTime>(DateTime.now());
   final _workTypeNotifier = ValueNotifier<JobDataWorkType>(
-    JobDataWorkType.ibrido,
+    JobDataWorkType.hybrid,
   );
   final _applicationStatus = ValueNotifier<ApplicationStatus>(
     ApplicationStatus.apply,

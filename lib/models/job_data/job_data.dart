@@ -57,10 +57,10 @@ class JobData extends Equatable {
 
   Map<String, dynamic> toJson() => {
         JobDataTableColumns.applyDate: dbFormat.format(applyDate),
-        JobDataTableColumns.applicationStatus: applicationStatus.displayName,
+        JobDataTableColumns.applicationStatus: applicationStatus.name,
         JobDataTableColumns.position: position,
         JobDataTableColumns.websiteUrl: websiteUrl,
-        JobDataTableColumns.workType: workType.displayName,
+        JobDataTableColumns.workType: workType.name,
         JobDataTableColumns.dayInOffice: dayInOffice,
         JobDataTableColumns.experience: experience,
       };
@@ -83,7 +83,7 @@ class JobData extends Equatable {
       applicationStatus: ApplicationStatus.apply,
       applyDate: DateTime.now(),
       position: "",
-      workType: JobDataWorkType.ibrido,
+      workType: JobDataWorkType.hybrid,
       websiteUrl: "",
     );
   }
