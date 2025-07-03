@@ -7,11 +7,12 @@ import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
 import 'package:manage_applications/repository/company_applications_repository.dart';
 
-class ApplicationsRelatedMainCompanyNotifier
+class MainCompanyApplicationsNotifier
     extends AutoDisposeFamilyAsyncNotifier<List<JobApplicationUi>, int> {
   Future<List<JobApplicationUi>> _getDatas(int companyId) async {
-    return await _companyApplicationsRepository
-        .getApplicationsRelatedMainCompany(companyId);
+    return await _companyApplicationsRepository.fetchApplicationsForMainCompany(
+      companyId,
+    );
   }
 
   @override
@@ -29,6 +30,8 @@ class ApplicationsRelatedMainCompanyNotifier
 
       return Success(data: true, message: SuccessMessage.deleteMessage);
     } catch (e, stackTrace) {
+      state = AsyncError(e, stackTrace);
+
       return mapToFailure(e, stackTrace);
     }
   }
@@ -37,9 +40,7 @@ class ApplicationsRelatedMainCompanyNotifier
       ref.read(companyApplicationsRepositoryProvider);
 }
 
-final applicationsRelatedMainCompanyProvider = AsyncNotifierProvider.autoDispose
-    .family<
-      ApplicationsRelatedMainCompanyNotifier,
-      List<JobApplicationUi>,
-      int
-    >(ApplicationsRelatedMainCompanyNotifier.new);
+final mainCompanyApplicationsProvider = AsyncNotifierProvider.autoDispose
+    .family<MainCompanyApplicationsNotifier, List<JobApplicationUi>, int>(
+      MainCompanyApplicationsNotifier.new,
+    );

@@ -13,7 +13,7 @@ class CompanyApplicationsRepository {
 
   CompanyApplicationsRepository(final DbHelper db) : _db = db;
 
-  Future<List<JobApplicationUi>> getApplicationsRelatedClientCompany(
+  Future<List<JobApplicationUi>> fetchApplicationsForClientCompany(
     int companyId,
   ) async {
     try {
@@ -38,7 +38,7 @@ class CompanyApplicationsRepository {
     }
   }
 
-  Future<List<JobApplicationUi>> getApplicationsRelatedMainCompany(
+  Future<List<JobApplicationUi>> fetchApplicationsForMainCompany(
     int companyId,
   ) async {
     try {

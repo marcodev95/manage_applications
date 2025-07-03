@@ -8,7 +8,7 @@ import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 import 'package:manage_applications/pages/companies_list_page/company_details_section/client_company_applications_section/client_company_applications_section.dart';
-import 'package:manage_applications/pages/companies_list_page/company_details_section/applications_related_main_company_section/applications_related_main_company.dart';
+import 'package:manage_applications/pages/companies_list_page/company_details_section/main_company_applications_section/main_company_applications_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
@@ -81,7 +81,7 @@ class _PageTabsWidget extends ConsumerWidget {
         SizedBox.expand(
           child: AppCard(
             child: SingleChildScrollView(
-              child: ApplicationsRelatedMainCompany(details.id!),
+              child: MainCompanyApplicationsSection(details.id!),
             ),
           ),
         ),

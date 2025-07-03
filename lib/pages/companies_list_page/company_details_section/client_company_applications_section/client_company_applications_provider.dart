@@ -11,7 +11,7 @@ class ClientCompanyApplicationsNotifier
     extends AutoDisposeFamilyAsyncNotifier<List<JobApplicationUi>, int> {
   Future<List<JobApplicationUi>> _getDatas(int companyId) async {
     return await _companyApplicationsRepository
-        .getApplicationsRelatedClientCompany(companyId);
+        .fetchApplicationsForClientCompany(companyId);
   }
 
   @override
