@@ -1,14 +1,14 @@
 import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/company/company_referent.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/applied_company_section/applied_company_form_controller.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/client_company_section/client_company_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_form_notifier.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/client_company/client_company_form_notifier.dart';
 import 'package:riverpod/riverpod.dart';
 
 final referentCompanyOptionsProvider = Provider.autoDispose<List<CompanyOption>>((
   ref,
 ) {
-  final applied = ref.watch(appliedCompanyFormController).value;
-  final client = ref.watch(clientCompanyFormController).value;
+  final applied = ref.watch(appliedCompanyFormProvider).value;
+  final client = ref.watch(clientCompanyFormProvider).value;
 
   if (applied == null && client == null) {
     return [];

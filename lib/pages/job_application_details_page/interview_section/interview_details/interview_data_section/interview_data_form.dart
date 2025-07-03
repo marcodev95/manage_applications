@@ -1,7 +1,7 @@
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/applied_company_section/applied_company_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_controller.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_place_field.dart';
@@ -58,7 +58,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
       _interviewFormatNotifier.value = interview.interviewFormat;
 
       if (interview.interviewFormat == InterviewsFormat.presenza) {
-        final company = ref.read(appliedCompanyFormController).value;
+        final company = ref.read(appliedCompanyFormProvider).value;
         _interviewPlaceController.text = '${company?.address}, ${company?.city}';
       } else {
         _interviewPlaceController.text = interview.interviewPlace!;

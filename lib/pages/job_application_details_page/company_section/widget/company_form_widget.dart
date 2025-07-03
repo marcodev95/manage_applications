@@ -64,7 +64,7 @@ class _CompanyFormWidgetState extends ConsumerState<CompanyFormWidget>
       key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        spacing: 60.0,
+        spacing: 30.0,
         children: [
           Row(children: [_companyNameField()]),
           Row(

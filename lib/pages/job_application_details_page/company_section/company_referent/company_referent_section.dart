@@ -1,5 +1,5 @@
 import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/company_change_screen_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/provider/company_change_screen_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_table.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/are_job_application_id_and_company_id_present.dart';
 import 'package:manage_applications/widgets/components/button/text_button_widget.dart';
@@ -35,18 +35,18 @@ class _CompanyReferentTrailing extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final areIdsPresent = ref.watch(areJobApplicationIdAndCompanyIdPresent);
+    final isActive = ref.watch(areJobApplicationIdAndCompanyIdPresent);
 
     return TextButtonWidget(
       onPressed:
-          areIdsPresent
+          isActive
               ? () =>
                   ref
                       .read(companyChangeScreenProvider.notifier)
                       .goToReferentCompanyForm()
               : () {},
       label: 'Aggiungi referente',
-      isEnable: areIdsPresent,
+      isEnable: isActive,
     );
   }
 }

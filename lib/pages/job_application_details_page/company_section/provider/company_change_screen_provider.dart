@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/models/states/change_screen_state.dart';
 import 'package:manage_applications/models/company/company.dart';
+import 'package:manage_applications/models/states/change_screen_state.dart';
 
 enum CompanyScreen { initial, mainCompanyForm, clientCompanyForm, referentForm }
 

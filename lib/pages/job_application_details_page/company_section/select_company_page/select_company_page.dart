@@ -2,7 +2,7 @@ import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/widgets/components/button/associate_button_widget.dart';
 import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/applied_company_section/applied_company_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_form_notifier.dart';
 import 'package:manage_applications/pages/job_applications_page/job_applications_table/job_applications_table_barrel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -117,7 +117,7 @@ final _fetchCompaniesProvider = FutureProvider.autoDispose((ref) async {
 });
 
 final _filteredCompaniesProvider = FutureProvider.autoDispose((ref) async {
-  final lastCompanyId = ref.watch(appliedCompanyFormController).value?.id;
+  final lastCompanyId = ref.watch(appliedCompanyFormProvider).value?.id;
 
   final companiesList = await ref.watch(_fetchCompaniesProvider.future);
 

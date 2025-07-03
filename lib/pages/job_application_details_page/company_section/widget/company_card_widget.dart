@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/company/company.dart';
+import 'package:manage_applications/models/shared/operation_result.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/select_company_page/select_company_page.dart';
+import 'package:manage_applications/widgets/components/button/text_button_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
@@ -11,7 +15,12 @@ class CompanyCardWidget extends StatelessWidget {
     required this.cardLabel,
     this.company,
     this.isMain = true,
-    this.externalPadding = const EdgeInsets.only(right: 24, left: 24, top: 18, bottom: 0),
+    this.externalPadding = const EdgeInsets.only(
+      right: 24,
+      left: 24,
+      top: 18,
+      bottom: 0,
+    ),
   });
 
   final Company? company;
@@ -25,7 +34,7 @@ class CompanyCardWidget extends StatelessWidget {
     return SectionWidget(
       externalPadding: externalPadding,
       title: cardLabel,
-      trailing: company?.id == null ? trailing : SizedBox(),
+      trailing: company?.id == null ? trailing : const SizedBox(),
       body: Padding(
         padding: EdgeInsets.all(AppStyle.pad8),
         child: Column(
@@ -63,7 +72,7 @@ class CompanyCardWidget extends StatelessWidget {
                           link: company?.website ?? '',
                         ),
                 icon: Icon(Icons.language),
-                label: Text("Visita sito"),
+                label: Text('Visita sito'),
               ),
             ),
           ],
@@ -79,9 +88,55 @@ class CompanyCardWidget extends StatelessWidget {
         spacing: 8.0,
         children: [
           Icon(icon, size: 18, color: Colors.grey),
-          Flexible(child: Text(data, style: TextStyle(fontSize: 16),)),
+          Flexible(child: Text(data, style: TextStyle(fontSize: 16))),
         ],
       ),
     );
+  }
+}
+
+class CompanyCardTrailing extends ConsumerWidget {
+  const CompanyCardTrailing({
+    super.key,
+    required this.selectCompanyOperation,
+    required this.goToForm,
+    required this.isActive,
+  });
+
+  final Future<OperationResult> Function(Company selectedCompany)
+  selectCompanyOperation;
+  final VoidCallback goToForm;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return isActive
+        ? Wrap(
+          spacing: 10,
+          children: [
+            TextButtonWidget(
+              onPressed:
+                  () => navigatorPush(
+                    context,
+                    SelectCompanyPage(
+                      onPressedSelectCompany: (selectedCompany) async {
+                        final result = await selectCompanyOperation(
+                          selectedCompany,
+                        );
+
+                        if (!context.mounted) return;
+
+                        result.handleResult(context: context, ref: ref);
+
+                        if (result.isSuccess) Navigator.pop(context);
+                      },
+                    ),
+                  ),
+              label: 'Seleziona azienda',
+            ),
+            TextButtonWidget(onPressed: goToForm, label: 'Aggiungi azienda'),
+          ],
+        )
+        : const SizedBox();
   }
 }

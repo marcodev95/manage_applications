@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/company_form_widget.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/widget/company_form_widget.dart';
 import 'package:manage_applications/providers/companies_paginator_notifier.dart';
 import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
 import 'package:manage_applications/repository/company_repository.dart';

@@ -11,7 +11,7 @@ import 'package:manage_applications/providers/job_applications_paginator_notifie
 import 'package:manage_applications/repository/company_repository.dart';
 import 'package:manage_applications/repository/job_data_repository.dart';
 
-class AppliedCompanyFormController extends AutoDisposeAsyncNotifier<Company> {
+class AppliedCompanyFormNotifier extends AutoDisposeAsyncNotifier<Company> {
   @override
   FutureOr<Company> build() async {
     final details = await ref.watch(fetchJobApplicationDetailsProvider.future);
@@ -25,18 +25,7 @@ class AppliedCompanyFormController extends AutoDisposeAsyncNotifier<Company> {
     try {
       final lastCompany = await _repository.addCompany(company);
 
-      final jobDataId = ref.read(jobDataProvider).value?.id;
-
-      if (jobDataId == null) {
-        throw MissingInformationError(error: 'ID_JobData non presente!');
-      }
-
-      await _jobDataRepository.updateCompanyId(lastCompany.id!, jobDataId);
-
-      _applicationsUINotifier.updateCompanyRef(
-        id: jobDataId,
-        companyRef: CompanyRef(id: lastCompany.id!, name: lastCompany.name),
-      );
+      await _updateJobDataCompany(lastCompany);
 
       await _companiesNotifier.handleAddCompany();
 
@@ -52,19 +41,7 @@ class AppliedCompanyFormController extends AutoDisposeAsyncNotifier<Company> {
 
   Future<OperationResult> selectCompany(Company company) async {
     try {
-      final jobDataId = ref.read(jobDataProvider).value?.id;
-
-      if (jobDataId == null) {
-        throw MissingInformationError(error: 'ID_Candidatura non presente!');
-      }
-
-      await _jobDataRepository.updateCompanyId(company.id!, jobDataId);
-
-      _applicationsUINotifier.updateCompanyRef(
-        id: jobDataId,
-        companyRef: CompanyRef(id: company.id!, name: company.name),
-      );
-
+      await _updateJobDataCompany(company);
       state = AsyncData(company);
 
       return Success(data: company, message: SuccessMessage.saveMessage);
@@ -75,9 +52,23 @@ class AppliedCompanyFormController extends AutoDisposeAsyncNotifier<Company> {
     }
   }
 
+  Future<void> _updateJobDataCompany(Company company) async {
+    final jobDataId = ref.read(jobDataProvider).value?.id;
+
+    if (jobDataId == null) {
+      throw MissingInformationError(error: 'ID_JobData non presente!');
+    }
+
+    await _jobDataRepository.updateCompanyId(company.id!, jobDataId);
+
+    _applicationsUINotifier.updateCompanyRef(
+      id: jobDataId,
+      companyRef: CompanyRef(id: company.id!, name: company.name),
+    );
+  }
+
   JobApplicationsPaginatorNotifier get _applicationsUINotifier =>
       ref.read(paginatorApplicationsUIProvider.notifier);
-
   CompanyRepository get _repository => ref.read(companyRepositoryProvider);
   JobDataRepository get _jobDataRepository =>
       ref.read(jobDataRepositoryProvider);
@@ -85,7 +76,7 @@ class AppliedCompanyFormController extends AutoDisposeAsyncNotifier<Company> {
       ref.read(companiesPaginatorProvider.notifier);
 }
 
-final appliedCompanyFormController =
-    AutoDisposeAsyncNotifierProvider<AppliedCompanyFormController, Company>(
-      AppliedCompanyFormController.new,
+final appliedCompanyFormProvider =
+    AutoDisposeAsyncNotifierProvider<AppliedCompanyFormNotifier, Company>(
+      AppliedCompanyFormNotifier.new,
     );

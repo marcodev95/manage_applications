@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/applied_company_section/applied_company_form_controller.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/client_company_section/client_company_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_form_notifier.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/client_company/client_company_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_form/contract_form_utlity.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
 
@@ -28,11 +28,11 @@ class _WorkPlaceFieldState extends ConsumerState<WorkPlaceField> {
 
     _notifierListener = () {
       if (widget.notifier.value == WorkPlace.azienda) {
-        ref.read(appliedCompanyFormController).whenData((value) {
+        ref.read(appliedCompanyFormProvider).whenData((value) {
           widget.controller.text = '${value.address} - ${value.city}';
         });
       } else if (widget.notifier.value == WorkPlace.cliente) {
-        ref.read(clientCompanyFormController).whenData((value) {
+        ref.read(clientCompanyFormProvider).whenData((value) {
           widget.controller.text = '${value.address} - ${value.city}';
         });
       } else {

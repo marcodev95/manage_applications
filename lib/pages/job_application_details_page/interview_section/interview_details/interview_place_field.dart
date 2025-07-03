@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/application_company_details_page/applied_company_section/applied_company_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
@@ -28,7 +28,7 @@ class _InterviewPlaceFieldState extends ConsumerState<InterviewPlaceField> {
 
     _notifierListener = () {
       if (widget.notifier.value == InterviewsFormat.presenza) {
-        final company = ref.read(appliedCompanyFormController).value;
+        final company = ref.read(appliedCompanyFormProvider).value;
         widget.controller.text = '${company?.address} - ${company?.city}';
       } else {
         widget.controller.clear();
