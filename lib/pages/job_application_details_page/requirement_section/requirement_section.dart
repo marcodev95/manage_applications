@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/requirement.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/requirement_section/requirement_form.dart';
 import 'package:manage_applications/pages/job_application_details_page/requirement_section/requirements_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:manage_applications/widgets/components/item_list_with_actions_widget.dart.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
@@ -15,7 +15,7 @@ class RequirementSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       primary: false,
       child: Column(
         children: [
@@ -26,11 +26,9 @@ class RequirementSection extends StatelessWidget {
 
           SectionWidget(
             title: 'Lista dei requisiti',
-            externalPadding: const EdgeInsets.symmetric(
-              horizontal: AppStyle.pad24,
-            ),
+            externalPadding: EdgeInsets.symmetric(horizontal: AppStyle.pad24),
             body: Column(
-              children: [SizedBox(height: 380.0, child: _RequirementsList())],
+              children: [SizedBox(height: 400.0, child: _RequirementsList())],
             ),
           ),
         ],
@@ -44,18 +42,18 @@ class _RequirementsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final benefitsAsync = ref.watch(requirementsProvider);
+    final requirementsAsync = ref.watch(requirementsProvider);
 
     ref.listenOnErrorWithoutSnackbar(
       provider: requirementsProvider,
       context: context,
     );
 
-    return benefitsAsync.when(
+    return requirementsAsync.when(
       skipLoadingOnReload: true,
       skipError: true,
       data:
-          (requirements) => ItemListWithActionsWidget(
+          (requirements) => ItemListWithActionsWidget<Requirement>(
             items: requirements,
             itemToString: (requirement) => requirement.requirement,
             editCallback: (value) => _showEditDialog(context, value),
@@ -86,7 +84,11 @@ class _RequirementsList extends ConsumerWidget {
         return AlertDialog(
           title: const Text('Modifica requisito'),
           content: ConstrainedBox(
-            constraints: BoxConstraints(minWidth: 500, maxWidth: 700),
+            constraints: BoxConstraints(
+              minWidth: 500,
+              maxWidth: 700,
+              maxHeight: 100,
+            ),
             child: RequirementFormWidget(requirement: requirement),
           ),
         );
