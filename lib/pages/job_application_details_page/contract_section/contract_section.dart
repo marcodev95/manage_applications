@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_details_page.dart';
+import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_table.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/provider/contract_delete_undo_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/are_job_application_id_and_company_id_present.dart';
 import 'package:manage_applications/widgets/components/button/text_button_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
-import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_table.dart';
-import 'package:flutter/material.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class ContractSection extends StatelessWidget {

@@ -1,3 +1,4 @@
+import 'package:manage_applications/models/contract/benefit.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/company/company_referent.dart';
 import 'package:manage_applications/models/db/db_helper.dart';
@@ -216,6 +217,7 @@ Future _getContratcsList(int jobDataId) async {
         ${ContractTableColumns.contractDuration},
         ${ContractTableColumns.workPlaceAddress},
         ${ContractTableColumns.ral},
+        ${ContractTableColumns.isTrialContract},
         ${ContractTableColumns.jobDataId}
       FROM $contractTable
       WHERE ${ContractTableColumns.jobDataId} = $jobDataId      

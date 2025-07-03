@@ -22,23 +22,24 @@ class BenefitsNotifier
     try {
       final result = await _repository.addBenefit(benefit);
 
-      state = AsyncData([...state.value!, result]);
+      state = AsyncData([..._currentState, result]);
 
       return Success(data: benefit, message: SuccessMessage.saveMessage);
     } catch (e, stackTrace) {
+      state = AsyncError(e, stackTrace);
+
       return mapToFailure(e, stackTrace);
     }
   }
 
   Future<OperationResult> updateBenefit(Benefit benefit) async {
-    final previousList = state.value ?? [];
     state = const AsyncLoading();
 
     try {
       await _repository.updateBenefit(benefit);
 
       final temp = [
-        for (final el in previousList)
+        for (final el in _currentState)
           if (el.id == benefit.id) benefit else el,
       ];
 
@@ -46,6 +47,8 @@ class BenefitsNotifier
 
       return Success(data: true, message: SuccessMessage.saveMessage);
     } catch (e, stackTrace) {
+      state = AsyncError(e, stackTrace);
+
       return mapToFailure(e, stackTrace);
     }
   }
@@ -57,16 +60,19 @@ class BenefitsNotifier
       await _repository.deleteBenefit(id);
 
       state = AsyncData(
-        state.value!.where((element) => element.id != id).toList(),
+        _currentState.where((element) => element.id != id).toList(),
       );
 
       return Success(data: true, message: SuccessMessage.deleteMessage);
     } catch (e, stackTrace) {
+      state = AsyncError(e, stackTrace);
+
       return mapToFailure(e, stackTrace);
     }
   }
 
   BenefitRepository get _repository => ref.read(benefitRepositoryProvider);
+  List<Benefit> get _currentState => state.value ?? [];
 }
 
 final benefitsProvider = AsyncNotifierProvider.autoDispose

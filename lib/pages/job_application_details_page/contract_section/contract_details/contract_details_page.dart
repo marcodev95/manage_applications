@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/provider/get_contract_details_provider.dart';
-import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/benefits_section/benefits_section.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_form/contract_form_widget.dart';
+import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/provider/get_contract_details_provider.dart';
+import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';

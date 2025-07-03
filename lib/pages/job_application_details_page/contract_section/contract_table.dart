@@ -1,13 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_details_page.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_form/contract_form_utlity.dart';
-import 'package:manage_applications/pages/job_application_details_page/contract_section/provider/contracts_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/provider/contract_delete_undo_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/contract_section/provider/contracts_notifier.dart';
 import 'package:manage_applications/widgets/components/table_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 

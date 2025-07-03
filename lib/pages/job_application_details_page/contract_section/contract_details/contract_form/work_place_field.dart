@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/client_company/client_company_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_form/contract_form_utlity.dart';
@@ -27,13 +28,15 @@ class _WorkPlaceFieldState extends ConsumerState<WorkPlaceField> {
     super.initState();
 
     _notifierListener = () {
-      if (widget.notifier.value == WorkPlace.azienda) {
+      final workPlace = widget.notifier.value;
+
+      if (workPlace == WorkPlace.azienda) {
         ref.read(appliedCompanyFormProvider).whenData((value) {
-          widget.controller.text = '${value.address} - ${value.city}';
+          widget.controller.text = formatAddress(value);
         });
-      } else if (widget.notifier.value == WorkPlace.cliente) {
+      } else if (workPlace == WorkPlace.cliente) {
         ref.read(clientCompanyFormProvider).whenData((value) {
-          widget.controller.text = '${value.address} - ${value.city}';
+          widget.controller.text = formatAddress(value);
         });
       } else {
         widget.controller.clear();
@@ -66,4 +69,7 @@ class _WorkPlaceFieldState extends ConsumerState<WorkPlaceField> {
       },
     );
   }
+
+  String formatAddress(Company company) =>
+      '${company.address} - ${company.city}';
 }

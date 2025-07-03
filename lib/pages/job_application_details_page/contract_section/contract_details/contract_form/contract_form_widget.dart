@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/contract/remuneration.dart';
@@ -6,12 +9,9 @@ import 'package:manage_applications/pages/job_application_details_page/contract_
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_form/work_place_field.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/provider/contract_form_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
+import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/dropdown_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
-import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
