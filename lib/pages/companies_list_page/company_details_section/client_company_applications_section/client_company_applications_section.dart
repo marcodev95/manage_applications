@@ -1,25 +1,22 @@
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/companies_list_page/company_details_section/applications_related_client_company_section/applications_related_client_company_notifier.dart';
+import 'package:manage_applications/pages/companies_list_page/company_details_section/client_company_applications_section/client_company_applications_provider.dart';
 import 'package:manage_applications/pages/companies_list_page/company_details_section/related_job_applications_table_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
-class ApplicationsRelatedClientCompanySectionSection extends ConsumerWidget {
-  const ApplicationsRelatedClientCompanySectionSection(
-    this.companyId, {
-    super.key,
-  });
+class ClientCompanyApplicationsSection extends ConsumerWidget {
+  const ClientCompanyApplicationsSection(this.companyId, {super.key});
 
   final int companyId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final jobApplicationsList = ref.watch(
-      applicationsRelatedClientCompanyProvider(companyId),
+    final jobApplicationsAsync = ref.watch(
+      clientCompanyApplicationsProvider(companyId),
     );
 
-    return jobApplicationsList.when(
+    return jobApplicationsAsync.when(
       data:
           (applications) => RelatedJobApplicationsTableWidget(
             applications: applications,
@@ -27,8 +24,7 @@ class ApplicationsRelatedClientCompanySectionSection extends ConsumerWidget {
           ),
       error: (_, __) {
         return DataLoadErrorScreenWidget(
-          onPressed:
-              () => ref.invalidate(applicationsRelatedClientCompanyProvider),
+          onPressed: () => ref.invalidate(clientCompanyApplicationsProvider),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -37,7 +33,7 @@ class ApplicationsRelatedClientCompanySectionSection extends ConsumerWidget {
 
   Future<void> _delete(WidgetRef ref, int id, BuildContext context) async {
     final notifier = ref.read(
-      applicationsRelatedClientCompanyProvider(companyId).notifier,
+      clientCompanyApplicationsProvider(companyId).notifier,
     );
     final result = await notifier.removeAssociation(id);
 

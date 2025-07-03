@@ -7,7 +7,7 @@ import 'package:manage_applications/widgets/components/errors_widget/errors_pane
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
-import 'package:manage_applications/pages/companies_list_page/company_details_section/applications_related_client_company_section/applications_related_client_company_section.dart';
+import 'package:manage_applications/pages/companies_list_page/company_details_section/client_company_applications_section/client_company_applications_section.dart';
 import 'package:manage_applications/pages/companies_list_page/company_details_section/applications_related_main_company_section/applications_related_main_company.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,7 +34,7 @@ class CompanyDetailsPage extends ConsumerWidget {
           actions: const [
             DeleteCompanyButton(),
             SizedBox(width: 20.0),
-            ErrorsPanelButtonWidget (),
+            ErrorsPanelButtonWidget(),
           ],
           bottom: TabBar(
             onTap: (int index) {
@@ -89,9 +89,7 @@ class _PageTabsWidget extends ConsumerWidget {
         SizedBox.expand(
           child: AppCard(
             child: SingleChildScrollView(
-              child: ApplicationsRelatedClientCompanySectionSection(
-                details.id!,
-              ),
+              child: ClientCompanyApplicationsSection(details.id!),
             ),
           ),
         ),

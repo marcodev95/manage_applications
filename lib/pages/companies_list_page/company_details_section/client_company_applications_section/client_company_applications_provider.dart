@@ -7,7 +7,7 @@ import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/repository/company_applications_repository.dart';
 import 'package:manage_applications/repository/job_data_repository.dart';
 
-class ApplicationsRelatedClientCompanyNotifier
+class ClientCompanyApplicationsNotifier
     extends AutoDisposeFamilyAsyncNotifier<List<JobApplicationUi>, int> {
   Future<List<JobApplicationUi>> _getDatas(int companyId) async {
     return await _companyApplicationsRepository
@@ -26,6 +26,8 @@ class ApplicationsRelatedClientCompanyNotifier
 
       return Success(data: true, message: SuccessMessage.deleteMessage);
     } catch (e, stackTrace) {
+      state = AsyncError(e, stackTrace);
+
       return mapToFailure(e, stackTrace);
     }
   }
@@ -36,10 +38,7 @@ class ApplicationsRelatedClientCompanyNotifier
       ref.read(companyApplicationsRepositoryProvider);
 }
 
-final applicationsRelatedClientCompanyProvider = AsyncNotifierProvider
-    .autoDispose
-    .family<
-      ApplicationsRelatedClientCompanyNotifier,
-      List<JobApplicationUi>,
-      int
-    >(ApplicationsRelatedClientCompanyNotifier.new);
+final clientCompanyApplicationsProvider = AsyncNotifierProvider.autoDispose
+    .family<ClientCompanyApplicationsNotifier, List<JobApplicationUi>, int>(
+      ClientCompanyApplicationsNotifier.new,
+    );
