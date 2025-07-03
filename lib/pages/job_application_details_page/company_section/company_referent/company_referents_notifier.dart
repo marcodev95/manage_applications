@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/company/company_referent.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
 import 'package:manage_applications/repository/company_referent_repository.dart';
 
@@ -19,7 +19,7 @@ class CompanyReferentsNotifier
 
   CompanyReferentRepository get _repository =>
       ref.read(companyReferentRepositoryProvider);
-  int? get _applicationId => ref.read(jobDataFormController).value?.id;
+  int? get _applicationId => ref.read(jobDataProvider).value?.id;
 
   Future<OperationResult> addCompanyReferent(
     CompanyReferentDetails referent,

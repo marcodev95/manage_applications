@@ -1,23 +1,23 @@
-import 'package:manage_applications/models/job_data/job_data.dart';
-import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_utility.dart';
-import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
-import 'package:manage_applications/widgets/components/dropdown_widget.dart';
-import 'package:manage_applications/widgets/components/form_field_widget.dart';
-import 'package:manage_applications/widgets/components/date_picker_widget.dart';
-import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_form_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:manage_applications/models/job_data/job_data.dart';
+import 'package:manage_applications/models/shared/operation_result.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
+import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
+import 'package:manage_applications/widgets/components/date_picker_widget.dart';
+import 'package:manage_applications/widgets/components/dropdown_widget.dart';
+import 'package:manage_applications/widgets/components/form_field_widget.dart';
 
 class JobDataForm extends ConsumerStatefulWidget {
   const JobDataForm({super.key});
 
   @override
-  ConsumerState<JobDataForm> createState() => _JobAnnouncementFormWidgetState();
+  ConsumerState<JobDataForm> createState() => _JobDataFormWidgetState();
 }
 
-class _JobAnnouncementFormWidgetState extends ConsumerState<JobDataForm>
+class _JobDataFormWidgetState extends ConsumerState<JobDataForm>
     with AutomaticKeepAliveClientMixin<JobDataForm> {
   final _formKey = GlobalKey<FormState>();
   final _positionController = TextEditingController();
@@ -69,7 +69,7 @@ class _JobAnnouncementFormWidgetState extends ConsumerState<JobDataForm>
                   flex: 4,
                   child: RequiredFormFieldWidget(
                     controller: _positionController,
-                    label: "Posizione",
+                    label: "Posizione *",
                   ),
                 ),
                 const SizedBox(width: 20.0),
@@ -87,7 +87,7 @@ class _JobAnnouncementFormWidgetState extends ConsumerState<JobDataForm>
                 Expanded(
                   child: RequiredFormFieldWidget(
                     controller: _linkController,
-                    label: "Link annuncio",
+                    label: "Link annuncio *",
                   ),
                 ),
               ],
@@ -124,9 +124,18 @@ class _JobAnnouncementFormWidgetState extends ConsumerState<JobDataForm>
               ],
             ),
             const SizedBox(height: 30.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [SaveButtonWidget(onPressed: _submit)],
+            Align(
+              alignment: Alignment.centerRight,
+              child: Consumer(
+                builder: (_, ref, __) {
+                  return ref
+                      .watch(jobDataProvider)
+                      .maybeWhen(
+                        loading: () => const CircularProgressIndicator(),
+                        orElse: () => SaveButtonWidget(onPressed: _submit),
+                      );
+                },
+              ),
             ),
           ],
         ),
@@ -136,7 +145,7 @@ class _JobAnnouncementFormWidgetState extends ConsumerState<JobDataForm>
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
-      final newId = ref.read(jobDataFormController).value?.id;
+      final newId = ref.read(jobDataProvider).value?.id;
 
       final jobData = JobData(
         id: newId,
@@ -149,7 +158,7 @@ class _JobAnnouncementFormWidgetState extends ConsumerState<JobDataForm>
         applicationStatus: _applicationStatus.value,
       );
 
-      final notifier = ref.read(jobDataFormController.notifier);
+      final notifier = ref.read(jobDataProvider.notifier);
 
       final submit =
           jobData.id == null

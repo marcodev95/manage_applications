@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: SideNavigationRailWidget(
         pages: [
           JobApplicationsPage(),
@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
           ),
           NavigationRailDestination(
             icon: IconWithBadgeWidget(icon: Icon(Icons.pan_tool)),
-            label: const Text("Pannello degli errori"),
+            label: Text("Pannello degli errori"),
           ),
         ],
         extended: true,

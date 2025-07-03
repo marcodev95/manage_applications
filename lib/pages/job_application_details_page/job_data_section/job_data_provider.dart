@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/job_data/job_data.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
 import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
 import 'package:manage_applications/repository/job_data_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class JobDataFormController extends AutoDisposeAsyncNotifier<JobData> {
+class JobDataNotifier extends AutoDisposeAsyncNotifier<JobData> {
   @override
   FutureOr<JobData> build() async {
     final details = await ref.watch(fetchJobApplicationDetailsProvider.future);
@@ -51,7 +51,7 @@ class JobDataFormController extends AutoDisposeAsyncNotifier<JobData> {
 
       await _applicationsUINotifier.reloadCurrentPage();
 
-      return Success(data: null, message: SuccessMessage.saveMessage);
+      return Success(data: true, message: SuccessMessage.saveMessage);
     } catch (e, stackTrace) {
       state = AsyncError(e, stackTrace);
 
@@ -64,7 +64,7 @@ class JobDataFormController extends AutoDisposeAsyncNotifier<JobData> {
       ref.read(paginatorApplicationsUIProvider.notifier);
 }
 
-final jobDataFormController =
-    AutoDisposeAsyncNotifierProvider<JobDataFormController, JobData>(() {
-      return JobDataFormController();
+final jobDataProvider =
+    AutoDisposeAsyncNotifierProvider<JobDataNotifier, JobData>(() {
+      return JobDataNotifier();
     });

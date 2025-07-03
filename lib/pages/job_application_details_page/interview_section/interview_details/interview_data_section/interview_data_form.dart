@@ -5,7 +5,7 @@ import 'package:manage_applications/pages/job_application_details_page/company_s
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_controller.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_place_field.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
 import 'package:manage_applications/widgets/components/calendar_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
 import 'package:manage_applications/widgets/components/time_picker_widget.dart';
@@ -196,7 +196,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
       answerTime: _interviewAnswerController.text,
       interviewPlace: isNotCompanyPlace ? _interviewPlaceController.text : null,
       notes: _interviewNotesController.text,
-      jobDataId: ref.read(jobDataFormController).value?.id,
+      jobDataId: ref.read(jobDataProvider).value?.id,
     );
   }
 

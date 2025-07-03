@@ -1,6 +1,6 @@
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/models/requirement.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/requirement_section/requirements_provider.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
@@ -63,7 +63,7 @@ class _RequirementFormWidgetState extends ConsumerState<RequirementFormWidget>
 
   void submit() async {
     if (_formKey.currentState!.validate()) {
-      final jobApplicationId = ref.read(jobDataFormController).value?.id;
+      final jobApplicationId = ref.read(jobDataProvider).value?.id;
 
       final requirement = Requirement(
         id: widget.requirement?.id,

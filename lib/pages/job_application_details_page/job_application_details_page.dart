@@ -1,5 +1,4 @@
-import 'package:manage_applications/pages/job_application_details_page/job_application_details_component/job_application_details_component_barrel.dart';
-import 'package:manage_applications/pages/job_application_details_page/providers/are_job_application_id_and_company_id_present.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_application_details_component/job_application_details_back_button.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
 import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_application_sections_barrel.dart';
@@ -16,23 +15,12 @@ class JobApplicationDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const _PageTitle(),
+        title: const Text('Dettagli della candidatura'),
         leading: const JobApplicationDetailsBackButton(),
-        actions: const [ErrorsPanelButtonWidget ()],
+        actions: const [ErrorsPanelButtonWidget()],
       ),
       body: const _JobApplicationDetailsPageBody(),
     );
-  }
-}
-
-class _PageTitle extends ConsumerWidget {
-  const _PageTitle();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isEdit = ref.watch(areJobApplicationIdAndCompanyIdPresent);
-
-    return Text(isEdit ? 'Modifica candidatura' : 'Nuovo candidatura');
   }
 }
 

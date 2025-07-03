@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
 import 'package:manage_applications/providers/companies_paginator_notifier.dart';
 import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
@@ -25,7 +25,7 @@ class AppliedCompanyFormController extends AutoDisposeAsyncNotifier<Company> {
     try {
       final lastCompany = await _repository.addCompany(company);
 
-      final jobDataId = ref.read(jobDataFormController).value?.id;
+      final jobDataId = ref.read(jobDataProvider).value?.id;
 
       if (jobDataId == null) {
         throw MissingInformationError(error: 'ID_JobData non presente!');
@@ -52,7 +52,7 @@ class AppliedCompanyFormController extends AutoDisposeAsyncNotifier<Company> {
 
   Future<OperationResult> selectCompany(Company company) async {
     try {
-      final jobDataId = ref.read(jobDataFormController).value?.id;
+      final jobDataId = ref.read(jobDataProvider).value?.id;
 
       if (jobDataId == null) {
         throw MissingInformationError(error: 'ID_Candidatura non presente!');
