@@ -66,7 +66,7 @@ class _PageBody extends StatelessWidget {
       destinations: [
         NavigationRailDestination(
           icon: Icon(Icons.description),
-          label: Text("Dati candidatura"),
+          label: Text("Dati annuncio"),
         ),
         NavigationRailDestination(
           icon: Icon(Icons.business_center),
