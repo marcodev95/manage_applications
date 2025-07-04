@@ -27,9 +27,12 @@ class _InterviewPlaceFieldState extends ConsumerState<InterviewPlaceField> {
     super.initState();
 
     _notifierListener = () {
-      if (widget.notifier.value == InterviewsFormat.presenza) {
+      final format = widget.notifier.value;
+      if (format == InterviewsFormat.presenza) {
         final company = ref.read(appliedCompanyFormProvider).value;
         widget.controller.text = '${company?.address} - ${company?.city}';
+      } else if (format == InterviewsFormat.telefono) {
+        widget.controller.text = 'Telefono';
       } else {
         widget.controller.clear();
       }
@@ -50,7 +53,8 @@ class _InterviewPlaceFieldState extends ConsumerState<InterviewPlaceField> {
       valueListenable: widget.notifier,
       builder: (_, format, __) {
         final isOnline = format == InterviewsFormat.online;
-        final changeLabel = isOnline ? 'Piattaforma del colloquio' : 'Luogo del colloquio';
+        final changeLabel =
+            isOnline ? 'Piattaforma del colloquio' : 'Luogo del colloquio';
 
         return FormFieldWidget(
           controller: widget.controller,

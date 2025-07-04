@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/company/company_referent.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/models/interview/referents_interview.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_controller.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/get_interview_details_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_notifier.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/provider/get_interview_details_provider.dart';
 import 'package:manage_applications/repository/referents_interview_repository.dart';
 
 class SelectedReferentsForInterviewNotifier
@@ -30,7 +30,7 @@ class SelectedReferentsForInterviewNotifier
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final interviewId = ref.read(interviewFormController(arg)).value?.id;
+      final interviewId = ref.read(interviewFormProvider(arg)).value?.id;
 
       if (interviewId == null || referent.id == null) {
         throw MissingInformationError(stackTrace: StackTrace.current);

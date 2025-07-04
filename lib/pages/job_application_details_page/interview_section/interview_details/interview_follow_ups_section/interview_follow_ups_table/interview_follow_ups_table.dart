@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/interview/interview_follow_up.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_follow_ups_section/interview_follow_ups_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_follow_ups_section/interview_follow_ups_notifier.dart';
 import 'package:manage_applications/widgets/components/table_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
@@ -16,7 +16,7 @@ class InterviewFollowUpsTable extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final routeId = getRouteArg<int?>(context);
 
-    final asyncFollowUps = ref.watch(interviewFollowUpsController(routeId));
+    final asyncFollowUps = ref.watch(interviewFollowUpsProvider(routeId));
 
     return asyncFollowUps.when(
       skipError: true,
@@ -108,14 +108,14 @@ class _DeleteFollowUpButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading =
-        ref.watch(interviewFollowUpsController(interviewId)).isLoading;
+        ref.watch(interviewFollowUpsProvider(interviewId)).isLoading;
 
     return isLoading
         ? CircularProgressIndicator()
         : IconButton(
           onPressed: () async {
             final result = await ref
-                .read(interviewFollowUpsController(interviewId).notifier)
+                .read(interviewFollowUpsProvider(interviewId).notifier)
                 .deleteFollowUp(followUp);
             if (!context.mounted) return;
 

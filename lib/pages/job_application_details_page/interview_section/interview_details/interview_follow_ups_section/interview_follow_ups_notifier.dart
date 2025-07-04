@@ -5,43 +5,39 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/interview/interview_follow_up.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/get_interview_details_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/provider/get_interview_details_provider.dart';
 import 'package:manage_applications/repository/interview_follow_ups_repository.dart';
 
-class InterviewFollowUpsController
+class InterviewFollowUpsNotifier
     extends AutoDisposeFamilyAsyncNotifier<List<InterviewFollowUp>, int?> {
   @override
   FutureOr<List<InterviewFollowUp>> build(int? arg) async {
     if (arg == null) return [];
 
     final details = await ref.watch(getInterviewDetailsProvider(arg).future);
-    debugPrint('__Build_InterviewFollowUpsController => ${details.followUps}');
+    debugPrint('__Build_InterviewFollowUpsNotifier => ${details.followUps}');
 
     return details.followUps;
   }
 
   Future<void> createFollowUp(InterviewFollowUp followUp) async {
-    final previousValue = state.valueOrNull ?? [];
-
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
       final result = await _repository.addFollowUp(followUp);
 
-      return [...previousValue, result];
+      return [..._currentState, result];
     });
   }
 
   Future<void> updateFollowUp(InterviewFollowUp followUp) async {
-    final previousValue = state.valueOrNull ?? [];
-
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
       await _repository.updateFollowUp(followUp);
 
       return [
-        for (final el in previousValue)
+        for (final el in _currentState)
           if (el == followUp) followUp else el,
       ];
     });
@@ -50,12 +46,10 @@ class InterviewFollowUpsController
   Future<OperationResult> deleteFollowUp(InterviewFollowUp followUp) async {
     if (followUp.id == null) {
       throw MissingInformationError(
-        error: 'ID del follow-up non presente',
+        error: 'ID_Follow-up non presente',
         stackTrace: StackTrace.current,
       );
     }
-
-    final previousValue = state.valueOrNull ?? [];
 
     state = const AsyncLoading();
 
@@ -63,7 +57,7 @@ class InterviewFollowUpsController
       await _repository.deleteFollowUp(followUp.id!);
 
       state = AsyncData([
-        for (final el in previousValue)
+        for (final el in _currentState)
           if (el.id != followUp.id) el,
       ]);
 
@@ -78,7 +72,7 @@ class InterviewFollowUpsController
   Future<OperationResult> createOrUpdate(InterviewFollowUp followUp) async {
     if (followUp.interviewId == null) {
       return MissingInformationError(
-        error: 'ID colloquio non presente',
+        error: 'ID_Colloquio non presente',
         stackTrace: StackTrace.current,
       );
     }
@@ -96,9 +90,11 @@ class InterviewFollowUpsController
 
   InterviewFollowUpsRepository get _repository =>
       ref.read(interviewFollowUpsRepositoryProvider);
+
+  List<InterviewFollowUp> get _currentState => state.value ?? [];
 }
 
-final interviewFollowUpsController = AsyncNotifierProvider.autoDispose
-    .family<InterviewFollowUpsController, List<InterviewFollowUp>, int?>(
-      InterviewFollowUpsController.new,
+final interviewFollowUpsProvider = AsyncNotifierProvider.autoDispose
+    .family<InterviewFollowUpsNotifier, List<InterviewFollowUp>, int?>(
+      InterviewFollowUpsNotifier.new,
     );

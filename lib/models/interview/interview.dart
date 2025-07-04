@@ -15,7 +15,7 @@ class Interview {
   final String? answerTime;
   final String? followUpType;
   final DateTime? followUpDate;
-  final String? interviewPlace;
+  final String interviewPlace;
   final int? jobDataId;
 
   Interview({
@@ -25,11 +25,11 @@ class Interview {
     required this.type,
     required this.interviewFormat,
     required this.status,
+    required this.interviewPlace,
     this.answerTime,
     this.notes,
     this.followUpType,
     this.followUpDate,
-    this.interviewPlace,
     this.jobDataId,
   });
 
@@ -85,12 +85,12 @@ class Interview {
   Map<String, dynamic> toJson() => {
     InterviewTableColumns.date: dbFormat.format(date),
     InterviewTableColumns.time: fromTimeOfDayToString(time),
-    InterviewTableColumns.type: type.displayName,
-    InterviewTableColumns.interviewFormat: interviewFormat.displayName,
+    InterviewTableColumns.type: type.name,
+    InterviewTableColumns.interviewFormat: interviewFormat.name,
     InterviewTableColumns.answerTime: answerTime,
     InterviewTableColumns.followUpType: followUpType,
     InterviewTableColumns.notes: notes,
-    InterviewTableColumns.status: status.displayName,
+    InterviewTableColumns.status: status.name,
     InterviewTableColumns.interviewPlace: interviewPlace,
     InterviewTableColumns.jobDataId: jobDataId,
   };
@@ -102,6 +102,7 @@ class Interview {
       type: InterviewTypes.conoscitivo,
       interviewFormat: InterviewsFormat.online,
       status: InterviewStatus.toDo,
+      interviewPlace: '',
       jobDataId: 0,
     );
   }
@@ -225,11 +226,5 @@ class InterviewUi extends Equatable {
   }
 
   @override
-  bool operator ==(other) => other is InterviewUi && other.id == id;
-
-  @override
-  int get hashCode => id!;
-
-  @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [id, type, interviewFormat, status, interviewPlace];
 }

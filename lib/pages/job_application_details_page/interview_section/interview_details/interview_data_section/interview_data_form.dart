@@ -1,18 +1,17 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_form_notifier.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_place_field.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_place_field.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
+import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/calendar_widget.dart';
+import 'package:manage_applications/widgets/components/dropdown_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
 import 'package:manage_applications/widgets/components/time_picker_widget.dart';
-import 'package:manage_applications/widgets/components/dropdown_widget.dart';
-import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class InterviewDataForm extends ConsumerStatefulWidget {
@@ -56,13 +55,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
       _interviewAnswerController.text = interview.answerTime ?? 'Da definire';
 
       _interviewFormatNotifier.value = interview.interviewFormat;
-
-      if (interview.interviewFormat == InterviewsFormat.presenza) {
-        final company = ref.read(appliedCompanyFormProvider).value;
-        _interviewPlaceController.text = '${company?.address}, ${company?.city}';
-      } else {
-        _interviewPlaceController.text = interview.interviewPlace!;
-      }
+      _interviewPlaceController.text = interview.interviewPlace;
     }
 
     debugPrint('Interview DatFormInitState => $interview');
@@ -172,9 +165,12 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
 
   void submit(int? routeArg) async {
     if (_formKey.currentState!.validate()) {
-      final result = await ref
-          .read(interviewFormController(routeArg).notifier)
-          .submit(_buildInterview(routeArg));
+      final notifier = ref.read(interviewFormProvider(routeArg).notifier);
+
+      final result =
+          widget.interview.id == null
+              ? await notifier.createInterview(_buildInterview(routeArg))
+              : await notifier.updateInterview(_buildInterview(routeArg));
 
       if (!mounted) return;
 
@@ -183,18 +179,15 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
   }
 
   Interview _buildInterview(int? routeArg) {
-    final isNotCompanyPlace =
-        _interviewFormatNotifier.value != InterviewsFormat.presenza;
-
     return Interview(
-      id: ref.read(interviewFormController(routeArg)).value?.id,
+      id: ref.read(interviewFormProvider(routeArg)).value?.id,
       type: _interviewTypeNotifier.value,
       date: _interviewDateNotifier.value,
       time: _interviewTimeNotifier.value,
       status: _interviewStatusNotifier.value,
       interviewFormat: _interviewFormatNotifier.value,
       answerTime: _interviewAnswerController.text,
-      interviewPlace: isNotCompanyPlace ? _interviewPlaceController.text : null,
+      interviewPlace: _interviewPlaceController.text,
       notes: _interviewNotesController.text,
       jobDataId: ref.read(jobDataProvider).value?.id,
     );
@@ -222,7 +215,7 @@ class _SaveButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = ref.watch(interviewFormController(routeArg)).isLoading;
+    final isLoading = ref.watch(interviewFormProvider(routeArg)).isLoading;
 
     return isLoading
         ? const CircularProgressIndicator()
@@ -269,7 +262,7 @@ class _InterviewCalendar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final thereIsInterviewId = ref.watch(
-      interviewFormController(
+      interviewFormProvider(
         routeArg,
       ).select((value) => value.hasValue && value.value!.id != null),
     );

@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/get_interview_details_provider.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/provider/get_interview_details_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_monitoring_section/interview_timeline_utility.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interviews_provider.dart';
 import 'package:manage_applications/repository/interview_timeline_repository.dart';
@@ -21,8 +21,6 @@ class InterviewTimelineNotifier
   }
 
   Future<OperationResult> addTimeline(InterviewTimeline timeline) async {
-    final currentState = state.value ?? [];
-
     state = const AsyncLoading();
 
     try {
@@ -32,7 +30,7 @@ class InterviewTimelineNotifier
 
       final result = await _repository.addInterviewTimeline(timeline);
 
-      state = AsyncData([...currentState, result]);
+      state = AsyncData([..._currentState, result]);
 
       if (result.eventType.isPostponed) {
         final interviewNotifer = ref.read(interviewsProvider.notifier);
@@ -52,7 +50,9 @@ class InterviewTimelineNotifier
   InterviewTimelineRepository get _repository =>
       ref.read(interviewTimelineRepository);
 
-  int? get _interviewId => ref.read(interviewFormController(arg)).value?.id;
+  int? get _interviewId => ref.read(interviewFormProvider(arg)).value?.id;
+
+  List<InterviewTimeline> get _currentState => state.value ?? [];
 }
 
 final interviewTimelineProvider = AsyncNotifierProvider.autoDispose

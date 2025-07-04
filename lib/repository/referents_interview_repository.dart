@@ -7,7 +7,7 @@ import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/interview/interview_follow_up.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/models/interview/referents_interview.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_details.dart';
+import 'package:manage_applications/models/interview/interview_details.dart';
 
 final referentsInterviewRepository = Provider(
   (_) => ReferentsInterviewRepository(DbHelper.instance),

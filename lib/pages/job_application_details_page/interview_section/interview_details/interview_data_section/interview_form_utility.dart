@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
-enum InterviewTypes { conoscitivo, tecnico, finale }
+enum InterviewTypes { conoscitivo, telefonico, tecnico, gruppo, finale }
 
 extension InterviewTypesExtension on InterviewTypes {
   String get displayName {
     switch (this) {
       case InterviewTypes.conoscitivo:
         return 'Conoscitivo';
+      case InterviewTypes.telefonico:
+        return 'Telefonico';
       case InterviewTypes.tecnico:
         return 'Tecnico';
       case InterviewTypes.finale:
         return 'Finale';
+      case InterviewTypes.gruppo:
+        return 'Di gruppo';
     }
   }
 
@@ -18,28 +22,36 @@ extension InterviewTypesExtension on InterviewTypes {
     switch (this) {
       case InterviewTypes.conoscitivo:
         return Icons.chat_bubble_outline;
+      case InterviewTypes.telefonico:
+        return Icons.phone;
       case InterviewTypes.tecnico:
         return Icons.code;
       case InterviewTypes.finale:
         return Icons.flag;
+      case InterviewTypes.gruppo:
+        return Icons.people_alt;
     }
   }
 }
 
 InterviewTypes getInterviewTypeFromString(String value) {
   switch (value) {
-    case 'Conoscitivo':
+    case 'conoscitivo':
       return InterviewTypes.conoscitivo;
-    case 'Tecnico':
+    case 'tecnico':
       return InterviewTypes.tecnico;
-    case 'Finale':
+    case 'finale':
       return InterviewTypes.finale;
+    case 'gruppo':
+      return InterviewTypes.gruppo;
+    case 'telefonico':
+      return InterviewTypes.telefonico;
     default:
       return InterviewTypes.conoscitivo;
   }
 }
 
-enum InterviewsFormat { online, presenza, altro }
+enum InterviewsFormat { online, telefono, presenza, altro }
 
 extension InterviewsFormatExtension on InterviewsFormat {
   String get displayName {
@@ -48,6 +60,8 @@ extension InterviewsFormatExtension on InterviewsFormat {
         return 'Online';
       case InterviewsFormat.presenza:
         return 'Indirizzo azienda';
+      case InterviewsFormat.telefono:
+        return 'Telefono';
       case InterviewsFormat.altro:
         return 'Altro';
     }
@@ -59,6 +73,8 @@ extension InterviewsFormatExtension on InterviewsFormat {
         return Icons.videocam;
       case InterviewsFormat.presenza:
         return Icons.people;
+      case InterviewsFormat.telefono:
+        return Icons.phone;
       case InterviewsFormat.altro:
         return Icons.place;
     }
@@ -67,11 +83,13 @@ extension InterviewsFormatExtension on InterviewsFormat {
 
 InterviewsFormat getInterviewFormatFromString(String value) {
   switch (value) {
-    case 'Online':
+    case 'online':
       return InterviewsFormat.online;
-    case 'Indirizzo azienda':
+    case 'presenza':
       return InterviewsFormat.presenza;
-    case 'Altro':
+    case 'telefono':
+      return InterviewsFormat.telefono;
+    case 'altro':
       return InterviewsFormat.altro;
     default:
       return InterviewsFormat.online;
@@ -110,13 +128,13 @@ extension InterviewStatusX on InterviewStatus {
 
 InterviewStatus getInterviewStatusFromString(String value) {
   switch (value) {
-    case 'Da fare':
+    case 'toDo':
       return InterviewStatus.toDo;
-    case 'Completato':
+    case 'completed':
       return InterviewStatus.completed;
-    case 'Rinviato':
+    case 'postponed':
       return InterviewStatus.postponed;
-    case 'Annullato':
+    case 'cancelled':
       return InterviewStatus.cancelled;
     default:
       return InterviewStatus.toDo;

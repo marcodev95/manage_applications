@@ -49,6 +49,10 @@ class InterviewTimelineList extends ConsumerWidget {
       InterviewTimelineEvent.postponed => _PostponedCard(timeline),
 
       InterviewTimelineEvent.cancelled => _CancelledCardWidget(timeline),
+      // TODO: Handle this case.
+      InterviewTimelineEvent.relocated => SizedBox.shrink(),
+      // TODO: Handle this case.
+      InterviewTimelineEvent.reminderSent => SizedBox.shrink(),
     };
   }
 }

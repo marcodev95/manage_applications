@@ -42,7 +42,14 @@ class _InterviewFollowUpsSectionState extends State<InterviewFollowUpsSection> {
               child: SectionWidget(
                 title: 'Elenco dei follow-ups',
                 trailing: _OpenFollowUpDailogButton(goToForm),
-                body: InterviewFollowUpsTable((followUp) => goToForm(followUp)),
+                body: SizedBox(
+                  height: 345.0,
+                  child: SingleChildScrollView(
+                    child: InterviewFollowUpsTable(
+                      (followUp) => goToForm(followUp),
+                    ),
+                  ),
+                ),
               ),
             ),
             Visibility(
@@ -50,9 +57,9 @@ class _InterviewFollowUpsSectionState extends State<InterviewFollowUpsSection> {
               child: SectionWidget(
                 title: 'Dettagli follow-up',
                 trailing: _GoBackToListButton(goToList),
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: InterviewFollowUpForm(followUp: value.data),
+                body: InterviewFollowUpForm(
+                  followUp: value.data,
+                  goToList: goToList,
                 ),
               ),
             ),

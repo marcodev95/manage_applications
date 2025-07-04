@@ -1,14 +1,13 @@
-import 'package:manage_applications/models/contract/benefit.dart';
-import 'package:manage_applications/models/contract/contract.dart';
+import 'package:flutter/material.dart';
+import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/company/company_referent.dart';
+import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/db/db_helper.dart';
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
-import 'package:manage_applications/models/job_data/job_data.dart';
-import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/job_application_details.dart';
+import 'package:manage_applications/models/job_data/job_data.dart';
 import 'package:manage_applications/models/requirement.dart';
-import 'package:flutter/material.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_monitoring_section/interview_timeline_utility.dart';
 
 Future<Map<String, Object?>> _getJobData(int jobDataId) async =>

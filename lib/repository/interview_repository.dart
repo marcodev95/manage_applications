@@ -48,7 +48,7 @@ class InterviewRepository {
         whereArgs: [interview.id],
       );
 
-      if (result == 0) throw ItemNotFound(stackTrace: StackTrace.current);
+      if (result == 0) throw ItemNotFound();
     } catch (e, stackTrace) {
       if (e is ItemNotFound) rethrow;
 

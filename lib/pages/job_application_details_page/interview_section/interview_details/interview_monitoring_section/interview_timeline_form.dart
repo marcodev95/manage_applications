@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_controller.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_monitoring_section/interview_timeline_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_monitoring_section/interview_timeline_utility.dart';
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
@@ -45,7 +45,7 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
   void initState() {
     super.initState();
 
-    final interview = ref.read(interviewFormController(widget.routeID)).value;
+    final interview = ref.read(interviewFormProvider(widget.routeID)).value;
 
     if (interview != null) {
       _newDateNotifier.value = interview.date;
@@ -93,7 +93,12 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
               return switch (value) {
                 InterviewTimelineEvent.done => const SizedBox.shrink(),
                 InterviewTimelineEvent.postponed => _postponedFormFields(),
-                InterviewTimelineEvent.cancelled => _cancelledFormFields(),
+                InterviewTimelineEvent.cancelled =>
+                  _cancelledFormFields(), // TODO: Handle this case.
+
+                InterviewTimelineEvent.relocated => SizedBox.shrink(),
+                // TODO: Handle this case.
+                InterviewTimelineEvent.reminderSent => SizedBox.shrink(),
               };
             },
           ),
@@ -190,7 +195,7 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
   InterviewTimeline _toUI() {
     final isPostponed = _eventTypeNotifier.value.isPostponed;
 
-    final interview = ref.read(interviewFormController(widget.routeID)).value!;
+    final interview = ref.read(interviewFormProvider(widget.routeID)).value!;
 
     return InterviewTimeline(
       eventType: _eventTypeNotifier.value,

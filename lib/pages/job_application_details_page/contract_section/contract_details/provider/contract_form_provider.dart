@@ -61,7 +61,7 @@ class ContractFormNotifier
 
     if (currentState == null) {
       state = AsyncValue.error(MissingInformationError(), StackTrace.current);
-      return MissingInformationError(error: 'Stato interno nullo');
+      return MissingInformationError();
     }
 
     currentState.id != null

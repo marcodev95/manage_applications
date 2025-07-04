@@ -16,11 +16,11 @@ class InterviewTimeline extends Equatable {
   const InterviewTimeline({
     this.id,
     required this.eventType,
-    this.originalDateTime,
-    this.newDateTime,
     required this.eventDateTime,
     required this.reason,
     required this.requester,
+    this.originalDateTime,
+    this.newDateTime,
     this.note,
     this.interviewId,
   });
@@ -56,7 +56,7 @@ class InterviewTimeline extends Equatable {
       interviewId = json[InterviewTimelineTable.interviewId];
 
   Map<String, dynamic> toJson() => {
-    InterviewTimelineTable.eventType: eventType.displayName,
+    InterviewTimelineTable.eventType: eventType.name,
     InterviewTimelineTable.originalDateTime: originalDateTime,
     InterviewTimelineTable.newDateTime: newDateTime,
     InterviewTimelineTable.eventDateTimeDB: convertToIsoDateTime(eventDateTime),

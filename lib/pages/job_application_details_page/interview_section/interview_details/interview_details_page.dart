@@ -1,23 +1,17 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/get_interview_details_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/provider/get_interview_details_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_data_form.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_details.dart';
+import 'package:manage_applications/models/interview/interview_details.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_follow_ups_section/interview_follow_ups_section.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_monitoring_section/interview_timeline_section.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/selected_referents_interview_section/selected_referents_interview_section.dart';
+import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
-
-/// https://dribbble.com/shots/21537710-Matchday-Jobmatching-with-AI
-/// https://dribbble.com/tags/schedule-interview
-/// https://dribbble.com/shots/24119511-AR-Office-Software
-/// https://dribbble.com/shots/25537125-Tiimi-Candidate-Details-and-Job-Interviews-in-SaaS-HRM
-///
 
 class InterviewDetailsPage extends ConsumerWidget {
   const InterviewDetailsPage({super.key});
@@ -28,7 +22,7 @@ class InterviewDetailsPage extends ConsumerWidget {
       length: _tabs.length,
       child: Scaffold(
         appBar: AppBar(
-          actions: [ErrorsPanelButtonWidget ()],
+          actions: [ErrorsPanelButtonWidget()],
           title: const Text('Dettagli del colloquio'),
           bottom: TabBar(
             onTap: (int? index) {
@@ -57,11 +51,11 @@ class InterviewDetailsPageBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routeID = getRouteArg<int?>(context);
+    final routeArg = getRouteArg<int?>(context);
 
-    debugPrint('RouteID => $routeID');
+    debugPrint('routeArg => $routeArg');
 
-    if (routeID == null) {
+    if (routeArg == null) {
       return Padding(
         padding: EdgeInsets.all(AppStyle.pad24),
         child: _PageTabsWidget(InterviewDetails.defaultValue()),
@@ -69,10 +63,10 @@ class InterviewDetailsPageBody extends ConsumerWidget {
     }
 
     final interviewDetailsAsync = ref.watch(
-      getInterviewDetailsProvider(routeID),
+      getInterviewDetailsProvider(routeArg),
     );
     ref.listenOnErrorWithoutSnackbar(
-      provider: getInterviewDetailsProvider(routeID),
+      provider: getInterviewDetailsProvider(routeArg),
       context: context,
     );
 
@@ -84,9 +78,8 @@ class InterviewDetailsPageBody extends ConsumerWidget {
           ),
       error:
           (_, __) => DataLoadErrorScreenWidget(
-            appBarTitle: 'Errore di caricamento',
             onPressed: () {
-              ref.invalidate(getInterviewDetailsProvider(routeID));
+              ref.invalidate(getInterviewDetailsProvider(routeArg));
             },
           ),
 

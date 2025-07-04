@@ -1,5 +1,5 @@
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_details.dart';
+import 'package:manage_applications/models/interview/interview_details.dart';
 import 'package:manage_applications/repository/referents_interview_repository.dart';
 import 'package:riverpod/riverpod.dart';
 
