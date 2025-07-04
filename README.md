@@ -29,10 +29,7 @@ Un'applicazione desktop sviluppata in Flutter per gestire e tenere traccia delle
 
 - [Flutter SDK](https://docs.flutter.dev/get-started/install)
 - Un editor come **VS Code** o **Android Studio**
-- Un sistema operativo supportato:
-  - Windows
-  - macOS
-  - Linux
+- Sistema operativo supportato: Windows
 
 ---
 
@@ -49,8 +46,6 @@ cd manage_applications
 
 ```bash
 flutter config --enable-windows-desktop
-flutter config --enable-macos-desktop
-flutter config --enable-linux-desktop
 ```
 
 ### 3. Installa le dipendenze
@@ -62,7 +57,7 @@ flutter pub get
 ### 4. Avvia il progetto
 
 ```bash
-flutter run -d windows   # oppure -d macos o -d linux a seconda del tuo sistema
+flutter run -d windows
 ```
 
 ## 🚧 Prossimi sviluppi
