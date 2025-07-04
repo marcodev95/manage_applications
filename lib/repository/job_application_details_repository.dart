@@ -9,7 +9,7 @@ import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/job_application_details.dart';
 import 'package:manage_applications/models/job_data/job_data.dart';
 import 'package:manage_applications/models/requirement.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_monitoring_section/interview_timeline_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_utility.dart';
 
 final jobApplicationDetailsRepositoryProvider = Provider(
   (_) => JobApplicationDetailsRepository(DbHelper.instance),

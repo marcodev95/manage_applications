@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_monitoring_section/interview_timeline_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_utility.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class InterviewTimeline extends Equatable {
@@ -111,20 +111,16 @@ class InterviewTimelineTable {
 
   static final String note = 'note';
 
-  //X Rinvio
   static final String originalDateTime = 'original_date_time';
   static final String newDateTime = 'new_date_time';
-  //static final String eventDateTimeDB = 'new_date_time_db';
 
   static final String reason = 'reason';
   static final String requester = 'requester';
 
   static final String relocatedAddress = 'relocated_address';
 
-  //static final String followUpSentAtDB = 'follow_up_sent_at_db';
   static final String followUpSentAt = 'follow_up_sent_at';
   static final String followUpSentTo = 'follow_up_sent_to';
 
-  //FK
   static final String interviewId = 'interview_id';
 }

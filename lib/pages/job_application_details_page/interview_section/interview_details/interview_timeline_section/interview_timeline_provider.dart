@@ -6,7 +6,7 @@ import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/provider/get_interview_details_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_notifier.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_monitoring_section/interview_timeline_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_utility.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interviews_provider.dart';
 import 'package:manage_applications/repository/interview_timeline_repository.dart';
 
