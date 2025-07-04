@@ -1,7 +1,6 @@
 import 'package:manage_applications/pages/companies_list_page/companies_page.dart';
 import 'package:manage_applications/pages/errors_page/errors_page.dart';
 import 'package:manage_applications/pages/job_applications_page/job_applications_page.dart';
-import 'package:manage_applications/pages/search_page.dart';
 import 'package:manage_applications/widgets/components/errors_widget/icon_with_badge_widget.dart';
 import 'package:manage_applications/widgets/components/side_navigation_rail_widget.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ class HomePage extends StatelessWidget {
         pages: [
           JobApplicationsPage(),
           CompaniesPage(),
-          SearchPage(),
           ErrorsPage(),
         ],
         destinations: [
@@ -27,10 +25,6 @@ class HomePage extends StatelessWidget {
           NavigationRailDestination(
             icon: Icon(Icons.business),
             label: Text("Lista aziende"),
-          ),
-          NavigationRailDestination(
-            icon: Icon(Icons.search),
-            label: Text("Cerca"),
           ),
           NavigationRailDestination(
             icon: IconWithBadgeWidget(icon: Icon(Icons.pan_tool)),
