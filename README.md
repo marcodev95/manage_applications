@@ -11,12 +11,17 @@ Un'applicazione desktop sviluppata in Flutter per gestire e tenere traccia delle
   - Visualizzazione delle aziende registrate
   - Collegamento delle candidature a una specifica azienda
   - Dettaglio delle candidature per ciascuna azienda
+- Salvataggio e gestione dei colloqui  
+  - Associazione dei referenti ai colloqui  
+  - Gestione dei follow-up  
+  - Storico completo degli eventi legati ai colloqui (rinvii, annullamenti, ecc.)
 
 ## ⚙️ Tecnologie usate
 
 - [Flutter](https://flutter.dev)
 - Dart
 - SQLite
+- Riverpod (per la gestione dello stato)
 
 ---
 
@@ -59,3 +64,9 @@ flutter pub get
 ```bash
 flutter run -d windows   # oppure -d macos o -d linux a seconda del tuo sistema
 ```
+
+## 🚧 Prossimi sviluppi
+- Migliorare la gestione responsive dell’interfaccia
+- Aggiungere notifiche per i follow-up e i colloqui imminenti
+- Aggiungere una schermata riepilogativa nella homepage per visualizzare tutti i colloqui del mese corrente
+- Altri miglioramenti e bugfix minori sono in corso di sviluppo
