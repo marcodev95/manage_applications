@@ -1,15 +1,15 @@
+import 'package:manage_applications/models/company/company.dart';
+import 'package:manage_applications/models/company/company_referent.dart';
 import 'package:manage_applications/models/contract/benefit.dart';
 import 'package:manage_applications/models/contract/contract.dart';
-import 'package:manage_applications/models/company/company_referent.dart';
-import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/interview/interview.dart';
-import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/interview/interview_follow_up.dart';
-import 'package:manage_applications/models/job_data/job_data.dart';
+import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/interview/referents_interview.dart';
+import 'package:manage_applications/models/job_data/job_data.dart';
 import 'package:manage_applications/models/requirement.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DbHelper {
   static final DbHelper instance = DbHelper._init();
@@ -91,8 +91,8 @@ class DbHelper {
         ${CompanyTableColumns.workingHours},
         ${CompanyTableColumns.email}
       ) VALUES 
-        ('Company', 'Gallarate', 'Via della Company', '123456789', 'https://www.google.com/', '9-18', 'email@email1'),
-        ('Company2', 'Varese', 'Via della Company2', '3456789', 'https://www.google.com/', '8.30-12.30/14-18', 'email@email2')
+        ('Azienda1', 'Città1', 'Via 1', '', 'https://www.google.com/', '9-18', 'test@example.com'),
+        ('Azienda2', 'Città12', 'Via 2', '', 'https://www.google.com/', '8.30-12.30/14-18', 'test@example2.com')
       ''');
   }
 
@@ -158,7 +158,7 @@ class DbHelper {
           ${JobDataTableColumns.experience},
           ${JobDataTableColumns.companyId},
           ${JobDataTableColumns.clientCompanyId}
-        ) VALUES ('2023-10-11', 'Junior Developer', 'apply', 'www.indeed.com', 'hybrid', '3', 'Da 1 a 5 anni', 1, 2), 
+        ) VALUES ('2023-10-11', 'Junior Developer', 'apply', 'www.indeed.com', 'hybrid', '3', '', 1, 2), 
                 ('2023-11-10', 'Junior Developer2', 'interview', 'www.indeed.com', 'onSite', '5', '', 2, NULL)
       ''');
   }

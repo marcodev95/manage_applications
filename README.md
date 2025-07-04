@@ -60,6 +60,11 @@ flutter pub get
 flutter run -d windows
 ```
 
+## Nota sui dati
+
+I dati presenti nel database sono fittizi e utilizzati solo a scopo dimostrativo.
+Non contengono informazioni reali o sensibili.
+
 ## 🚧 Prossimi sviluppi
 - Migliorare la gestione responsive dell’interfaccia
 - Aggiungere notifiche per i follow-up e i colloqui imminenti
