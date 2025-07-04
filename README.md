@@ -60,7 +60,7 @@ flutter pub get
 flutter run -d windows
 ```
 
-## Nota sui dati
+## ⚠️ Nota sui dati
 
 I dati presenti nel database sono fittizi e utilizzati solo a scopo dimostrativo.
 Non contengono informazioni reali o sensibili.
