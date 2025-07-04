@@ -53,12 +53,12 @@ macos/build/
 linux/flutter/ephemeral/
 linux/build/
 
-# SQLite DB files (se sono generati localmente e non vuoi tracciarli)
+# SQLite DB files
 *.db
 *.db-shm
 *.db-wal
 
-# IDE settings (se usi anche VS Code o altri editor)
+# IDE settings 
 .vscode/
 
 # Flutter tool config
