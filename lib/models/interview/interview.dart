@@ -151,7 +151,7 @@ class InterviewUi extends Equatable {
   final InterviewsFormat interviewFormat;
   final String? answerTime;
   final String? interviewPlace;
-  final String? rescheduleDateTime;
+  final DateTime? rescheduleDateTime;
   final DateTime? followUpDate;
   final InterviewStatus status;
 
@@ -180,7 +180,7 @@ class InterviewUi extends Equatable {
       answerTime = json[InterviewTableColumns.answerTime],
       interviewPlace = json[InterviewTableColumns.interviewPlace],
 
-      rescheduleDateTime = json[InterviewTimelineTable.newDateTime],
+      rescheduleDateTime = parseDateTimeOrNull(json[InterviewTimelineTable.newDateTime]),
 
       followUpDate =
           json[InterviewTableColumns.followUpDate] != null
@@ -194,7 +194,7 @@ class InterviewUi extends Equatable {
     InterviewStatus? status,
     String? answerTime,
     String? interviewPlace,
-    String? rescheduleDateTime,
+    DateTime? rescheduleDateTime,
   }) {
     return InterviewUi(
       id: id ?? this.id,

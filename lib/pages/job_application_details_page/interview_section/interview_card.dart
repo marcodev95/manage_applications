@@ -168,7 +168,7 @@ class InterviewCard extends ConsumerWidget {
           SizedBox(width: 4),
 
           Text(
-            interviewUi.rescheduleDateTime!,
+            dateTimeFormatUI.format(interviewUi.rescheduleDateTime!),
             style: TextStyle(
               color: Colors.orange[800],
               fontSize: 13,

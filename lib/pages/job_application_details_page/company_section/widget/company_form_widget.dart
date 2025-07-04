@@ -90,7 +90,7 @@ class _CompanyFormWidgetState extends ConsumerState<CompanyFormWidget>
     return Expanded(
       child: RequiredFormFieldWidget(
         controller: _nameController,
-        label: "Nome azienda",
+        label: "Nome azienda(*)",
       ),
     );
   }
@@ -99,7 +99,7 @@ class _CompanyFormWidgetState extends ConsumerState<CompanyFormWidget>
     return Expanded(
       child: RequiredFormFieldWidget(
         controller: _cityController,
-        label: "Città",
+        label: "Città(*)",
       ),
     );
   }
@@ -108,7 +108,7 @@ class _CompanyFormWidgetState extends ConsumerState<CompanyFormWidget>
     return Expanded(
       child: RequiredFormFieldWidget(
         controller: _addressController,
-        label: "Indirizzo",
+        label: "Indirizzo(*)",
       ),
     );
   }
@@ -127,7 +127,7 @@ class _CompanyFormWidgetState extends ConsumerState<CompanyFormWidget>
       flex: 2,
       child: RequiredFormFieldWidget(
         controller: _websiteController,
-        label: "Sito web",
+        label: "Sito web(*)",
         keyboardType: TextInputType.url,
       ),
     );
@@ -137,7 +137,7 @@ class _CompanyFormWidgetState extends ConsumerState<CompanyFormWidget>
     return Expanded(
       child: RequiredFormFieldWidget(
         controller: _emailController,
-        label: "Email dell'azienda",
+        label: "Email dell'azienda(*)",
         keyboardType: TextInputType.emailAddress,
       ),
     );

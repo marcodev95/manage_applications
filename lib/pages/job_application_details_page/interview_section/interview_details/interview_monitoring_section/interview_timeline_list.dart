@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_monitoring_section/interview_timeline_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_monitoring_section/interview_timeline_utility.dart';
+import 'package:manage_applications/widgets/components/section_widget.dart';
 
 import 'package:manage_applications/widgets/components/utility.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
@@ -49,10 +51,10 @@ class InterviewTimelineList extends ConsumerWidget {
       InterviewTimelineEvent.postponed => _PostponedCard(timeline),
 
       InterviewTimelineEvent.cancelled => _CancelledCardWidget(timeline),
-      // TODO: Handle this case.
-      InterviewTimelineEvent.relocated => SizedBox.shrink(),
-      // TODO: Handle this case.
-      InterviewTimelineEvent.reminderSent => SizedBox.shrink(),
+
+      InterviewTimelineEvent.relocated => _RelocatedCard(timeline),
+
+      InterviewTimelineEvent.followUpSent => _FollowUpSentCard(timeline),
     };
   }
 }
@@ -64,26 +66,23 @@ class _DoneCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.grey[900],
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 4,
-          children: [
-            Row(
-              spacing: 10.0,
-              children: [
-                Icon(Icons.check_circle, color: Colors.green),
-                _EventDateTimeBadge(timeline.eventDateTime),
-                Text('- Colloquio svolto', style: TextStyle(fontSize: 16)),
-              ],
-            ),
-            if (timeline.note != null && timeline.note!.isNotEmpty)
-              _NoteWidget(timeline.note!),
-          ],
-        ),
+    return AppCard(
+      externalPadding: EdgeInsets.symmetric(vertical: AppStyle.pad8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 4,
+        children: [
+          Row(
+            spacing: 10.0,
+            children: [
+              Icon(Icons.check_circle, color: Colors.green),
+              _EventDateTimeBadge(convertDateTimeToUI(timeline.eventDateTime)),
+              Text('- Colloquio svolto', style: TextStyle(fontSize: 16)),
+            ],
+          ),
+          if (timeline.note != null && timeline.note!.isNotEmpty)
+            _NoteWidget(timeline.note!),
+        ],
       ),
     );
   }
@@ -95,30 +94,27 @@ class _PostponedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.grey[900],
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          spacing: 4,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              spacing: 10.0,
-              children: [
-                Icon(Icons.event_busy, color: Colors.amber),
-                _EventDateTimeBadge(timeline.eventDateTime),
-                Text('- Colloquio rinviato', style: TextStyle(fontSize: 16)),
-              ],
-            ),
-            Text('Richiesto da: ${timeline.requester}'),
-            Text('Da: ${timeline.originalDateTime}'),
-            Text('A: ${timeline.newDateTime}'),
-            Text('Motivo: ${timeline.reason}'),
-            if (timeline.note != null && timeline.note!.isNotEmpty)
-              _NoteWidget(timeline.note!),
-          ],
-        ),
+    return AppCard(
+      externalPadding: EdgeInsets.symmetric(vertical: AppStyle.pad8),
+      child: Column(
+        spacing: 4,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            spacing: 10.0,
+            children: [
+              Icon(Icons.event_busy, color: Colors.amber),
+              _EventDateTimeBadge(convertDateTimeToUI(timeline.eventDateTime)),
+              Text('- Colloquio rinviato', style: TextStyle(fontSize: 16)),
+            ],
+          ),
+          Text('Richiesto da: ${timeline.requester}'),
+          Text('Da: ${convertDateTimeToUI(timeline.originalDateTime!)}'),
+          Text('A: ${convertDateTimeToUI(timeline.newDateTime!)}'),
+          Text('Motivo: ${timeline.reason}'),
+          if (timeline.note != null && timeline.note!.isNotEmpty)
+            _NoteWidget(timeline.note!),
+        ],
       ),
     );
   }
@@ -131,29 +127,26 @@ class _CancelledCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.grey[900],
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          spacing: 4,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              spacing: 10.0,
-              children: [
-                Icon(Icons.cancel, color: Colors.red),
-                _EventDateTimeBadge(timeline.eventDateTime),
-                Text('- Colloquio annullato', style: TextStyle(fontSize: 16)),
-              ],
-            ),
-            Text('Richiesto da: ${timeline.requester}'),
-            Text('Motivo: ${timeline.reason}'),
+    return AppCard(
+      externalPadding: EdgeInsets.symmetric(vertical: AppStyle.pad8),
+      child: Column(
+        spacing: 4,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            spacing: 10.0,
+            children: [
+              Icon(Icons.cancel, color: Colors.red),
+              _EventDateTimeBadge(convertDateTimeToUI(timeline.eventDateTime)),
+              Text('- Colloquio annullato', style: TextStyle(fontSize: 16)),
+            ],
+          ),
+          Text('Richiesto da: ${timeline.requester}'),
+          Text('Motivo: ${timeline.reason}'),
 
-            if (timeline.note != null && timeline.note!.isNotEmpty)
-              _NoteWidget(timeline.note!),
-          ],
-        ),
+          if (timeline.note != null && timeline.note!.isNotEmpty)
+            _NoteWidget(timeline.note!),
+        ],
       ),
     );
   }
@@ -194,6 +187,76 @@ class _NoteWidget extends StatelessWidget {
     return Text(
       note,
       style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15),
+    );
+  }
+}
+
+class _RelocatedCard extends StatelessWidget {
+  const _RelocatedCard(this.timeline);
+
+  final InterviewTimeline timeline;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      externalPadding: EdgeInsets.symmetric(vertical: AppStyle.pad8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 8,
+        children: [
+          Row(
+            spacing: 10.0,
+            children: [
+              Icon(Icons.sync_alt, color: Colors.blue),
+              _EventDateTimeBadge(
+                dateTimeFormatUI.format(timeline.eventDateTime),
+              ),
+              Text(
+                '- Colloquio spostato ad un nuovo indirizzo',
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+          Text('Nuovo indirizzo: ${timeline.relocatedAddress}'),
+          if (timeline.note != null && timeline.note!.isNotEmpty)
+            _NoteWidget(timeline.note!),
+        ],
+      ),
+    );
+  }
+}
+
+class _FollowUpSentCard extends StatelessWidget {
+  const _FollowUpSentCard(this.timeline);
+
+  final InterviewTimeline timeline;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      externalPadding: EdgeInsets.symmetric(vertical: AppStyle.pad8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 8,
+        children: [
+          Row(
+            spacing: 10.0,
+            children: [
+              Icon(Icons.mail_outline, color: Colors.deepPurple[300]),
+              _EventDateTimeBadge(
+                dateTimeFormatUI.format(timeline.eventDateTime),
+              ),
+              Text('- FollowUp mandato', style: TextStyle(fontSize: 16)),
+            ],
+          ),
+          Text(
+            'Data e ora dell\'invio: ${convertDateTimeToUI(timeline.followUpSentAt!)}',
+          ),
+          Text('Invio a: ${timeline.followUpSentTo}'),
+          if (timeline.note != null && timeline.note!.isNotEmpty)
+            _NoteWidget(timeline.note!),
+        ],
+      ),
     );
   }
 }

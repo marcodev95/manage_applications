@@ -57,18 +57,18 @@ class _InterviewFollowUpFormState extends ConsumerState<InterviewFollowUpForm> {
               Flexible(
                 child: RequiredFormFieldWidget(
                   controller: followUpTypeController,
-                  label: "Tipo follow-up",
+                  label: "Tipo follow-up(*)",
                 ),
               ),
               Flexible(
                 child: DatePickerWidget(
-                  label: 'Data invio follow-up',
+                  label: 'Data invio follow-up(*)',
                   selectedDate: followUpDateNotifier,
                 ),
               ),
               Flexible(
                 child: DropdownWidget(
-                  label: 'Risposta ricevuta',
+                  label: 'Risposta ricevuta(*)',
                   items: ResponseReceived.values.toDropdownItems(
                     (e) => e.displayName,
                   ),

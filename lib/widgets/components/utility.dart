@@ -1,19 +1,11 @@
-import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final DateFormat uiFormat = DateFormat("dd-MM-yyyy");
 final DateFormat dbFormat = DateFormat("yyyy-MM-dd");
-
-/* String formatTimeOfDay(
-  BuildContext context,
-  TimeOfDay time, {
-  bool alwaysUse24HourFormat = true,
-}) {
-  return MaterialLocalizations.of(context)
-      .formatTimeOfDay(time, alwaysUse24HourFormat: alwaysUse24HourFormat);
-} */
+final DateFormat dateTimeFormatUI = DateFormat("dd-MM-yyyy 'alle' HH:mm");
 
 String fromTimeOfDayToString(TimeOfDay time) {
   return '${time.hour}:${time.minute}';
@@ -23,31 +15,22 @@ String formatDateTimeForDb(DateTime date, TimeOfDay time) {
   return '${uiFormat.format(date)} : ${fromTimeOfDayToString(time)}';
 }
 
-String padTwoDigits(int n) => n.toString().padLeft(2, '0');
-
-String convertToIsoDateTime(String oldDateStr) {
-  final parts = oldDateStr.split(' : ');
-  if (parts.length != 2) throw FormatException("Formato data non valido");
-  
-  final datePart = parts[0];  // "DATE"
-  final timePart = parts[1];  // "TIME"
-  
-  final dateParts = datePart.split('-');
-  if (dateParts.length != 3) throw FormatException("Formato data non valido");
-  
-  final day = padTwoDigits(int.parse(dateParts[0]));
-  final month = padTwoDigits(int.parse(dateParts[1]));
-  final year = dateParts[2];
-  
-  final timeParts = timePart.split(':');
-  if (timeParts.length != 2) throw FormatException("Formato orario non valido");
-  
-  final hour = padTwoDigits(int.parse(timeParts[0]));
-  final minute = padTwoDigits(int.parse(timeParts[1]));
-  
-  return "$year-$month-$day $hour:$minute:00";
+DateTime buildDateTime(DateTime date, TimeOfDay time) {
+  return DateTime(date.year, date.month, date.day, time.hour, time.minute);
 }
 
+DateTime? parseDateTimeOrNull(String? dateTime) {
+  if (dateTime == null) return null;
+  return DateTime.tryParse(dateTime);
+}
+
+String? convertToIsoString(DateTime? dateTime) {
+  return dateTime?.toIso8601String();
+}
+
+String convertDateTimeToUI(DateTime dateTime) {
+  return dateTimeFormatUI.format(dateTime);
+}
 
 bool fromIntToBool(int? value) => (value ?? 0) != 0;
 int fromBoolToInt(bool val) => val ? 1 : 0;

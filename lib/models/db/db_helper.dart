@@ -294,12 +294,14 @@ class DbHelper {
         ${InterviewTimelineTable.id} $_idType, 
         ${InterviewTimelineTable.eventType} $_textType,
         ${InterviewTimelineTable.eventDateTime} $_textType,
-        ${InterviewTimelineTable.eventDateTimeDB} $_textType,
         ${InterviewTimelineTable.originalDateTime} $_textType,
         ${InterviewTimelineTable.newDateTime} $_textType,
         ${InterviewTimelineTable.requester} $_textType,
         ${InterviewTimelineTable.reason} $_textType,
         ${InterviewTimelineTable.note} $_textType,
+        ${InterviewTimelineTable.followUpSentAt} $_textType,
+        ${InterviewTimelineTable.followUpSentTo} $_textType,
+        ${InterviewTimelineTable.relocatedAddress} $_textType,
         ${InterviewTimelineTable.interviewId} $_intType,
 
         FOREIGN KEY (${InterviewTimelineTable.interviewId}) 

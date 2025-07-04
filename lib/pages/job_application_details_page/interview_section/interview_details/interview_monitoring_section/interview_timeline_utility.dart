@@ -3,7 +3,7 @@ enum InterviewTimelineEvent {
   postponed,
   cancelled,
   relocated,
-  reminderSent,
+  followUpSent,
 }
 
 extension InterviewTimelineEventX on InterviewTimelineEvent {
@@ -17,7 +17,7 @@ extension InterviewTimelineEventX on InterviewTimelineEvent {
         return 'Annullato';
       case InterviewTimelineEvent.relocated:
         return 'Luogo modificato';
-      case InterviewTimelineEvent.reminderSent:
+      case InterviewTimelineEvent.followUpSent:
         return 'Inviato follow-up';
     }
   }
@@ -37,8 +37,8 @@ InterviewTimelineEvent getInterviewTimelineFromString(String value) {
       return InterviewTimelineEvent.cancelled;
     case 'relocated':
       return InterviewTimelineEvent.relocated;
-    case 'reminderSent':
-      return InterviewTimelineEvent.reminderSent;
+    case 'followUpSent':
+      return InterviewTimelineEvent.followUpSent;
     default:
       return InterviewTimelineEvent.done;
   }

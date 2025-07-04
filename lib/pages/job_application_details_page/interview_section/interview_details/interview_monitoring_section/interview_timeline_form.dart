@@ -37,6 +37,12 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
   final _newDateNotifier = ValueNotifier<DateTime>(DateTime.now());
   final _newTimeNotifier = ValueNotifier<TimeOfDay>(TimeOfDay.now());
 
+  final _relocatedAddress = TextEditingController();
+
+  final _followUpSentAtDate = ValueNotifier<DateTime>(DateTime.now());
+  final _followUpSentAtTime = ValueNotifier<TimeOfDay>(TimeOfDay.now());
+  final _followUpSentTo = TextEditingController();
+
   final _reasonController = TextEditingController();
   final _noteController = TextEditingController();
   final _requesterController = TextEditingController();
@@ -93,12 +99,9 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
               return switch (value) {
                 InterviewTimelineEvent.done => const SizedBox.shrink(),
                 InterviewTimelineEvent.postponed => _postponedFormFields(),
-                InterviewTimelineEvent.cancelled =>
-                  _cancelledFormFields(), // TODO: Handle this case.
-
-                InterviewTimelineEvent.relocated => SizedBox.shrink(),
-                // TODO: Handle this case.
-                InterviewTimelineEvent.reminderSent => SizedBox.shrink(),
+                InterviewTimelineEvent.cancelled => _cancelledFormFields(),
+                InterviewTimelineEvent.relocated => _relocatedFields(),
+                InterviewTimelineEvent.followUpSent => _followUpSentFields(),
               };
             },
           ),
@@ -114,6 +117,39 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _followUpSentFields() {
+    return Row(
+      spacing: 20.0,
+      children: [
+        Expanded(
+          child: DatePickerWidget(
+            label: 'Data invio',
+            selectedDate: _followUpSentAtDate,
+          ),
+        ),
+        Expanded(
+          child: TimePickerWidget(
+            label: 'Ora invio',
+            selectedTime: _followUpSentAtTime,
+          ),
+        ),
+        Expanded(
+          child: RequiredFormFieldWidget(
+            label: 'Inviato a ',
+            controller: _followUpSentTo,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _relocatedFields() {
+    return RequiredFormFieldWidget(
+      controller: _relocatedAddress,
+      label: 'Nuovo indirizzo',
     );
   }
 
@@ -199,23 +235,23 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
 
     return InterviewTimeline(
       eventType: _eventTypeNotifier.value,
-      eventDateTime: formatDateTimeForDb(
+      eventDateTime: buildDateTime(
         _eventDateNotifier.value,
         _eventTimeNotifier.value,
       ),
       note: _noteController.text,
       originalDateTime:
-          isPostponed
-              ? formatDateTimeForDb(interview.date, interview.time)
-              : null,
+          isPostponed ? buildDateTime(interview.date, interview.time) : null,
       newDateTime:
           isPostponed
-              ? formatDateTimeForDb(
-                _newDateNotifier.value,
-                _newTimeNotifier.value,
-              )
+              ? buildDateTime(_newDateNotifier.value, _newTimeNotifier.value)
               : null,
-
+      followUpSentTo: _followUpSentTo.text,
+      followUpSentAt: buildDateTime(
+        _followUpSentAtDate.value,
+        _followUpSentAtTime.value,
+      ),
+      relocatedAddress: _relocatedAddress.text,
       reason: _reasonController.text,
       requester: _requesterController.text,
       interviewId: interview.id,
@@ -231,6 +267,11 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
     _requesterController.dispose();
     _newDateNotifier.dispose();
     _newTimeNotifier.dispose();
+    _followUpSentAtDate.dispose();
+    _followUpSentAtTime.dispose();
+    _followUpSentTo.dispose();
+    _relocatedAddress.dispose();
+    _noteController.dispose();
     super.dispose();
   }
 }

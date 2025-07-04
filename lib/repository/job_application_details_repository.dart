@@ -104,10 +104,10 @@ class JobApplicationDetailsRepository {
     final postponedResultsQuery = '''
     SELECT 
       ${InterviewTimelineTable.interviewId}, 
-      MAX(${InterviewTimelineTable.eventDateTimeDB}) AS ${InterviewTimelineTable.eventDateTimeDB},
+      MAX(${InterviewTimelineTable.eventDateTime}) AS ${InterviewTimelineTable.eventDateTime},
       ${InterviewTimelineTable.newDateTime}
     FROM ${InterviewTimelineTable.tableName}
-    WHERE ${InterviewTimelineTable.eventType} = '${InterviewTimelineEvent.postponed.displayName}'
+    WHERE ${InterviewTimelineTable.eventType} = '${InterviewTimelineEvent.postponed.name}'
     GROUP BY ${InterviewTimelineTable.interviewId}
 ''';
 
@@ -158,7 +158,7 @@ class JobApplicationDetailsRepository {
     return await _db.rawQuery(sql: sql);
   }
 
-  Future<JobApplicationDetails> getJobApplicationDetails1({
+  Future<JobApplicationDetails> getJobApplicationDetails({
     required int jobDataId,
   }) async {
     Map<String, dynamic> jobDataDetailsMap = {};

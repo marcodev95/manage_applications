@@ -5,11 +5,14 @@ import 'package:manage_applications/widgets/components/utility.dart';
 class InterviewTimeline extends Equatable {
   final int? id;
   final InterviewTimelineEvent eventType;
-  final String eventDateTime;
-  final String? originalDateTime;
-  final String? newDateTime;
+  final DateTime eventDateTime;
+  final DateTime? originalDateTime;
+  final DateTime? newDateTime;
   final String reason;
   final String requester;
+  final DateTime? followUpSentAt;
+  final String? followUpSentTo;
+  final String? relocatedAddress;
   final String? note;
   final int? interviewId;
 
@@ -21,6 +24,9 @@ class InterviewTimeline extends Equatable {
     required this.requester,
     this.originalDateTime,
     this.newDateTime,
+    this.followUpSentAt,
+    this.followUpSentTo,
+    this.relocatedAddress,
     this.note,
     this.interviewId,
   });
@@ -32,7 +38,10 @@ class InterviewTimeline extends Equatable {
       originalDateTime: originalDateTime,
       newDateTime: newDateTime,
       eventDateTime: eventDateTime,
+      relocatedAddress: relocatedAddress,
       reason: reason,
+      followUpSentAt: followUpSentAt,
+      followUpSentTo: followUpSentTo,
       requester: requester,
       note: note,
       interviewId: interviewId,
@@ -41,14 +50,19 @@ class InterviewTimeline extends Equatable {
 
   InterviewTimeline.fromJson(Map<String, dynamic> json)
     : id = json[InterviewTimelineTable.id],
-      
-      eventDateTime = json[InterviewTimelineTable.eventDateTime],
+
+      eventDateTime = DateTime.parse(json[InterviewTimelineTable.eventDateTime]),
       eventType = getInterviewTimelineFromString(
         json[InterviewTimelineTable.eventType],
       ),
 
-      originalDateTime = json[InterviewTimelineTable.originalDateTime],
-      newDateTime = json[InterviewTimelineTable.newDateTime],
+      originalDateTime = parseDateTimeOrNull(json[InterviewTimelineTable.originalDateTime]),
+      newDateTime = parseDateTimeOrNull(json[InterviewTimelineTable.newDateTime]),
+
+      followUpSentAt = parseDateTimeOrNull(json[InterviewTimelineTable.followUpSentAt]),
+      followUpSentTo = json[InterviewTimelineTable.followUpSentTo],
+
+      relocatedAddress = json[InterviewTimelineTable.relocatedAddress],
 
       reason = json[InterviewTimelineTable.reason],
       requester = json[InterviewTimelineTable.requester],
@@ -57,13 +71,15 @@ class InterviewTimeline extends Equatable {
 
   Map<String, dynamic> toJson() => {
     InterviewTimelineTable.eventType: eventType.name,
-    InterviewTimelineTable.originalDateTime: originalDateTime,
-    InterviewTimelineTable.newDateTime: newDateTime,
-    InterviewTimelineTable.eventDateTimeDB: convertToIsoDateTime(eventDateTime),
-    InterviewTimelineTable.eventDateTime: eventDateTime,
+    InterviewTimelineTable.originalDateTime: convertToIsoString(originalDateTime),
+    InterviewTimelineTable.newDateTime: convertToIsoString(newDateTime),
+    InterviewTimelineTable.eventDateTime: eventDateTime.toIso8601String(),
+    InterviewTimelineTable.followUpSentAt: convertToIsoString(followUpSentAt),
+    InterviewTimelineTable.followUpSentTo: followUpSentTo,
     InterviewTimelineTable.reason: reason,
     InterviewTimelineTable.requester: requester,
     InterviewTimelineTable.note: note,
+    InterviewTimelineTable.relocatedAddress: relocatedAddress,
     InterviewTimelineTable.interviewId: interviewId,
   };
 
@@ -98,10 +114,16 @@ class InterviewTimelineTable {
   //X Rinvio
   static final String originalDateTime = 'original_date_time';
   static final String newDateTime = 'new_date_time';
-  static final String eventDateTimeDB = 'new_date_time_db';
+  //static final String eventDateTimeDB = 'new_date_time_db';
 
   static final String reason = 'reason';
   static final String requester = 'requester';
+
+  static final String relocatedAddress = 'relocated_address';
+
+  //static final String followUpSentAtDB = 'follow_up_sent_at_db';
+  static final String followUpSentAt = 'follow_up_sent_at';
+  static final String followUpSentTo = 'follow_up_sent_to';
 
   //FK
   static final String interviewId = 'interview_id';

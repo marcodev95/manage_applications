@@ -94,7 +94,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
                             children: [
                               Expanded(
                                 child: DropdownWidget(
-                                  label: "Tipo colloquio",
+                                  label: "Tipo colloquio(*)",
                                   items: InterviewTypes.values.toDropdownItems(
                                     (e) => e.displayName,
                                   ),
@@ -103,7 +103,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
                               ),
                               Expanded(
                                 child: DropdownWidget(
-                                  label: "Stato del colloquio",
+                                  label: "Stato del colloquio(*)",
                                   items: InterviewStatus.values.toDropdownItems(
                                     (e) => e.displayName,
                                   ),
@@ -114,7 +114,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
                           ),
                         ),
                         TimePickerWidget(
-                          label: "Ora del colloquio",
+                          label: "Ora del colloquio(*)",
                           selectedTime: _interviewTimeNotifier,
                         ),
 
@@ -123,7 +123,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
                             children: [
                               Expanded(
                                 child: DropdownWidget(
-                                  label: 'Svolgimento del colloquio',
+                                  label: 'Svolgimento colloquio(*)',
                                   items: InterviewsFormat.values
                                       .toDropdownItems((e) => e.displayName),
                                   selectedValue: _interviewFormatNotifier,

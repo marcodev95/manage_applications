@@ -102,7 +102,7 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
       flex: 2,
       child: RequiredFormFieldWidget(
         controller: _nameController,
-        label: "Nome referente",
+        label: "Nome referente(*)",
       ),
     );
   }
@@ -112,7 +112,7 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
       builder: (_, ref, __) {
         return Expanded(
           child: DropdownWidget(
-            label: "Azienda a cui è associato",
+            label: "Azienda a cui è associato(*)",
             items: ref
                 .watch(referentCompanyOptionsProvider)
                 .toDropdownItems((e) => e.companyRef.name),
@@ -126,7 +126,7 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
   Expanded _referentRole() {
     return Expanded(
       child: DropdownWidget(
-        label: "Ruolo referente",
+        label: "Ruolo referente(*)",
         items: RoleType.values.toDropdownItems((e) => e.displaName),
         selectedValue: _roleController,
       ),
@@ -137,7 +137,7 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
     return Expanded(
       child: RequiredFormFieldWidget(
         controller: _emailController,
-        label: "Email referente",
+        label: "Email referente(*)",
       ),
     );
   }

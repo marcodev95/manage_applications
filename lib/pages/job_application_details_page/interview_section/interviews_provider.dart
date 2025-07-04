@@ -63,7 +63,7 @@ class InterviewsNotifier extends AutoDisposeAsyncNotifier<List<InterviewUi>> {
 
   void rescheduleDateTime({
     required int id,
-    required String rescheduleDateTime,
+    required DateTime rescheduleDateTime,
   }) {
     state = state.whenData((value) {
       final newList = [

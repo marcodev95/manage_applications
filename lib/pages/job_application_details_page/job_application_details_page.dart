@@ -1,10 +1,10 @@
-import 'package:manage_applications/pages/job_application_details_page/job_application_details_component/job_application_details_back_button.dart';
-import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
-import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_application_sections_barrel.dart';
-import 'package:manage_applications/widgets/components/side_navigation_rail_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_application_details_component/job_application_details_back_button.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_application_sections_barrel.dart';
+import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
+import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
+import 'package:manage_applications/widgets/components/side_navigation_rail_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
