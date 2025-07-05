@@ -91,8 +91,8 @@ class DbHelper {
         ${CompanyTableColumns.workingHours},
         ${CompanyTableColumns.email}
       ) VALUES 
-        ('Azienda1', 'Città1', 'Via 1', '', 'https://www.google.com/', '9-18', 'test@example.com'),
-        ('Azienda2', 'Città12', 'Via 2', '', 'https://www.google.com/', '8.30-12.30/14-18', 'test@example2.com')
+        ('Azienda Demo 1', 'Città Demo', 'Via Finta 10', '', 'https://www.google.com/', '9-18', 'demo1@example.com'),
+        ('Azienda Demo 2', 'Città Demo 2', 'Via Finta 20', '', 'https://www.google.com/', '8.30-12.30/14-18', 'demo2@example.com')
       ''');
   }
 
@@ -125,8 +125,8 @@ class DbHelper {
           ${CompanyReferentTableColumns.jobDataId},
           ${CompanyReferentTableColumns.companyId}
         ) VALUES 
-          ('Referent1', 'email1', '1234556', 'hr', 'main', 1, 1),
-          ('Referent2', 'email2', '1234556', 'dev', 'client',  1, 2)
+          ('Referente Demo 1', 'referente1@example.com', '1234556', 'hr', 'main', 1, 1),
+          ('Referente Demo 2', 'referente2@example.com', '1234556', 'dev', 'client',  1, 2)
         ''');
   }
 
@@ -158,8 +158,8 @@ class DbHelper {
           ${JobDataTableColumns.experience},
           ${JobDataTableColumns.companyId},
           ${JobDataTableColumns.clientCompanyId}
-        ) VALUES ('2023-10-11', 'Junior Developer', 'apply', 'www.indeed.com', 'hybrid', '3', '', 1, 2), 
-                ('2023-11-10', 'Junior Developer2', 'interview', 'www.indeed.com', 'onSite', '5', '', 2, NULL)
+        ) VALUES ('2023-10-11', 'Posizione Demo 1', 'apply', 'www.indeed.com', 'hybrid', '3', '', 1, 2), 
+                ('2023-11-10', 'Posizione Demo 2', 'interview', 'www.indeed.com', 'onSite', '5', '', 2, NULL)
       ''');
   }
 
