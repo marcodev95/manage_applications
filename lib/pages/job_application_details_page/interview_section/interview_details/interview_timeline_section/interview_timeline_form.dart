@@ -44,8 +44,9 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
   final _followUpSentTo = TextEditingController();
 
   final _reasonController = TextEditingController();
-  final _noteController = TextEditingController();
   final _requesterController = TextEditingController();
+
+  final _noteController = TextEditingController();
 
   @override
   void initState() {
@@ -100,10 +101,24 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
             builder: (_, value, __) {
               return switch (value) {
                 InterviewTimelineEvent.done => const SizedBox.shrink(),
-                InterviewTimelineEvent.postponed => _postponedFormFields(),
-                InterviewTimelineEvent.cancelled => _cancelledFormFields(),
-                InterviewTimelineEvent.relocated => _relocatedFields(),
-                InterviewTimelineEvent.followUpSent => _followUpSentFields(),
+                InterviewTimelineEvent.postponed => _PostponedFields(
+                  newDateNotifier: _newDateNotifier,
+                  newTimeNotifier: _newTimeNotifier,
+                  reasonController: _reasonController,
+                  requesterController: _requesterController,
+                ),
+                InterviewTimelineEvent.cancelled => _CancelledFields(
+                  reasonController: _reasonController,
+                  requesterController: _requesterController,
+                ),
+                InterviewTimelineEvent.relocated => _RelocatedField(
+                  _relocatedAddress,
+                ),
+                InterviewTimelineEvent.followUpSent => _FollowUpSentFields(
+                  followUpSentAtDate: _followUpSentAtDate,
+                  followUpSentAtTime: _followUpSentAtTime,
+                  followUpSentTo: _followUpSentTo,
+                ),
               };
             },
           ),
@@ -115,103 +130,21 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
 
           Align(
             alignment: Alignment.centerRight,
-            child: _SaveButton(() => submit(), widget.routeID),
+            child: Consumer(
+              builder: (_, ref, __) {
+                final isLoading =
+                    ref
+                        .watch(interviewTimelineProvider(widget.routeID))
+                        .isLoading;
+
+                return isLoading
+                    ? const CircularProgressIndicator()
+                    : SaveButtonWidget(onPressed: () => submit());
+              },
+            ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _followUpSentFields() {
-    return Row(
-      spacing: 20.0,
-      children: [
-        Expanded(
-          child: DatePickerWidget(
-            label: 'Data invio',
-            selectedDate: _followUpSentAtDate,
-          ),
-        ),
-        Expanded(
-          child: TimePickerWidget(
-            label: 'Ora invio',
-            selectedTime: _followUpSentAtTime,
-          ),
-        ),
-        Expanded(
-          child: RequiredFormFieldWidget(
-            label: 'Inviato a ',
-            controller: _followUpSentTo,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _relocatedFields() {
-    return RequiredFormFieldWidget(
-      controller: _relocatedAddress,
-      label: 'Nuovo indirizzo',
-    );
-  }
-
-  Widget _postponedFormFields() {
-    return Column(
-      spacing: 25.0,
-      children: [
-        Row(
-          spacing: 30,
-          children: [
-            Expanded(
-              child: DatePickerWidget(
-                label: 'Nuova data del colloquio',
-                selectedDate: _newDateNotifier,
-              ),
-            ),
-            Expanded(
-              child: TimePickerWidget(
-                label: 'Nuovo orario del colloquio',
-                selectedTime: _newTimeNotifier,
-              ),
-            ),
-            Expanded(
-              child: RequiredFormFieldWidget(
-                label: 'Chi ha chiesto il rinvio',
-                controller: _requesterController,
-              ),
-            ),
-          ],
-        ),
-
-        RequiredFormFieldWidget(
-          controller: _reasonController,
-          label: 'Motivazioni per il rinvio del colloquio',
-        ),
-      ],
-    );
-  }
-
-  Column _cancelledFormFields() {
-    return Column(
-      children: [
-        Row(
-          spacing: 30,
-          children: [
-            Expanded(
-              child: RequiredFormFieldWidget(
-                label: 'Chi ha chiesto il rinvio',
-                controller: _requesterController,
-              ),
-            ),
-            Expanded(
-              child: RequiredFormFieldWidget(
-                controller: _reasonController,
-                label: 'Motivazioni per il rinvio del colloquio',
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 
@@ -278,18 +211,141 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
   }
 }
 
-class _SaveButton extends ConsumerWidget {
-  const _SaveButton(this.callback, this.id);
+class _FollowUpSentFields extends StatelessWidget {
+  const _FollowUpSentFields({
+    required this.followUpSentAtDate,
+    required this.followUpSentAtTime,
+    required this.followUpSentTo,
+  });
 
-  final VoidCallback callback;
-  final int? id;
+  final ValueNotifier<DateTime> followUpSentAtDate;
+  final ValueNotifier<TimeOfDay> followUpSentAtTime;
+  final TextEditingController followUpSentTo;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = ref.watch(interviewTimelineProvider(id)).isLoading;
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 20.0,
+      children: [
+        Expanded(
+          child: DatePickerWidget(
+            label: 'Data invio',
+            selectedDate: followUpSentAtDate,
+          ),
+        ),
+        Expanded(
+          child: TimePickerWidget(
+            label: 'Ora invio',
+            selectedTime: followUpSentAtTime,
+          ),
+        ),
+        Expanded(
+          child: RequiredFormFieldWidget(
+            label: 'Inviato a ',
+            controller: followUpSentTo,
+          ),
+        ),
+      ],
+    );
+  }
+}
 
-    return isLoading
-        ? const CircularProgressIndicator()
-        : SaveButtonWidget(onPressed: callback);
+class _RelocatedField extends StatelessWidget {
+  const _RelocatedField(this.relocatedAddress);
+
+  final TextEditingController relocatedAddress;
+
+  @override
+  Widget build(BuildContext context) {
+    return RequiredFormFieldWidget(
+      controller: relocatedAddress,
+      label: 'Nuovo indirizzo',
+    );
+  }
+}
+
+class _CancelledFields extends StatelessWidget {
+  const _CancelledFields({
+    required this.reasonController,
+    required this.requesterController,
+  });
+
+  final TextEditingController reasonController;
+  final TextEditingController requesterController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          spacing: 30,
+          children: [
+            Expanded(
+              child: RequiredFormFieldWidget(
+                label: 'Chi ha chiesto il rinvio',
+                controller: requesterController,
+              ),
+            ),
+            Expanded(
+              child: RequiredFormFieldWidget(
+                controller: reasonController,
+                label: 'Motivazioni per il rinvio del colloquio',
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _PostponedFields extends StatelessWidget {
+  const _PostponedFields({
+    required this.newDateNotifier,
+    required this.newTimeNotifier,
+    required this.reasonController,
+    required this.requesterController,
+  });
+
+  final ValueNotifier<DateTime> newDateNotifier;
+  final ValueNotifier<TimeOfDay> newTimeNotifier;
+  final TextEditingController reasonController;
+  final TextEditingController requesterController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 25.0,
+      children: [
+        Row(
+          spacing: 30,
+          children: [
+            Expanded(
+              child: DatePickerWidget(
+                label: 'Nuova data del colloquio',
+                selectedDate: newDateNotifier,
+              ),
+            ),
+            Expanded(
+              child: TimePickerWidget(
+                label: 'Nuovo orario del colloquio',
+                selectedTime: newTimeNotifier,
+              ),
+            ),
+            Expanded(
+              child: RequiredFormFieldWidget(
+                label: 'Chi ha chiesto il rinvio',
+                controller: requesterController,
+              ),
+            ),
+          ],
+        ),
+
+        RequiredFormFieldWidget(
+          controller: reasonController,
+          label: 'Motivazioni per il rinvio del colloquio',
+        ),
+      ],
+    );
   }
 }
