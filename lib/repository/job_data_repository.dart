@@ -127,7 +127,7 @@ class JobDataRepository {
     }
   }
 
-  Future<List<JobApplicationUi>> paginatorQuery({
+  Future<List<JobApplicationUi>> fetchJobApplicationsPage({
     required int itemsPerPage,
     required int offset,
     String? statusFilter,

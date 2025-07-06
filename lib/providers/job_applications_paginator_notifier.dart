@@ -17,7 +17,7 @@ class JobApplicationsPaginatorNotifier
   ]) async {
     final repository = ref.read(jobDataRepositoryProvider);
 
-    final applicationsUI = await repository.paginatorQuery(
+    final applicationsUI = await repository.fetchJobApplicationsPage(
       itemsPerPage: PaginatorState.itemsPerPage + 1,
       offset: pageNumber * PaginatorState.itemsPerPage,
       statusFilter: statusFilter,

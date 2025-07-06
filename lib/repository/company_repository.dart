@@ -85,7 +85,7 @@ class CompanyRepository {
     }
   }
 
-  Future<List<Company>> paginatorQuery({
+  Future<List<Company>> fetchCompaniesPage ({
     required int itemsPerPage,
     required int offset,
   }) async {

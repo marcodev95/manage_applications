@@ -11,7 +11,7 @@ class CompaniesPaginatorNotifier
   Future<PaginatorState<Company>> _getAllCompaniesRows(int pageNumber) async {
     final repository = ref.read(companyRepositoryProvider);
 
-    final companies = await repository.paginatorQuery(
+    final companies = await repository.fetchCompaniesPage (
       itemsPerPage: PaginatorState.itemsPerPage + 1,
       offset: pageNumber * PaginatorState.itemsPerPage,
     );
