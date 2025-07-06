@@ -166,9 +166,10 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
   void submit(int? routeArg) async {
     if (_formKey.currentState!.validate()) {
       final notifier = ref.read(interviewFormProvider(routeArg).notifier);
+      final interviewId = ref.read(interviewFormProvider(routeArg)).value?.id;
 
       final result =
-          widget.interview.id == null
+          interviewId == null
               ? await notifier.createInterview(_buildInterview(routeArg))
               : await notifier.updateInterview(_buildInterview(routeArg));
 
