@@ -25,11 +25,11 @@ class JobApplicationDetails {
   });
 
   JobApplicationDetails.fromJson(Map<String, dynamic> json)
-    : jobData = JobData.fromJson(json["job_data"]),
+    : jobData = JobData.fromJson(json["job_application"]),
       company = Company.fromJson(json["company"]),
       clientCompany =
-          json["final_company"] != null
-              ? Company.fromJson(json["final_company"])
+          json["client_company"] != null
+              ? Company.fromJson(json["client_company"])
               : Company.defaultValue(),
       companyReferents =
           json["company_referents"] != null

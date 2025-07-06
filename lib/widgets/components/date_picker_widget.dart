@@ -7,10 +7,12 @@ class DatePickerWidget extends StatefulWidget {
     super.key,
     required this.label,
     required this.selectedDate,
+    this.isDisabled = false,
   });
 
   final String label;
   final ValueNotifier<DateTime> selectedDate;
+  final bool isDisabled;
 
   @override
   State<DatePickerWidget> createState() => _DatePickerWidgetState();
@@ -48,15 +50,16 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
+      cursor:
+          widget.isDisabled
+              ? SystemMouseCursors.basic
+              : SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () => changeDate(context),
+        onTap: widget.isDisabled ? null : () => changeDate(context),
         child: AbsorbPointer(
           child: FormFieldWidget(
             controller: _controller,
             label: widget.label,
-            readOnly: true,
-            validator: (String? v) => baseValidator(v, widget.label),
             prefixIcon: const Icon(Icons.calendar_month),
           ),
         ),

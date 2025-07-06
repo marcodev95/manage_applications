@@ -82,12 +82,14 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
                 child: DatePickerWidget(
                   label: 'Data evento',
                   selectedDate: _eventDateNotifier,
+                  isDisabled: true,
                 ),
               ),
               Expanded(
                 child: TimePickerWidget(
                   label: 'Ora evento',
                   selectedTime: _eventTimeNotifier,
+                  isDisabled: true,
                 ),
               ),
             ],

@@ -7,6 +7,7 @@ import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
 import 'package:manage_applications/repository/company_referent_repository.dart';
+import 'package:manage_applications/repository/job_application_referents_repository.dart';
 
 class CompanyReferentsNotifier
     extends AutoDisposeAsyncNotifier<List<CompanyReferentUi>> {
@@ -28,6 +29,11 @@ class CompanyReferentsNotifier
       final lastReferent = await _repository.addCompanyReferent(
         referent,
         applicationId,
+      );
+
+      await _appReferentsRepository.addReferentToJobData(
+        applicationId,
+        lastReferent.id!,
       );
 
       state = AsyncData([
@@ -103,6 +109,8 @@ class CompanyReferentsNotifier
 
   CompanyReferentRepository get _repository =>
       ref.read(companyReferentRepositoryProvider);
+  JobApplicationReferentsRepository get _appReferentsRepository =>
+      ref.read(jobApplicationReferentsRepositoryProvider);
   int? get _applicationId => ref.read(jobDataProvider).value?.id;
   List<CompanyReferentUi> get _currentState => state.value ?? [];
 }

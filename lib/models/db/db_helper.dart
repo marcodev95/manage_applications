@@ -7,6 +7,7 @@ import 'package:manage_applications/models/interview/interview_follow_up.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/interview/referents_interview.dart';
 import 'package:manage_applications/models/job_data/job_data.dart';
+import 'package:manage_applications/models/job_data/job_application_referents.dart';
 import 'package:manage_applications/models/requirement.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -54,6 +55,7 @@ class DbHelper {
         _createBenefitsTable(batch);
         _createReferentsInterviewTable(batch);
         _createInterviewTimelineTable(batch);
+        _createJobApplicationReferents(batch);
 
         await batch.commit();
       },
@@ -104,16 +106,12 @@ class DbHelper {
         ${CompanyReferentTableColumns.phoneNumber} $_textType,
         ${CompanyReferentTableColumns.companyType} $_textType,
         ${CompanyReferentTableColumns.role} $_textType,
-        ${CompanyReferentTableColumns.jobDataId} $_intType,
         ${CompanyReferentTableColumns.companyId} $_intType,
 
         FOREIGN KEY (${CompanyReferentTableColumns.companyId}) 
           REFERENCES $companyTable (${CompanyTableColumns.id}) 
-            ON DELETE CASCADE,
-
-        FOREIGN KEY (${CompanyReferentTableColumns.jobDataId}) 
-          REFERENCES $jobDataTable (${JobDataTableColumns.id}) 
             ON DELETE CASCADE
+
       )''');
 
     batch.execute('''INSERT INTO $companyReferentTableName (
@@ -122,42 +120,41 @@ class DbHelper {
           ${CompanyReferentTableColumns.phoneNumber},
           ${CompanyReferentTableColumns.role},
           ${CompanyReferentTableColumns.companyType},
-          ${CompanyReferentTableColumns.jobDataId},
           ${CompanyReferentTableColumns.companyId}
         ) VALUES 
-          ('Referente Demo 1', 'referente1@example.com', '1234556', 'hr', 'main', 1, 1),
-          ('Referente Demo 2', 'referente2@example.com', '1234556', 'dev', 'client',  1, 2)
+          ('Referente Demo 1', 'referente1@example.com', '1234556', 'hr', 'main', 1),
+          ('Referente Demo 2', 'referente2@example.com', '1234556', 'dev', 'client', 1)
         ''');
   }
 
   void _createJobDataTable(Batch batch) {
-    batch.execute('''CREATE TABLE $jobDataTable ( 
-        ${JobDataTableColumns.id} $_idType, 
-        ${JobDataTableColumns.applyDate} $_textType,
-        ${JobDataTableColumns.position} $_textType,
-        ${JobDataTableColumns.applicationStatus} $_textType,
-        ${JobDataTableColumns.websiteUrl} $_textType,
-        ${JobDataTableColumns.dayInOffice} $_textType,
-        ${JobDataTableColumns.workType} $_textType,
-        ${JobDataTableColumns.experience} $_textType,
-        ${JobDataTableColumns.companyId} $_intType,
-        ${JobDataTableColumns.clientCompanyId} $_intType DEFAULT NULL,
+    batch.execute('''CREATE TABLE $jobApplicationsTable ( 
+        ${JobApplicationsTableColumns.id} $_idType, 
+        ${JobApplicationsTableColumns.applyDate} $_textType,
+        ${JobApplicationsTableColumns.position} $_textType,
+        ${JobApplicationsTableColumns.applicationStatus} $_textType,
+        ${JobApplicationsTableColumns.websiteUrl} $_textType,
+        ${JobApplicationsTableColumns.dayInOffice} $_textType,
+        ${JobApplicationsTableColumns.workType} $_textType,
+        ${JobApplicationsTableColumns.experience} $_textType,
+        ${JobApplicationsTableColumns.companyId} $_intType,
+        ${JobApplicationsTableColumns.clientCompanyId} $_intType DEFAULT NULL,
 
-        FOREIGN KEY (${JobDataTableColumns.companyId}) 
+        FOREIGN KEY (${JobApplicationsTableColumns.companyId}) 
           REFERENCES $companyTable (${CompanyTableColumns.id}) 
             ON DELETE CASCADE
       )''');
 
-    batch.execute('''INSERT INTO $jobDataTable (
-          ${JobDataTableColumns.applyDate},
-          ${JobDataTableColumns.position},
-          ${JobDataTableColumns.applicationStatus},
-          ${JobDataTableColumns.websiteUrl},
-          ${JobDataTableColumns.workType},
-          ${JobDataTableColumns.dayInOffice},
-          ${JobDataTableColumns.experience},
-          ${JobDataTableColumns.companyId},
-          ${JobDataTableColumns.clientCompanyId}
+    batch.execute('''INSERT INTO $jobApplicationsTable (
+          ${JobApplicationsTableColumns.applyDate},
+          ${JobApplicationsTableColumns.position},
+          ${JobApplicationsTableColumns.applicationStatus},
+          ${JobApplicationsTableColumns.websiteUrl},
+          ${JobApplicationsTableColumns.workType},
+          ${JobApplicationsTableColumns.dayInOffice},
+          ${JobApplicationsTableColumns.experience},
+          ${JobApplicationsTableColumns.companyId},
+          ${JobApplicationsTableColumns.clientCompanyId}
         ) VALUES ('2023-10-11', 'Posizione Demo 1', 'apply', 'www.indeed.com', 'hybrid', '3', '', 1, 2), 
                 ('2023-11-10', 'Posizione Demo 2', 'interview', 'www.indeed.com', 'onSite', '5', '', 2, NULL)
       ''');
@@ -179,7 +176,7 @@ class DbHelper {
         ${InterviewTableColumns.jobDataId} $_intType,
 
         FOREIGN KEY (${InterviewTableColumns.jobDataId}) 
-          REFERENCES $jobDataTable (${JobDataTableColumns.id}) 
+          REFERENCES $jobApplicationsTable (${JobApplicationsTableColumns.id}) 
             ON DELETE CASCADE
     )''');
   }
@@ -203,7 +200,7 @@ class DbHelper {
         ${ContractTableColumns.jobDataId} $_intType,
 
         FOREIGN KEY (${ContractTableColumns.jobDataId}) 
-          REFERENCES $jobDataTable (${JobDataTableColumns.id}) 
+          REFERENCES $jobApplicationsTable (${JobApplicationsTableColumns.id}) 
             ON DELETE CASCADE
     )''');
   }
@@ -227,11 +224,11 @@ class DbHelper {
       ${RequirementTableColumns.jobDataId} $_intType,
 
       FOREIGN KEY (${RequirementTableColumns.jobDataId}) 
-        REFERENCES $jobDataTable (${JobDataTableColumns.id}) 
+        REFERENCES $jobApplicationsTable (${JobApplicationsTableColumns.id}) 
           ON DELETE CASCADE
     )''');
   }
-  
+
   void _createReferentsInterviewTable(Batch batch) {
     batch.execute('''CREATE TABLE $referentsInterviewTable( 
         ${ReferentsInterviewTableColumns.id} $_idType, 
@@ -282,6 +279,34 @@ class DbHelper {
           REFERENCES $interviewTable (${InterviewTableColumns.id}) 
             ON DELETE CASCADE
     )''');
+  }
+
+  void _createJobApplicationReferents(Batch batch) {
+    batch.execute('''CREATE TABLE ${JobApplicationReferentsColumns.tableName}( 
+        ${JobApplicationReferentsColumns.jobApplicationId} $_intType, 
+        ${JobApplicationReferentsColumns.referentId} $_intType,
+        ${JobApplicationReferentsColumns.involvedInInterview} $_intType,
+
+        PRIMARY KEY (
+          ${JobApplicationReferentsColumns.jobApplicationId}, 
+          ${JobApplicationReferentsColumns.referentId}
+        ),
+
+        FOREIGN KEY (${JobApplicationReferentsColumns.jobApplicationId}) 
+          REFERENCES $jobApplicationsTable (${JobApplicationsTableColumns.id}) 
+            ON DELETE CASCADE,
+        
+        FOREIGN KEY (${JobApplicationReferentsColumns.referentId}) 
+          REFERENCES $companyReferentTableName(${CompanyReferentTableColumns.id})
+    )''');
+
+     batch.execute('''INSERT INTO ${JobApplicationReferentsColumns.tableName} (
+        ${JobApplicationReferentsColumns.jobApplicationId}, 
+        ${JobApplicationReferentsColumns.referentId},
+        ${JobApplicationReferentsColumns.involvedInInterview}
+        ) VALUES 
+          (1, 1, 1), (1, 2, 0)
+        ''');
   }
 
   /* Query */

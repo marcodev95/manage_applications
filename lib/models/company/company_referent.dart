@@ -30,7 +30,7 @@ class CompanyReferent {
     json[CompanyReferentTableColumns.phoneNumber] = phoneNumber;
     json[CompanyReferentTableColumns.email] = email;
     json[CompanyReferentTableColumns.role] = role.name;
-    json[CompanyReferentTableColumns.jobDataId] = jobDataId;
+    //json[CompanyReferentTableColumns.jobDataId] = jobDataId;
     json[CompanyReferentTableColumns.companyId] = companyId;
     json[CompanyReferentTableColumns.companyType] = companyType.name;
 
@@ -92,7 +92,7 @@ class CompanyReferentDetails {
       phoneNumber: referent.phoneNumber,
       companyType: referent.company.companyType,
       companyId: referent.company.companyRef.id,
-      jobDataId: applicationId,
+      //jobDataId: applicationId,
     );
   }
 

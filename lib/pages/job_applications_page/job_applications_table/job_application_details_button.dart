@@ -12,7 +12,7 @@ class JobApplicationDetailsButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
-      onPressed: () {
+      onPressed: () async {
         ref.read(jobApplicationId.notifier).state = id;
         navigatorPush(context, const JobApplicationDetailsPage());
       },

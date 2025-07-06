@@ -11,7 +11,7 @@ final jobDataRepositoryProvider = Provider(
 
 class JobDataRepository {
   final DbHelper _db;
-  final _table = jobDataTable;
+  final _table = jobApplicationsTable;
 
   JobDataRepository(DbHelper db) : _db = db;
 
@@ -24,19 +24,19 @@ class JobDataRepository {
   Future<List<JobApplicationUi>> fetchJobApplicationsWithCompany() async {
     final String sql = '''
     SELECT 
-      jd.${JobDataTableColumns.id}, 
-      jd.${JobDataTableColumns.applyDate}, 
-      jd.${JobDataTableColumns.position}, 
-      jd.${JobDataTableColumns.applicationStatus}, 
-      jd.${JobDataTableColumns.websiteUrl}, 
-      jd.${JobDataTableColumns.companyId},
+      jd.${JobApplicationsTableColumns.id}, 
+      jd.${JobApplicationsTableColumns.applyDate}, 
+      jd.${JobApplicationsTableColumns.position}, 
+      jd.${JobApplicationsTableColumns.applicationStatus}, 
+      jd.${JobApplicationsTableColumns.websiteUrl}, 
+      jd.${JobApplicationsTableColumns.companyId},
 
       c.${CompanyTableColumns.id}, 
       c.${CompanyTableColumns.name}
 
-      FROM $jobDataTable AS jd    
+      FROM $_table AS jd    
         LEFT JOIN $companyTable AS c 
-          ON jd.${JobDataTableColumns.companyId} = c.${CompanyTableColumns.id}
+          ON jd.${JobApplicationsTableColumns.companyId} = c.${CompanyTableColumns.id}
   ''';
 
     try {
@@ -65,7 +65,7 @@ class JobDataRepository {
       final result = await _db.update(
         table: _table,
         json: jobData.toJson(),
-        where: "${JobDataTableColumns.id} = ?",
+        where: "${JobApplicationsTableColumns.id} = ?",
         whereArgs: [jobData.id],
       );
 
@@ -81,8 +81,8 @@ class JobDataRepository {
     try {
       final result = await _db.update(
         table: _table,
-        json: {JobDataTableColumns.companyId: companyId},
-        where: "${JobDataTableColumns.id} = ?",
+        json: {JobApplicationsTableColumns.companyId: companyId},
+        where: "${JobApplicationsTableColumns.id} = ?",
         whereArgs: [jobDataId],
       );
 
@@ -98,8 +98,8 @@ class JobDataRepository {
     try {
       final result = await _db.update(
         table: _table,
-        json: {JobDataTableColumns.clientCompanyId: companyId},
-        where: "${JobDataTableColumns.id} = ?",
+        json: {JobApplicationsTableColumns.clientCompanyId: companyId},
+        where: "${JobApplicationsTableColumns.id} = ?",
         whereArgs: [jobDataId],
       );
 
@@ -115,7 +115,7 @@ class JobDataRepository {
     try {
       final result = await _db.delete(
         table: _table,
-        where: "${JobDataTableColumns.id} = ?",
+        where: "${JobApplicationsTableColumns.id} = ?",
         whereArgs: [id],
       );
 
@@ -134,29 +134,29 @@ class JobDataRepository {
   }) async {
     final whereClause =
         statusFilter != null
-            ? 'WHERE jd.${JobDataTableColumns.applicationStatus} = "$statusFilter"'
+            ? 'WHERE jd.${JobApplicationsTableColumns.applicationStatus} = "$statusFilter"'
             : '';
 
     final sql = '''
 
       SELECT 
-        jd.${JobDataTableColumns.id}, 
-        jd.${JobDataTableColumns.applyDate}, 
-        jd.${JobDataTableColumns.position}, 
-        jd.${JobDataTableColumns.applicationStatus}, 
-        jd.${JobDataTableColumns.websiteUrl}, 
-        jd.${JobDataTableColumns.companyId},
+        jd.${JobApplicationsTableColumns.id}, 
+        jd.${JobApplicationsTableColumns.applyDate}, 
+        jd.${JobApplicationsTableColumns.position}, 
+        jd.${JobApplicationsTableColumns.applicationStatus}, 
+        jd.${JobApplicationsTableColumns.websiteUrl}, 
+        jd.${JobApplicationsTableColumns.companyId},
 
         c.${CompanyTableColumns.id}, 
         c.${CompanyTableColumns.name}
 
-      FROM $jobDataTable AS jd    
+      FROM $_table AS jd    
         LEFT JOIN $companyTable AS c 
-          ON jd.${JobDataTableColumns.companyId} = c.${CompanyTableColumns.id}
+          ON jd.${JobApplicationsTableColumns.companyId} = c.${CompanyTableColumns.id}
       
       $whereClause
 
-      ORDER BY ${JobDataTableColumns.id}
+      ORDER BY ${JobApplicationsTableColumns.id}
 
       LIMIT $itemsPerPage OFFSET $offset
     

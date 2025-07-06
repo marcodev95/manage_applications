@@ -19,14 +19,14 @@ class CompanyApplicationsRepository {
     try {
       final sql = '''
       SELECT 
-        ${JobDataTableColumns.id}, 
-        ${JobDataTableColumns.position}, 
-        ${JobDataTableColumns.applyDate},
-        ${JobDataTableColumns.applicationStatus},
-        ${JobDataTableColumns.websiteUrl}
+        ${JobApplicationsTableColumns.id}, 
+        ${JobApplicationsTableColumns.position}, 
+        ${JobApplicationsTableColumns.applyDate},
+        ${JobApplicationsTableColumns.applicationStatus},
+        ${JobApplicationsTableColumns.websiteUrl}
 
-      FROM $jobDataTable
-      WHERE ${JobDataTableColumns.clientCompanyId} = $companyId
+      FROM $jobApplicationsTable
+      WHERE ${JobApplicationsTableColumns.clientCompanyId} = $companyId
     ''';
 
       final result = await _db.rawQuery(sql: sql);
@@ -44,14 +44,14 @@ class CompanyApplicationsRepository {
     try {
       final sql = '''
       SELECT 
-        ${JobDataTableColumns.id}, 
-        ${JobDataTableColumns.position}, 
-        ${JobDataTableColumns.applyDate},
-        ${JobDataTableColumns.applicationStatus},
-        ${JobDataTableColumns.websiteUrl}
+        ${JobApplicationsTableColumns.id}, 
+        ${JobApplicationsTableColumns.position}, 
+        ${JobApplicationsTableColumns.applyDate},
+        ${JobApplicationsTableColumns.applicationStatus},
+        ${JobApplicationsTableColumns.websiteUrl}
 
-      FROM $jobDataTable 
-      WHERE ${JobDataTableColumns.companyId} = $companyId
+      FROM $jobApplicationsTable 
+      WHERE ${JobApplicationsTableColumns.companyId} = $companyId
     ''';
 
       final result = await _db.rawQuery(sql: sql);

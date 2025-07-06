@@ -7,8 +7,10 @@ import 'package:manage_applications/models/db/db_helper.dart';
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/job_application_details.dart';
+import 'package:manage_applications/models/job_data/job_application_referents.dart';
 import 'package:manage_applications/models/job_data/job_data.dart';
 import 'package:manage_applications/models/requirement.dart';
+import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_utility.dart';
 
 final jobApplicationDetailsRepositoryProvider = Provider(
@@ -18,131 +20,143 @@ final jobApplicationDetailsRepositoryProvider = Provider(
 class JobApplicationDetailsRepository {
   final DbHelper _db;
 
-  JobApplicationDetailsRepository(final DbHelper db) : _db = db;
+  JobApplicationDetailsRepository(DbHelper db) : _db = db;
 
-  Future<Map<String, Object?>> _getJobData(int jobDataId) async =>
-      await _db.readSingleItem(
-        table: jobDataTable,
-        where: "${JobDataTableColumns.id} = ?",
-        whereArgs: [jobDataId],
-      );
+  Future _getJobDetailsWithCompanies(int applicationId) async {
+    final sql = '''
+    SELECT 
+      ja.${JobApplicationsTableColumns.id},
+      ja.${JobApplicationsTableColumns.position},
+      ja.${JobApplicationsTableColumns.applyDate},
+      ja.${JobApplicationsTableColumns.applicationStatus},
+      ja.${JobApplicationsTableColumns.websiteUrl},
+      ja.${JobApplicationsTableColumns.workType},
+      ja.${JobApplicationsTableColumns.dayInOffice},
 
-  Future<Map<String, Object?>> _getCompany(int jobDataId) async =>
-      await _db.readSingleItem(
-        table: companyTable,
-        columns: [
-          CompanyTableColumns.id,
-          CompanyTableColumns.name,
-          CompanyTableColumns.address,
-          CompanyTableColumns.city,
-          CompanyTableColumns.email,
-          CompanyTableColumns.website,
-          CompanyTableColumns.phoneNumber,
-        ],
-        where: "${CompanyTableColumns.id} = ?",
-        whereArgs: [jobDataId],
-      );
+      c.${CompanyTableColumns.id} AS c_id,
+      c.${CompanyTableColumns.name} AS c_name,
+      c.${CompanyTableColumns.address} AS c_address,
+      c.${CompanyTableColumns.city} AS c_city,
+      c.${CompanyTableColumns.email} AS c_email,
+      c.${CompanyTableColumns.website} AS c_website,
+      c.${CompanyTableColumns.phoneNumber} AS c_phoneNumber,
 
-  Future<Map<String, Object?>?> _getClientCompany(int id) async {
-    return await _db.readSingleItem(
-      table: companyTable,
-      columns: [
-        CompanyTableColumns.id,
-        CompanyTableColumns.name,
-        CompanyTableColumns.address,
-        CompanyTableColumns.city,
-        CompanyTableColumns.email,
-        CompanyTableColumns.website,
-        CompanyTableColumns.phoneNumber,
-        CompanyTableColumns.workingHours,
-      ],
-      where: "${CompanyTableColumns.id} = ?",
-      whereArgs: [id],
-    );
+      cc.${CompanyTableColumns.id} AS cc_id,
+      cc.${CompanyTableColumns.name} AS cc_name,
+      cc.${CompanyTableColumns.address} AS cc_address,
+      cc.${CompanyTableColumns.city} AS cc_city,
+      cc.${CompanyTableColumns.email} AS cc_email,
+      cc.${CompanyTableColumns.website} AS cc_website,
+      cc.${CompanyTableColumns.phoneNumber} AS cc_phoneNumber
+
+    FROM $jobApplicationsTable AS ja
+      INNER JOIN $companyTable AS c  
+        ON c.${CompanyTableColumns.id} = ja.${JobApplicationsTableColumns.companyId}
+
+      LEFT JOIN $companyTable AS cc
+        ON cc.${CompanyTableColumns.id} = ja.${JobApplicationsTableColumns.clientCompanyId}
+
+
+    WHERE ja.${JobApplicationsTableColumns.id} = $applicationId
+
+    ''';
+
+    final result = await _db.rawQuery(sql: sql);
+
+    print(result);
+
+    final row = result.first;
+
+    return {
+      'job_application': {
+        JobApplicationsTableColumns.id: row[JobApplicationsTableColumns.id],
+        JobApplicationsTableColumns.position: row[JobApplicationsTableColumns.position],
+        JobApplicationsTableColumns.applyDate: row[JobApplicationsTableColumns.applyDate],
+        JobApplicationsTableColumns.applicationStatus:
+            row[JobApplicationsTableColumns.applicationStatus],
+        JobApplicationsTableColumns.websiteUrl: row[JobApplicationsTableColumns.websiteUrl],
+        JobApplicationsTableColumns.workType: row[JobApplicationsTableColumns.workType],
+        JobApplicationsTableColumns.dayInOffice: row[JobApplicationsTableColumns.dayInOffice],
+      },
+      'company': {
+        CompanyTableColumns.id: row['c_id'],
+        CompanyTableColumns.name: row['c_name'],
+        CompanyTableColumns.address: row['c_address'],
+        CompanyTableColumns.city: row['c_city'],
+        CompanyTableColumns.email: row['c_email'],
+        CompanyTableColumns.website: row['c_website'],
+        CompanyTableColumns.phoneNumber: row['c_phoneNumber'],
+      },
+      'client_company':
+          row['cc_id'] == null
+              ? null
+              : {
+                CompanyTableColumns.id: row['cc_id'],
+                CompanyTableColumns.name: row['cc_name'],
+                CompanyTableColumns.address: row['cc_address'],
+                CompanyTableColumns.city: row['cc_city'],
+                CompanyTableColumns.email: row['cc_email'],
+                CompanyTableColumns.website: row['cc_website'],
+                CompanyTableColumns.phoneNumber: row['cc_phoneNumber'],
+              },
+    };
   }
 
-  Future<List<Map<String, Object?>>> _getCompanyReferents(int jobDataId) async {
+  Future<List<Map<String, Object?>>> _getCompanyReferents(
+    int applicationId,
+  ) async {
     final sql = '''
     SELECT 
       ${CompanyReferentTableColumns.id},
       ${CompanyReferentTableColumns.name},
       ${CompanyReferentTableColumns.role},
       ${CompanyReferentTableColumns.companyType},
-      ${CompanyReferentTableColumns.email}
+      ${CompanyReferentTableColumns.email},
+
+      ${JobApplicationReferentsColumns.involvedInInterview}
 
     FROM $companyReferentTableName
+      INNER JOIN ${JobApplicationReferentsColumns.tableName}
+        ON ${JobApplicationReferentsColumns.referentId} = ${CompanyReferentTableColumns.id}
 
-    WHERE ${CompanyReferentTableColumns.jobDataId} = $jobDataId
+    WHERE ${JobApplicationReferentsColumns.jobApplicationId} = $applicationId
   ''';
 
     return await _db.rawQuery(sql: sql);
   }
 
-  Future<List<Map<String, Object?>>> _getInterviewList(int jobDataId) async {
-    final interviewDataSQL = '''   
-  SELECT 
-    ${InterviewTableColumns.id}, 
-    ${InterviewTableColumns.type}, 
-    ${InterviewTableColumns.date}, 
-    ${InterviewTableColumns.interviewFormat},
-    ${InterviewTableColumns.answerTime},
-    ${InterviewTableColumns.interviewPlace},
-    ${InterviewTableColumns.status},
-    ${InterviewTableColumns.time},
-    ${InterviewTableColumns.followUpDate}
+  Future<List<Map<String, Object?>>> _getInterviewList(
+    int applicationId,
+  ) async {
+    final sql = '''
+      SELECT 
+      i.${InterviewTableColumns.id}, 
+      i.${InterviewTableColumns.type}, 
+      i.${InterviewTableColumns.date}, 
+      i.${InterviewTableColumns.interviewFormat},
+      i.${InterviewTableColumns.answerTime},
+      i.${InterviewTableColumns.interviewPlace},
+      i.${InterviewTableColumns.status},
+      i.${InterviewTableColumns.time},
+      i.${InterviewTableColumns.followUpDate},
 
-  FROM $interviewTable 
-  WHERE ${InterviewTableColumns.jobDataId} = $jobDataId
-  ''';
+      MAX(it.${InterviewTimelineTable.eventDateTime}) AS ${InterviewTimelineTable.eventDateTime},
+      it.${InterviewTimelineTable.newDateTime}
 
-    final interviewMap = await _db.rawQuery(
-      sql: interviewDataSQL,
-    );
-
-    if (interviewMap.isEmpty) return [];
-
-    final postponedResultsQuery = '''
-    SELECT 
-      ${InterviewTimelineTable.interviewId}, 
-      MAX(${InterviewTimelineTable.eventDateTime}) AS ${InterviewTimelineTable.eventDateTime},
-      ${InterviewTimelineTable.newDateTime}
-    FROM ${InterviewTimelineTable.tableName}
-    WHERE ${InterviewTimelineTable.eventType} = '${InterviewTimelineEvent.postponed.name}'
-    GROUP BY ${InterviewTimelineTable.interviewId}
-''';
-
-    final postponedMap = await _db.rawQuery(
-      sql: postponedResultsQuery,
-    );
-
-    final Map<int, dynamic> postponedMapById = {};
-    for (final item in postponedMap) {
-      final interviewId = item[InterviewTimelineTable.interviewId] as int;
-      postponedMapById[interviewId] = item[InterviewTimelineTable.newDateTime];
-    }
-
-    final enrichedInterviews =
-        interviewMap.map((row) {
-          final interviewId = row[InterviewTableColumns.id] as int;
-          final postponeDate = postponedMapById[interviewId];
-          return {...row, InterviewTimelineTable.newDateTime: postponeDate};
-        }).toList();
-
-    return enrichedInterviews;
-  }
-
-  Future _getRequirementsList(int jobDataId) async {
-    final sql = ''' 
-      SELECT  
-        ${RequirementTableColumns.id},
-        ${RequirementTableColumns.requirement} 
-      FROM $requirementTable
-      WHERE ${RequirementTableColumns.jobDataId} = $jobDataId      
+    FROM $interviewTable i
+    LEFT JOIN ${InterviewTimelineTable.tableName} it
+      ON it.${InterviewTimelineTable.interviewId} = i.${InterviewTableColumns.id}
+      AND it.${InterviewTimelineTable.eventType} = '${InterviewTimelineEvent.postponed.name}'
+    WHERE i.${InterviewTableColumns.jobDataId} = $applicationId
+    GROUP BY i.${InterviewTableColumns.id}
     ''';
+
     return await _db.rawQuery(sql: sql);
   }
 
-  Future _getContratcsList(int jobDataId) async {
+  Future<List<Map<String, Object?>>> _getContractsList(
+    int applicationId,
+  ) async {
     final sql = ''' 
     SELECT 
         ${ContractTableColumns.id}, 
@@ -150,48 +164,47 @@ class JobApplicationDetailsRepository {
         ${ContractTableColumns.contractDuration},
         ${ContractTableColumns.workPlaceAddress},
         ${ContractTableColumns.ral},
-        ${ContractTableColumns.isTrialContract},
-        ${ContractTableColumns.jobDataId}
+        ${ContractTableColumns.isTrialContract}
       FROM $contractTable
-      WHERE ${ContractTableColumns.jobDataId} = $jobDataId      
+      WHERE ${ContractTableColumns.jobDataId} = $applicationId      
   ''';
     return await _db.rawQuery(sql: sql);
   }
 
-  Future<JobApplicationDetails> getJobApplicationDetails({
-    required int jobDataId,
-  }) async {
-    Map<String, dynamic> jobDataDetailsMap = {};
+  Future<List<Map<String, Object?>>> _getRequirementsList(
+    int applicationId,
+  ) async {
+    final sql = ''' 
+      SELECT  
+        ${RequirementTableColumns.id},
+        ${RequirementTableColumns.requirement} 
+      FROM $requirementTable
+      WHERE ${RequirementTableColumns.jobDataId} = $applicationId      
+    ''';
+    return await _db.rawQuery(sql: sql);
+  }
 
-    jobDataDetailsMap["job_data"] = await _getJobData(jobDataId);
+  Future<JobApplicationDetails> getJobApplicationDetails(applicationId) async {
+    try {
+      final jobDetails = await _getJobDetailsWithCompanies(applicationId);
+      final Map<String, dynamic> applicationDetailsMap = {
+        'job_application': jobDetails['job_application'],
+        'company': jobDetails['company'],
+        'client_company': jobDetails['client_company'],
+        'company_referents': await _getCompanyReferents(applicationId),
+        'interviews': await _getInterviewList(applicationId),
+        'contracts': await _getContractsList(applicationId),
+        'requirements': await _getRequirementsList(applicationId),
+      };
 
-    final companyId =
-        jobDataDetailsMap["job_data"][JobDataTableColumns.companyId] as int;
-    jobDataDetailsMap["company"] = await _getCompany(companyId);
-
-    final clientCompanyId =
-        jobDataDetailsMap["job_data"][JobDataTableColumns.clientCompanyId];
-    if (clientCompanyId != null) {
-      jobDataDetailsMap["final_company"] = await _getClientCompany(
-        clientCompanyId as int,
+      debugPrint("JobDataDetailsAPI => $applicationDetailsMap");
+      debugPrint(
+        "FromJson => ${JobApplicationDetails.fromJson(applicationDetailsMap)}",
       );
+
+      return JobApplicationDetails.fromJson(applicationDetailsMap);
+    } catch (e, stackTrace) {
+      throw DataLoadingError(error: e, stackTrace: stackTrace);
     }
-
-    jobDataDetailsMap["company_referents"] = await _getCompanyReferents(
-      jobDataId,
-    );
-
-    jobDataDetailsMap["requirements"] = await _getRequirementsList(jobDataId);
-
-    jobDataDetailsMap["interviews"] = await _getInterviewList(jobDataId);
-
-    jobDataDetailsMap["contracts"] = await _getContratcsList(jobDataId);
-
-    debugPrint("JobDataDetailsAPI => $jobDataDetailsMap");
-    debugPrint(
-      "FromJson => ${JobApplicationDetails.fromJson(jobDataDetailsMap)}",
-    );
-
-    return JobApplicationDetails.fromJson(jobDataDetailsMap);
   }
 }

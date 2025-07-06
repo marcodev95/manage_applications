@@ -7,10 +7,12 @@ class TimePickerWidget extends StatefulWidget {
     super.key,
     required this.label,
     required this.selectedTime,
+    this.isDisabled = false,
   });
 
   final String label;
   final ValueNotifier<TimeOfDay> selectedTime;
+  final bool isDisabled;
 
   @override
   State<TimePickerWidget> createState() => _TimePickerWidgetState();
@@ -48,15 +50,16 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
+      cursor:
+          widget.isDisabled
+              ? SystemMouseCursors.basic
+              : SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () => changeTime(context),
+        onTap: widget.isDisabled ? null : () => changeTime(context),
         child: AbsorbPointer(
           child: FormFieldWidget(
             controller: _controller,
             label: widget.label,
-            readOnly: true,
-            validator: (String? v) => baseValidator(v, widget.label),
             prefixIcon: const Icon(Icons.access_time),
           ),
         ),

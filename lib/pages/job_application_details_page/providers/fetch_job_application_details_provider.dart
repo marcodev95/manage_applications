@@ -11,5 +11,5 @@ final fetchJobApplicationDetailsProvider =
 
       if (id == 0) return JobApplicationDetails.defaultValue();
 
-      return await repository.getJobApplicationDetails(jobDataId: id);
+      return await repository.getJobApplicationDetails(id);
     });

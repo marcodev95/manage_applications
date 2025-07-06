@@ -24,14 +24,14 @@ class JobData extends Equatable {
   });
 
   JobData.fromJson(Map<String, dynamic> json)
-      : id = json[JobDataTableColumns.id],
-        applyDate = DateTime.parse(json[JobDataTableColumns.applyDate]),
-        applicationStatus = applicationStatusFromString(json[JobDataTableColumns.applicationStatus]),
-        position = json[JobDataTableColumns.position],
-        dayInOffice = json[JobDataTableColumns.dayInOffice],
-        workType = workTypeFromString(json[JobDataTableColumns.workType]),
-        websiteUrl = json[JobDataTableColumns.websiteUrl],
-        experience = json[JobDataTableColumns.experience];
+      : id = json[JobApplicationsTableColumns.id],
+        applyDate = DateTime.parse(json[JobApplicationsTableColumns.applyDate]),
+        applicationStatus = applicationStatusFromString(json[JobApplicationsTableColumns.applicationStatus]),
+        position = json[JobApplicationsTableColumns.position],
+        dayInOffice = json[JobApplicationsTableColumns.dayInOffice],
+        workType = workTypeFromString(json[JobApplicationsTableColumns.workType]),
+        websiteUrl = json[JobApplicationsTableColumns.websiteUrl],
+        experience = json[JobApplicationsTableColumns.experience];
 
   JobData copyWith({
     int? id,
@@ -56,13 +56,13 @@ class JobData extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        JobDataTableColumns.applyDate: dbFormat.format(applyDate),
-        JobDataTableColumns.applicationStatus: applicationStatus.name,
-        JobDataTableColumns.position: position,
-        JobDataTableColumns.websiteUrl: websiteUrl,
-        JobDataTableColumns.workType: workType.name,
-        JobDataTableColumns.dayInOffice: dayInOffice,
-        JobDataTableColumns.experience: experience,
+        JobApplicationsTableColumns.applyDate: dbFormat.format(applyDate),
+        JobApplicationsTableColumns.applicationStatus: applicationStatus.name,
+        JobApplicationsTableColumns.position: position,
+        JobApplicationsTableColumns.websiteUrl: websiteUrl,
+        JobApplicationsTableColumns.workType: workType.name,
+        JobApplicationsTableColumns.dayInOffice: dayInOffice,
+        JobApplicationsTableColumns.experience: experience,
       };
 
   @override
@@ -92,13 +92,13 @@ class JobData extends Equatable {
   List<Object?> get props => [id, position];
 }
 
-const String jobDataTable = "job_data_table";
+const String jobApplicationsTable = "job_applications_table";
 
-class JobDataTableColumns {
-  static String id = "_id_job_data";
+class JobApplicationsTableColumns {
+  static String id = "_id_job_application";
   static String applyDate = "apply_date";
   static String position = "position";
-  static String applicationStatus = "job_data_status";
+  static String applicationStatus = "job_application_status";
   static String websiteUrl = "website_url";
   static String workType = "work_type";
   static String dayInOffice = "day_in_office";

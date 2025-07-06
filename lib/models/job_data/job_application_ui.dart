@@ -33,13 +33,13 @@ class JobApplicationBase extends JobApplicationBaseUI {
 
   factory JobApplicationBase.fromJson(Map<String, dynamic> json) {
     return JobApplicationBase(
-      id: json[JobDataTableColumns.id],
-      position: json[JobDataTableColumns.position],
-      applyDate: DateTime.parse(json[JobDataTableColumns.applyDate]),
+      id: json[JobApplicationsTableColumns.id],
+      position: json[JobApplicationsTableColumns.position],
+      applyDate: DateTime.parse(json[JobApplicationsTableColumns.applyDate]),
       applicationStatus: applicationStatusFromString(
-        json[JobDataTableColumns.applicationStatus],
+        json[JobApplicationsTableColumns.applicationStatus],
       ),
-      link: json[JobDataTableColumns.websiteUrl],
+      link: json[JobApplicationsTableColumns.websiteUrl],
     );
   }
 }
@@ -62,17 +62,17 @@ class JobApplicationUi extends Equatable {
   });
 
   JobApplicationUi.fromJson(Map<String, dynamic> json)
-    : id = json[JobDataTableColumns.id],
-      position = json[JobDataTableColumns.position],
+    : id = json[JobApplicationsTableColumns.id],
+      position = json[JobApplicationsTableColumns.position],
       companyRef =
           json[CompanyTableColumns.id] != null
               ? CompanyRef.fromJson(json)
               : null,
-      applyDate = DateTime.parse(json[JobDataTableColumns.applyDate]),
+      applyDate = DateTime.parse(json[JobApplicationsTableColumns.applyDate]),
       applicationStatus = applicationStatusFromString(
-        json[JobDataTableColumns.applicationStatus],
+        json[JobApplicationsTableColumns.applicationStatus],
       ),
-      link = json[JobDataTableColumns.websiteUrl];
+      link = json[JobApplicationsTableColumns.websiteUrl];
 
   JobApplicationUi copyWith({
     int? id,
