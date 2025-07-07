@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/company/company_referent.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
 import 'package:manage_applications/repository/company_referent_repository.dart';
 import 'package:manage_applications/repository/job_application_referents_repository.dart';
@@ -26,12 +26,9 @@ class CompanyReferentsNotifier
     state = const AsyncLoading();
 
     try {
-      final lastReferent = await _repository.addCompanyReferent(
-        referent,
-        applicationId,
-      );
+      final lastReferent = await _repository.addCompanyReferent(referent);
 
-      await _appReferentsRepository.addReferentToJobData(
+      await _appReferentsRepository.addReferentToJobApplication(
         applicationId,
         lastReferent.id!,
       );
@@ -52,13 +49,11 @@ class CompanyReferentsNotifier
   Future<OperationResult> updateCompanyReferent(
     CompanyReferentDetails referent,
   ) async {
-    final applicationId = _getApplicationIdOrFailure();
-
     state = const AsyncLoading();
 
     try {
       await _repository.updateCompanyReferent(
-        CompanyReferentDetails.toDB(referent, applicationId),
+        CompanyReferentDetails.toDB(referent),
       );
 
       final updateList =
@@ -111,7 +106,7 @@ class CompanyReferentsNotifier
       ref.read(companyReferentRepositoryProvider);
   JobApplicationReferentsRepository get _appReferentsRepository =>
       ref.read(jobApplicationReferentsRepositoryProvider);
-  int? get _applicationId => ref.read(jobDataProvider).value?.id;
+  int? get _applicationId => ref.read(jobApplicationProvider).value?.id;
   List<CompanyReferentUi> get _currentState => state.value ?? [];
 }
 

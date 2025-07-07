@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_form_notifier.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';
 
 final areJobApplicationIdAndCompanyIdPresent = Provider.autoDispose<bool>(
   (ref) =>
@@ -9,7 +9,7 @@ final areJobApplicationIdAndCompanyIdPresent = Provider.autoDispose<bool>(
 
 final isJobApplicationIdPresent = Provider.autoDispose<bool>(
   (ref) => ref.watch(
-    jobDataProvider.select(
+    jobApplicationProvider.select(
       (value) =>
           value.maybeWhen(data: (data) => data.id != null, orElse: () => false),
     ),
@@ -24,9 +24,3 @@ final isCompanyIdPresent = Provider.autoDispose<bool>(
     ),
   ),
 );
-
-
-
- /* jobApplicationDetailsProvider.select(
-      (value) => value.company.id != null && value.jobData.id != null,
-    ), */

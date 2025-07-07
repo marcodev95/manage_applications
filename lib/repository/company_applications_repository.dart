@@ -1,7 +1,7 @@
 import 'package:manage_applications/models/db/db_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/models/job_data/job_application_ui.dart';
-import 'package:manage_applications/models/job_data/job_data.dart';
+import 'package:manage_applications/models/job_application/job_application_ui.dart';
+import 'package:manage_applications/models/job_application/job_application.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 
 final companyApplicationsRepositoryProvider = Provider(

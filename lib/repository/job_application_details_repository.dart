@@ -7,8 +7,8 @@ import 'package:manage_applications/models/db/db_helper.dart';
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/job_application_details.dart';
-import 'package:manage_applications/models/job_data/job_application_referents.dart';
-import 'package:manage_applications/models/job_data/job_data.dart';
+import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application.dart';
 import 'package:manage_applications/models/requirement.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_utility.dart';
@@ -147,7 +147,7 @@ class JobApplicationDetailsRepository {
     LEFT JOIN ${InterviewTimelineTable.tableName} it
       ON it.${InterviewTimelineTable.interviewId} = i.${InterviewTableColumns.id}
       AND it.${InterviewTimelineTable.eventType} = '${InterviewTimelineEvent.postponed.name}'
-    WHERE i.${InterviewTableColumns.jobDataId} = $applicationId
+    WHERE i.${InterviewTableColumns.jobApplicationId} = $applicationId
     GROUP BY i.${InterviewTableColumns.id}
     ''';
 
@@ -166,7 +166,7 @@ class JobApplicationDetailsRepository {
         ${ContractTableColumns.ral},
         ${ContractTableColumns.isTrialContract}
       FROM $contractTable
-      WHERE ${ContractTableColumns.jobDataId} = $applicationId      
+      WHERE ${ContractTableColumns.jobApplicationId} = $applicationId      
   ''';
     return await _db.rawQuery(sql: sql);
   }
@@ -178,8 +178,8 @@ class JobApplicationDetailsRepository {
       SELECT  
         ${RequirementTableColumns.id},
         ${RequirementTableColumns.requirement} 
-      FROM $requirementTable
-      WHERE ${RequirementTableColumns.jobDataId} = $applicationId      
+      FROM $requirementsTable
+      WHERE ${RequirementTableColumns.jobApplicationId} = $applicationId      
     ''';
     return await _db.rawQuery(sql: sql);
   }

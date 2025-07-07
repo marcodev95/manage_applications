@@ -1,5 +1,5 @@
 import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/models/job_data/job_application_ui.dart';
+import 'package:manage_applications/models/job_application/job_application_ui.dart';
 import 'package:manage_applications/pages/job_applications_page/job_application_status_chip.dart';
 import 'package:manage_applications/widgets/components/button/remove_button_widget.dart';
 import 'package:manage_applications/widgets/components/table_widget.dart';

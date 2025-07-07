@@ -1,27 +1,27 @@
 class Requirement {
   final int? id;
   final String requirement;
-  final int? jobDataId;
+  final int? jobApplicationId;
 
-  Requirement({this.id, required this.requirement, this.jobDataId});
+  Requirement({this.id, required this.requirement, this.jobApplicationId});
 
   Requirement.fromJson(Map<String, dynamic> json)
-      : id = json[RequirementTableColumns.id],
-        requirement = json[RequirementTableColumns.requirement],
-        jobDataId = json[RequirementTableColumns.jobDataId];
+    : id = json[RequirementTableColumns.id],
+      requirement = json[RequirementTableColumns.requirement],
+      jobApplicationId = json[RequirementTableColumns.jobApplicationId];
 
   Requirement copyWith({int? id, String? requirement}) {
     return Requirement(
       id: id ?? this.id,
       requirement: requirement ?? this.requirement,
-      jobDataId: jobDataId
+      jobApplicationId: jobApplicationId,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        RequirementTableColumns.requirement: requirement,
-        RequirementTableColumns.jobDataId: jobDataId,
-      };
+    RequirementTableColumns.requirement: requirement,
+    RequirementTableColumns.jobApplicationId: jobApplicationId,
+  };
 
   static Requirement reset() {
     return Requirement(requirement: "");
@@ -42,10 +42,10 @@ class Requirement {
   int get hashCode => id!;
 }
 
-const String requirementTable = "requirement_table";
+const String requirementsTable = "requirements_table";
 
 class RequirementTableColumns {
   static String id = "_id_requirement";
   static String requirement = "requirement";
-  static String jobDataId = "fk_job_data_id";
+  static String jobApplicationId = "fk_job_application_id";
 }

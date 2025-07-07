@@ -3,27 +3,29 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
-import 'package:manage_applications/models/job_data/job_data.dart';
+import 'package:manage_applications/models/job_application/job_application.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
 import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
 import 'package:manage_applications/repository/job_data_repository.dart';
 
-class JobDataNotifier extends AutoDisposeAsyncNotifier<JobData> {
+class JobApplicationNotifier extends AutoDisposeAsyncNotifier<JobApplication> {
   @override
-  FutureOr<JobData> build() async {
+  FutureOr<JobApplication> build() async {
     final details = await ref.watch(fetchJobApplicationDetailsProvider.future);
 
     debugPrint('Details => $details');
 
-    return details.jobData;
+    return details.jobApplication;
   }
 
-  Future<OperationResult> addJobData(JobData jobData) async {
+  Future<OperationResult> addJobApplication(
+    JobApplication jobApplication,
+  ) async {
     state = const AsyncLoading();
 
     try {
-      final lastData = await _repository.addJobData(jobData);
+      final lastData = await _repository.addJobApplication(jobApplication);
 
       state = AsyncData(lastData);
 
@@ -39,13 +41,15 @@ class JobDataNotifier extends AutoDisposeAsyncNotifier<JobData> {
     }
   }
 
-  Future<OperationResult> updateJobData(JobData jobData) async {
+  Future<OperationResult> updateJobApplication(
+    JobApplication jobApplication,
+  ) async {
     state = const AsyncLoading();
 
     try {
-      await _repository.updateJobData(jobData);
+      await _repository.updateJobApplication(jobApplication);
 
-      state = AsyncData(jobData);
+      state = AsyncData(jobApplication);
 
       debugPrint('Update => $state');
 
@@ -59,12 +63,15 @@ class JobDataNotifier extends AutoDisposeAsyncNotifier<JobData> {
     }
   }
 
-  JobDataRepository get _repository => ref.read(jobDataRepositoryProvider);
+  JobApplicationRepository get _repository =>
+      ref.read(jobApplicationRepositoryProvider);
   JobApplicationsPaginatorNotifier get _applicationsUINotifier =>
       ref.read(paginatorApplicationsUIProvider.notifier);
 }
 
-final jobDataProvider =
-    AutoDisposeAsyncNotifierProvider<JobDataNotifier, JobData>(() {
-      return JobDataNotifier();
-    });
+final jobApplicationProvider =
+    AutoDisposeAsyncNotifierProvider<JobApplicationNotifier, JobApplication>(
+      () {
+        return JobApplicationNotifier();
+      },
+    );

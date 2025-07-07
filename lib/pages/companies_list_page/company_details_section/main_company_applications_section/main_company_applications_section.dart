@@ -20,7 +20,8 @@ class MainCompanyApplicationsSection extends ConsumerWidget {
       data:
           (applications) => JobApplicationsForCompanyTableWidget(
             applications: applications,
-            button: (jobData) => _delete(ref, jobData.id!, context),
+            button:
+                (jobApplication) => _delete(ref, jobApplication.id!, context),
           ),
       error: (_, __) {
         return DataLoadErrorScreenWidget(

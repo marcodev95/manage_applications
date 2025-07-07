@@ -8,7 +8,7 @@ import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_form/contract_form_utlity.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_form/work_place_field.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/provider/contract_form_provider.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/dropdown_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
@@ -131,7 +131,7 @@ class _ContractFormWidgetState extends ConsumerState<ContractFormWidget>
         isOvertimePresent: _overTimeNotifier.value,
         isProductionBonusPresent: _productionBonusNotifier.value,
       ),
-      jobDataId: ref.read(jobDataProvider).value?.id,
+      jobApplicationId: ref.read(jobApplicationProvider).value?.id,
     );
   }
 

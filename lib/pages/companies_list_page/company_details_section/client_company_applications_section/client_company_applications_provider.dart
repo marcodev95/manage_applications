@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
-import 'package:manage_applications/models/job_data/job_application_ui.dart';
+import 'package:manage_applications/models/job_application/job_application_ui.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/repository/company_applications_repository.dart';
 import 'package:manage_applications/repository/job_data_repository.dart';
@@ -32,7 +32,8 @@ class ClientCompanyApplicationsNotifier
     }
   }
 
-  JobDataRepository get _repository => ref.read(jobDataRepositoryProvider);
+  JobApplicationRepository get _repository =>
+      ref.read(jobApplicationRepositoryProvider);
 
   CompanyApplicationsRepository get _companyApplicationsRepository =>
       ref.read(companyApplicationsRepositoryProvider);

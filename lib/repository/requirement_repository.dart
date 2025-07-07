@@ -11,11 +11,12 @@ class RequirementRepository {
   RequirementRepository(DbHelper db) : _db = db;
 
   final DbHelper _db;
+  final String _table = requirementsTable;
 
   Future<Requirement> addRequirement(Requirement requirement) async {
     try {
       final result = await _db.create(
-        table: requirementTable,
+        table: _table,
         json: requirement.toJson(),
       );
 
@@ -29,7 +30,7 @@ class RequirementRepository {
     try {
       final result = await _db.update(
         json: requirement.toJson(),
-        table: requirementTable,
+        table: _table,
         where: "${RequirementTableColumns.id} = ?",
         whereArgs: [requirement.id],
       );
@@ -44,7 +45,7 @@ class RequirementRepository {
   Future<void> deleteRequirement(int id) async {
     try {
       final result = await _db.delete(
-        table: requirementTable,
+        table: _table,
         where: "${RequirementTableColumns.id} = ?",
         whereArgs: [id],
       );

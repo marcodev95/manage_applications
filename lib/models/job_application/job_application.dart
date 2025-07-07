@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_utility.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
-class JobData extends Equatable {
+class JobApplication extends Equatable {
   final int? id;
   final ApplicationStatus applicationStatus;
   final DateTime applyDate;
@@ -12,7 +12,7 @@ class JobData extends Equatable {
   final String? dayInOffice;
   final String? experience;
 
-  const JobData({
+  const JobApplication({
     this.id,
     required this.applicationStatus,
     required this.applyDate,
@@ -23,7 +23,7 @@ class JobData extends Equatable {
     this.experience,
   });
 
-  JobData.fromJson(Map<String, dynamic> json)
+  JobApplication.fromJson(Map<String, dynamic> json)
       : id = json[JobApplicationsTableColumns.id],
         applyDate = DateTime.parse(json[JobApplicationsTableColumns.applyDate]),
         applicationStatus = applicationStatusFromString(json[JobApplicationsTableColumns.applicationStatus]),
@@ -33,7 +33,7 @@ class JobData extends Equatable {
         websiteUrl = json[JobApplicationsTableColumns.websiteUrl],
         experience = json[JobApplicationsTableColumns.experience];
 
-  JobData copyWith({
+  JobApplication copyWith({
     int? id,
     ApplicationStatus? applicationStatus,
     DateTime? applyDate,
@@ -43,7 +43,7 @@ class JobData extends Equatable {
     JobDataWorkType? workType,
     String? experience,
   }) {
-    return JobData(
+    return JobApplication(
       id: id ?? this.id,
       applicationStatus: applicationStatus ?? this.applicationStatus,
       applyDate: applyDate ?? this.applyDate,
@@ -78,8 +78,8 @@ class JobData extends Equatable {
       ''';
   } 
 
-  static JobData defaultValue() {
-    return JobData(
+  static JobApplication defaultValue() {
+    return JobApplication(
       applicationStatus: ApplicationStatus.apply,
       applyDate: DateTime.now(),
       position: "",

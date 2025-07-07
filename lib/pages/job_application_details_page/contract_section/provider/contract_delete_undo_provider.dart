@@ -73,7 +73,7 @@ class ContractDeleteUndoNotifier
           isTrialContract: lastDeletedContract.isTrialContract,
           ral: lastDeletedContract.remuneration?.ral,
           workPlaceAddress: lastDeletedContract.workPlaceAddress,
-          jobApplicationId: lastDeletedContract.jobDataId,
+          jobApplicationId: lastDeletedContract.jobApplicationId,
         ),
       );
 

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/db/db_helper.dart';
-import 'package:manage_applications/models/job_data/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application_referents.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 
 final jobApplicationReferentsRepositoryProvider = Provider(
@@ -13,12 +13,15 @@ class JobApplicationReferentsRepository {
 
   JobApplicationReferentsRepository(final DbHelper db) : _db = db;
 
-  Future<void> addReferentToJobData(int jobDataId, int referentId) async {
+  Future<void> addReferentToJobApplication(
+    int jobApplicationId,
+    int referentId,
+  ) async {
     try {
       await _db.create(
         table: tableName,
         json: {
-          JobApplicationReferentsColumns.jobApplicationId: jobDataId,
+          JobApplicationReferentsColumns.jobApplicationId: jobApplicationId,
           JobApplicationReferentsColumns.referentId: referentId,
         },
       );

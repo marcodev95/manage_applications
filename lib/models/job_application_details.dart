@@ -2,11 +2,11 @@ import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/company/company_referent.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/interview/interview.dart';
-import 'package:manage_applications/models/job_data/job_data.dart';
+import 'package:manage_applications/models/job_application/job_application.dart';
 import 'package:manage_applications/models/requirement.dart';
 
 class JobApplicationDetails {
-  final JobData jobData;
+  final JobApplication jobApplication;
   final Company company;
   final Company clientCompany;
   final List<CompanyReferentUi> companyReferents;
@@ -15,7 +15,7 @@ class JobApplicationDetails {
   final List<Requirement> requirements;
 
   const JobApplicationDetails({
-    required this.jobData,
+    required this.jobApplication,
     required this.company,
     required this.clientCompany,
     required this.companyReferents,
@@ -25,7 +25,7 @@ class JobApplicationDetails {
   });
 
   JobApplicationDetails.fromJson(Map<String, dynamic> json)
-    : jobData = JobData.fromJson(json["job_application"]),
+    : jobApplication = JobApplication.fromJson(json["job_application"]),
       company = Company.fromJson(json["company"]),
       clientCompany =
           json["client_company"] != null
@@ -61,7 +61,7 @@ class JobApplicationDetails {
               : [];
 
   JobApplicationDetails copyWith({
-    JobData? jobData,
+    JobApplication? jobApplication,
     Company? company,
     Company? clientCompany,
     List<CompanyReferentUi>? companyReferents,
@@ -70,7 +70,7 @@ class JobApplicationDetails {
     List<InterviewUi>? interviews,
   }) {
     return JobApplicationDetails(
-      jobData: jobData ?? this.jobData,
+      jobApplication: jobApplication ?? this.jobApplication,
       company: company ?? this.company,
       clientCompany: clientCompany ?? this.clientCompany,
       companyReferents: companyReferents ?? this.companyReferents,
@@ -82,7 +82,7 @@ class JobApplicationDetails {
 
   static JobApplicationDetails defaultValue() {
     return JobApplicationDetails(
-      jobData: JobData.defaultValue(),
+      jobApplication: JobApplication.defaultValue(),
       companyReferents: [],
       company: Company.defaultValue(),
       clientCompany: Company.defaultValue(),
@@ -95,7 +95,7 @@ class JobApplicationDetails {
   @override
   String toString() {
     return '''{
-      JobAppData => { ${jobData.toString()} }
+      JobAppData => { ${jobApplication.toString()} }
       Company => ${company.toString()}
       ClientCompany => ${clientCompany.toString()}
       Referent => ${companyReferents.toString()}

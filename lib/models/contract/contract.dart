@@ -17,7 +17,7 @@ class Contract {
   final String? workPlaceAddress;
 
   final Remuneration? remuneration;
-  final int? jobDataId;
+  final int? jobApplicationId;
 
   Contract({
     this.id,
@@ -30,7 +30,7 @@ class Contract {
     this.workingHour = '40',
     this.remuneration,
     this.workPlaceAddress,
-    this.jobDataId,
+    this.jobApplicationId,
   });
 
   Contract.fromJson(Map<String, dynamic> json)
@@ -48,7 +48,7 @@ class Contract {
       workPlace = getWorkPlaceFromString(json[ContractTableColumns.workPlace]),
       workPlaceAddress = json[ContractTableColumns.workPlaceAddress],
       remuneration = Remuneration.fromJson(json),
-      jobDataId = json[ContractTableColumns.jobDataId];
+      jobApplicationId = json[ContractTableColumns.jobApplicationId];
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -60,7 +60,7 @@ class Contract {
     json[ContractTableColumns.notes] = notes;
     json[ContractTableColumns.workingHour] = workingHour;
     json[ContractTableColumns.workPlace] = workPlace.name;
-    json[ContractTableColumns.jobDataId] = jobDataId;
+    json[ContractTableColumns.jobApplicationId] = jobApplicationId;
 
     json[ContractTableColumns.workPlaceAddress] = workPlaceAddress;
 
@@ -102,7 +102,7 @@ class Contract {
       isTrialContract: isTrialContract ?? this.isTrialContract,
       notes: notes ?? this.notes,
       workingHour: workingHour ?? this.workingHour,
-      jobDataId: jobDataId,
+      jobApplicationId: jobApplicationId,
     );
   }
 
@@ -122,7 +122,7 @@ class Contract {
       ${ContractTableColumns.isTrialContract} => $isTrialContract
       ${ContractTableColumns.workPlaceAddress} => $workPlaceAddress
       ${ContractTableColumns.contractDuration} => $contractDuration
-      ${ContractTableColumns.jobDataId} => $jobDataId
+      ${ContractTableColumns.jobApplicationId} => $jobApplicationId
       ${ContractTableColumns.workPlace} => $workPlace
       Remuneration: $remuneration
     ''';
@@ -152,7 +152,7 @@ class ContractTableColumns {
   static String isProductionBonusPresent = 'is_production_bonus_present';
   static String workPlace = 'work_place';
   static String workPlaceAddress = 'work_place_address';
-  static String jobDataId = "fk_job_data_id";
+  static String jobApplicationId = "fk_job_application_id";
 }
 
 class ContractUI extends Equatable {
@@ -184,7 +184,7 @@ class ContractUI extends Equatable {
       ),
       workPlaceAddress = json[ContractTableColumns.workPlaceAddress],
       ral = json[ContractTableColumns.ral],
-      jobApplicationId = json[ContractTableColumns.jobDataId];
+      jobApplicationId = json[ContractTableColumns.jobApplicationId];
 
   ContractUI copyWith({
     int? id,
@@ -227,7 +227,7 @@ extension ContractUIX on ContractUI {
 }
 
 extension ContractX on Contract {
-  ContractUI toUI({String? ral, int? jobDataId}) {
+  ContractUI toUI({String? ral, int? jobApplicationId}) {
     return ContractUI(
       id: id,
       type: type,
@@ -235,7 +235,7 @@ extension ContractX on Contract {
       isTrialContract: isTrialContract,
       ral: ral,
       workPlaceAddress: workPlaceAddress,
-      jobApplicationId: jobDataId,
+      jobApplicationId: jobApplicationId,
     );
   }
 }

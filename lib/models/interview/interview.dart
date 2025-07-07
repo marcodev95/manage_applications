@@ -16,7 +16,7 @@ class Interview {
   final String? followUpType;
   final DateTime? followUpDate;
   final String interviewPlace;
-  final int? jobDataId;
+  final int? jobApplicationId;
 
   Interview({
     this.id,
@@ -30,7 +30,7 @@ class Interview {
     this.notes,
     this.followUpType,
     this.followUpDate,
-    this.jobDataId,
+    this.jobApplicationId,
   });
 
   Interview.fromJson(Map<String, dynamic> json)
@@ -50,7 +50,7 @@ class Interview {
           json[InterviewTableColumns.followUpDate] != null
               ? DateTime.tryParse(json[InterviewTableColumns.followUpDate])
               : null,
-      jobDataId = json[InterviewTableColumns.jobDataId];
+      jobApplicationId = json[InterviewTableColumns.jobApplicationId];
 
   Interview copyWith({
     int? id,
@@ -64,7 +64,7 @@ class Interview {
     String? notes,
     DateTime? followUpDate,
     String? interviewPlace,
-    int? jobDataId,
+    int? jobApplicationId,
   }) {
     return Interview(
       id: id ?? this.id,
@@ -78,7 +78,7 @@ class Interview {
       followUpType: followUpType ?? this.followUpType,
       followUpDate: followUpDate ?? this.followUpDate,
       interviewPlace: interviewPlace ?? this.interviewPlace,
-      jobDataId: jobDataId ?? this.jobDataId,
+      jobApplicationId: jobApplicationId ?? this.jobApplicationId,
     );
   }
 
@@ -92,7 +92,7 @@ class Interview {
     InterviewTableColumns.notes: notes,
     InterviewTableColumns.status: status.name,
     InterviewTableColumns.interviewPlace: interviewPlace,
-    InterviewTableColumns.jobDataId: jobDataId,
+    InterviewTableColumns.jobApplicationId: jobApplicationId,
   };
 
   static Interview defaultValue() {
@@ -103,7 +103,6 @@ class Interview {
       interviewFormat: InterviewsFormat.online,
       status: InterviewStatus.toDo,
       interviewPlace: '',
-      jobDataId: 0,
     );
   }
 
@@ -121,7 +120,7 @@ class Interview {
       followUpDate: ${followUpDate.toString()}
       interviewPlace: $interviewPlace
       notes: $notes
-      jobDataId: $jobDataId
+      jobApplicationId: $jobApplicationId
     ''';
   }
 }
@@ -140,7 +139,7 @@ class InterviewTableColumns {
   static String followUpType = "follow_up_type";
   static String followUpDate = "follow_up_date";
   static String interviewPlace = "interview_place";
-  static String jobDataId = "fk_job_data_id";
+  static String jobApplicationId = "fk_job_application_id";
 }
 
 class InterviewUi extends Equatable {

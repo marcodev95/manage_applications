@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/models/job_data/job_application_ui.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_utility.dart';
+import 'package:manage_applications/models/job_application/job_application_ui.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_utility.dart';
 import 'package:manage_applications/pages/job_applications_page/job_applications_table/job_applications_table_barrel.dart';
 import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
 import 'package:manage_applications/widgets/components/paginator_widget.dart';
@@ -81,14 +81,14 @@ class JobApplicationsTableBody extends ConsumerWidget {
       dataRow: buildColoredRow<JobApplicationUi>(
         list: applicationsUI,
         cells:
-            (jobData, _) => [
+            (jobApplication, _) => [
               DataCell(
                 SizedBox(
                   width: 250.0,
                   child: Tooltip(
-                    message: jobData.position,
+                    message: jobApplication.position,
                     child: TextOverflowEllipsisWidget(
-                      jobData.position,
+                      jobApplication.position,
                       fontSize: AppStyle.tableTextFontSize,
                     ),
                   ),
@@ -98,9 +98,9 @@ class JobApplicationsTableBody extends ConsumerWidget {
                 SizedBox(
                   width: 140.0,
                   child: Tooltip(
-                    message: jobData.companyRef?.name ?? '',
+                    message: jobApplication.companyRef?.name ?? '',
                     child: TextOverflowEllipsisWidget(
-                      jobData.companyRef?.name ?? '',
+                      jobApplication.companyRef?.name ?? '',
                       fontSize: AppStyle.tableTextFontSize,
                     ),
                   ),
@@ -110,7 +110,7 @@ class JobApplicationsTableBody extends ConsumerWidget {
                 SizedBox(
                   width: 142.0,
                   child: TextOverflowEllipsisWidget(
-                    uiFormat.format(jobData.applyDate),
+                    uiFormat.format(jobApplication.applyDate),
                     fontSize: AppStyle.tableTextFontSize,
                   ),
                 ),
@@ -119,8 +119,8 @@ class JobApplicationsTableBody extends ConsumerWidget {
                 SizedBox(
                   width: 120.0,
                   child: StatusChipWidget(
-                    label: jobData.applicationStatus.displayName,
-                    chipColor: jobData.applicationStatus.displayChipColor,
+                    label: jobApplication.applicationStatus.displayName,
+                    chipColor: jobApplication.applicationStatus.displayChipColor,
                   ),
                 ),
               ),
@@ -129,16 +129,16 @@ class JobApplicationsTableBody extends ConsumerWidget {
                   width: 160.0,
                   child: TableButtonsWidget(
                     buttons: [
-                      JobApplicationDetailsButton(id: jobData.id!),
+                      JobApplicationDetailsButton(id: jobApplication.id!),
                       IconButton(
                         icon: Icon(Icons.link, color: Colors.blue),
                         onPressed:
                             () async => await tryToLaunchUrl(
                               context: context,
-                              link: jobData.link,
+                              link: jobApplication.link,
                             ),
                       ),
-                      JobApplicationRemoveButtonWidget(jobData.id!),
+                      JobApplicationRemoveButtonWidget(jobApplication.id!),
                     ],
                   ),
                 ),

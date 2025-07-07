@@ -6,7 +6,7 @@ import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_place_field.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_provider.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/calendar_widget.dart';
 import 'package:manage_applications/widgets/components/dropdown_widget.dart';
@@ -190,7 +190,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
       answerTime: _interviewAnswerController.text,
       interviewPlace: _interviewPlaceController.text,
       notes: _interviewNotesController.text,
-      jobDataId: ref.read(jobDataProvider).value?.id,
+      jobApplicationId: ref.read(jobApplicationProvider).value?.id,
     );
   }
 

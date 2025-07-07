@@ -15,16 +15,12 @@ class CompanyReferentRepository {
 
   Future<CompanyReferentDetails> addCompanyReferent(
     CompanyReferentDetails referent,
-    int? applicationId,
   ) async {
     try {
-      if (applicationId == null) {
-        throw MissingInformationError(error: 'ID_Application non presente');
-      }
 
       final lastId = await _db.create(
         table: companyReferentTableName,
-        json: CompanyReferentDetails.toDB(referent, applicationId).toJson(),
+        json: CompanyReferentDetails.toDB(referent).toJson(),
       );
 
       return referent.copyWith(id: lastId);

@@ -9,19 +9,17 @@ class CompanyReferent {
   final String? phoneNumber;
   final String email;
   final RoleType role;
-  final int? jobDataId;
-  final int? companyId;
   final CompanyType companyType;
+  final int? companyId;
 
   const CompanyReferent({
     this.id,
     required this.name,
-    this.phoneNumber,
     required this.email,
     required this.role,
-    this.jobDataId,
-    this.companyId,
     required this.companyType,
+    this.phoneNumber,
+    this.companyId,
   });
 
   Map<String, dynamic> toJson() {
@@ -30,7 +28,6 @@ class CompanyReferent {
     json[CompanyReferentTableColumns.phoneNumber] = phoneNumber;
     json[CompanyReferentTableColumns.email] = email;
     json[CompanyReferentTableColumns.role] = role.name;
-    //json[CompanyReferentTableColumns.jobDataId] = jobDataId;
     json[CompanyReferentTableColumns.companyId] = companyId;
     json[CompanyReferentTableColumns.companyType] = companyType.name;
 
@@ -46,7 +43,6 @@ class CompanyReferent {
       Email => $email
       Role => $role
       CompanyType => $companyType
-      FkJobId => $jobDataId
       FkCompanyId => $companyId     
     ''';
   }
@@ -80,10 +76,7 @@ class CompanyReferentDetails {
         fromStringToCompanyType(json[CompanyReferentTableColumns.companyType]),
       );
 
-  static CompanyReferent toDB(
-    CompanyReferentDetails referent,
-    int? applicationId,
-  ) {
+  static CompanyReferent toDB(CompanyReferentDetails referent) {
     return CompanyReferent(
       id: referent.id,
       name: referent.name,
@@ -92,7 +85,6 @@ class CompanyReferentDetails {
       phoneNumber: referent.phoneNumber,
       companyType: referent.company.companyType,
       companyId: referent.company.companyRef.id,
-      //jobDataId: applicationId,
     );
   }
 
@@ -126,7 +118,6 @@ class CompanyReferentTableColumns {
   static String email = "email";
   static String role = "role";
   static String companyType = "company_type";
-  static String jobDataId = "fk_job_data_id";
   static String companyId = "fk_company_id";
 }
 
@@ -149,7 +140,9 @@ class CompanyReferentUi extends Equatable {
     : id = json[CompanyReferentTableColumns.id],
       name = json[CompanyReferentTableColumns.name],
       email = json[CompanyReferentTableColumns.email],
-      companyType = fromStringToCompanyType(json[CompanyReferentTableColumns.companyType]),
+      companyType = fromStringToCompanyType(
+        json[CompanyReferentTableColumns.companyType],
+      ),
       role = roleTypeFromString(json[CompanyReferentTableColumns.role]);
 
   CompanyReferentUi copyWith({

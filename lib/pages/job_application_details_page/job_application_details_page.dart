@@ -57,7 +57,7 @@ class _PageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SideNavigationRailWidget(
       pages: [
-        JobDataSection(),
+        JobApplicationSection(),
         CompanySection(),
         InterviewSection(),
         ContractSection(),

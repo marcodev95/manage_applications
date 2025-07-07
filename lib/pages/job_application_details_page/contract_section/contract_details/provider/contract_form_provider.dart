@@ -26,7 +26,7 @@ class ContractFormNotifier
       _contractsNotifier.addContract(
         result.toUI(
           ral: contract.remuneration?.ral,
-          jobDataId: contract.jobDataId,
+          jobApplicationId: contract.jobApplicationId,
         ),
       );
 
@@ -45,7 +45,7 @@ class ContractFormNotifier
       _contractsNotifier.updateContract(
         contract.toUI(
           ral: contract.remuneration?.ral,
-          jobDataId: contract.jobDataId,
+          jobApplicationId: contract.jobApplicationId,
         ),
       );
 

@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
-import 'package:manage_applications/models/job_data/job_application_ui.dart';
+import 'package:manage_applications/models/job_application/job_application_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/models/states/paginator_state.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_utility.dart';
 import 'package:manage_applications/providers/job_application_filter.dart';
 import 'package:manage_applications/repository/job_data_repository.dart';
 
@@ -15,7 +15,7 @@ class JobApplicationsPaginatorNotifier
     int pageNumber, [
     String? statusFilter,
   ]) async {
-    final repository = ref.read(jobDataRepositoryProvider);
+    final repository = ref.read(jobApplicationRepositoryProvider);
 
     final applicationsUI = await repository.fetchJobApplicationsPage(
       itemsPerPage: PaginatorState.itemsPerPage + 1,
@@ -132,7 +132,7 @@ class JobApplicationsPaginatorNotifier
   }
 
   Future<OperationResult> deleteJobApplication(int id) async {
-    final repository = ref.read(jobDataRepositoryProvider);
+    final repository = ref.read(jobApplicationRepositoryProvider);
     final currentState = _currentStateOrFail(
       'Non è stato possibile caricare i dati.',
     );
@@ -144,7 +144,7 @@ class JobApplicationsPaginatorNotifier
     state = const AsyncLoading();
 
     try {
-      await repository.deleteJobData(id);
+      await repository.deleteJobApplication(id);
 
       final filteredList = currentState.items.where((a) => a.id != id).toList();
 

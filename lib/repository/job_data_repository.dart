@@ -1,24 +1,26 @@
 import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/db/db_helper.dart';
-import 'package:manage_applications/models/job_data/job_application_ui.dart';
-import 'package:manage_applications/models/job_data/job_data.dart';
+import 'package:manage_applications/models/job_application/job_application_ui.dart';
+import 'package:manage_applications/models/job_application/job_application.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 
-final jobDataRepositoryProvider = Provider(
-  (ref) => JobDataRepository(DbHelper.instance),
+final jobApplicationRepositoryProvider = Provider(
+  (ref) => JobApplicationRepository(DbHelper.instance),
 );
 
-class JobDataRepository {
+class JobApplicationRepository {
   final DbHelper _db;
   final _table = jobApplicationsTable;
 
-  JobDataRepository(DbHelper db) : _db = db;
+  JobApplicationRepository(DbHelper db) : _db = db;
 
-  Future<List<JobData>> getAllJobData({List<String>? columns}) async {
+  Future<List<JobApplication>> getAllJobApplications({
+    List<String>? columns,
+  }) async {
     final result = await _db.readAllItems(table: _table, columns: columns);
 
-    return List.from(result.map((e) => JobData.fromJson(e)));
+    return List.from(result.map((e) => JobApplication.fromJson(e)));
   }
 
   Future<List<JobApplicationUi>> fetchJobApplicationsWithCompany() async {
@@ -50,23 +52,28 @@ class JobDataRepository {
     }
   }
 
-  Future<JobData> addJobData(JobData jobData) async {
+  Future<JobApplication> addJobApplication(
+    JobApplication jobApplication,
+  ) async {
     try {
-      final lastId = await _db.create(table: _table, json: jobData.toJson());
+      final lastId = await _db.create(
+        table: _table,
+        json: jobApplication.toJson(),
+      );
 
-      return jobData.copyWith(id: lastId);
+      return jobApplication.copyWith(id: lastId);
     } catch (e, stackTrace) {
       throw SaveError(error: e, stackTrace: stackTrace);
     }
   }
 
-  Future<void> updateJobData(JobData jobData) async {
+  Future<void> updateJobApplication(JobApplication jobApplication) async {
     try {
       final result = await _db.update(
         table: _table,
-        json: jobData.toJson(),
+        json: jobApplication.toJson(),
         where: "${JobApplicationsTableColumns.id} = ?",
-        whereArgs: [jobData.id],
+        whereArgs: [jobApplication.id],
       );
 
       if (result == 0) throw ItemNotFound();
@@ -77,13 +84,13 @@ class JobDataRepository {
     }
   }
 
-  Future<void> updateCompanyId(int companyId, int jobDataId) async {
+  Future<void> updateCompanyId(int companyId, int jobAppId) async {
     try {
       final result = await _db.update(
         table: _table,
         json: {JobApplicationsTableColumns.companyId: companyId},
         where: "${JobApplicationsTableColumns.id} = ?",
-        whereArgs: [jobDataId],
+        whereArgs: [jobAppId],
       );
 
       if (result == 0) throw ItemNotFound();
@@ -94,13 +101,13 @@ class JobDataRepository {
     }
   }
 
-  Future<void> updateClientCompanyId(int? companyId, int jobDataId) async {
+  Future<void> updateClientCompanyId(int? companyId, int jobAppId) async {
     try {
       final result = await _db.update(
         table: _table,
         json: {JobApplicationsTableColumns.clientCompanyId: companyId},
         where: "${JobApplicationsTableColumns.id} = ?",
-        whereArgs: [jobDataId],
+        whereArgs: [jobAppId],
       );
 
       if (result == 0) throw ItemNotFound();
@@ -111,7 +118,7 @@ class JobDataRepository {
     }
   }
 
-  Future<void> deleteJobData(int id) async {
+  Future<void> deleteJobApplication(int id) async {
     try {
       final result = await _db.delete(
         table: _table,

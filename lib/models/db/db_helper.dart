@@ -6,8 +6,8 @@ import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/interview/interview_follow_up.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/interview/referents_interview.dart';
-import 'package:manage_applications/models/job_data/job_data.dart';
-import 'package:manage_applications/models/job_data/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application.dart';
+import 'package:manage_applications/models/job_application/job_application_referents.dart';
 import 'package:manage_applications/models/requirement.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -173,9 +173,9 @@ class DbHelper {
         ${InterviewTableColumns.interviewPlace} $_textType,
         ${InterviewTableColumns.followUpType} $_textType,
         ${InterviewTableColumns.followUpDate} $_textType,
-        ${InterviewTableColumns.jobDataId} $_intType,
+        ${InterviewTableColumns.jobApplicationId} $_intType,
 
-        FOREIGN KEY (${InterviewTableColumns.jobDataId}) 
+        FOREIGN KEY (${InterviewTableColumns.jobApplicationId}) 
           REFERENCES $jobApplicationsTable (${JobApplicationsTableColumns.id}) 
             ON DELETE CASCADE
     )''');
@@ -197,9 +197,9 @@ class DbHelper {
         ${ContractTableColumns.workPlaceAddress} $_textType,
         ${ContractTableColumns.workPlace} $_textType,
         ${ContractTableColumns.workingHour} $_textType,
-        ${ContractTableColumns.jobDataId} $_intType,
+        ${ContractTableColumns.jobApplicationId} $_intType,
 
-        FOREIGN KEY (${ContractTableColumns.jobDataId}) 
+        FOREIGN KEY (${ContractTableColumns.jobApplicationId}) 
           REFERENCES $jobApplicationsTable (${JobApplicationsTableColumns.id}) 
             ON DELETE CASCADE
     )''');
@@ -218,12 +218,12 @@ class DbHelper {
   }
 
   void _createRequirementTable(Batch batch) {
-    batch.execute('''CREATE TABLE $requirementTable ( 
+    batch.execute('''CREATE TABLE $requirementsTable ( 
       ${RequirementTableColumns.id} $_idType, 
       ${RequirementTableColumns.requirement} $_textType,
-      ${RequirementTableColumns.jobDataId} $_intType,
+      ${RequirementTableColumns.jobApplicationId} $_intType,
 
-      FOREIGN KEY (${RequirementTableColumns.jobDataId}) 
+      FOREIGN KEY (${RequirementTableColumns.jobApplicationId}) 
         REFERENCES $jobApplicationsTable (${JobApplicationsTableColumns.id}) 
           ON DELETE CASCADE
     )''');

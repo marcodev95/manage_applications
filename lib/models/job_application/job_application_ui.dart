@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:manage_applications/models/company/company.dart';
-import 'package:manage_applications/models/job_data/job_data.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_data_utility.dart';
+import 'package:manage_applications/models/job_application/job_application.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_utility.dart';
 
 abstract class JobApplicationBaseUI extends Equatable {
   final int? id;
