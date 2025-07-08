@@ -5,6 +5,7 @@ import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/job_application/job_application_ui.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/repository/company_applications_repository.dart';
+import 'package:manage_applications/repository/job_application_referents_repository.dart';
 import 'package:manage_applications/repository/job_data_repository.dart';
 
 class ClientCompanyApplicationsNotifier
@@ -17,10 +18,18 @@ class ClientCompanyApplicationsNotifier
   @override
   FutureOr<List<JobApplicationUi>> build(int arg) async => await _getDatas(arg);
 
-  Future<OperationResult> removeAssociation(int jobApplicationId) async {
+  Future<OperationResult> removeAssociation(
+    int jobApplicationId,
+    int companyId,
+  ) async {
     state = const AsyncLoading();
 
     try {
+      await _applicationReferentsRepository
+          .unlinkCompanyReferentsFromJobApplication(
+            jobApplicationId,
+            companyId,
+          );
       await _repository.updateClientCompanyId(null, jobApplicationId);
       state = AsyncData(await _getDatas(arg));
 
@@ -37,6 +46,9 @@ class ClientCompanyApplicationsNotifier
 
   CompanyApplicationsRepository get _companyApplicationsRepository =>
       ref.read(companyApplicationsRepositoryProvider);
+
+  JobApplicationReferentsRepository get _applicationReferentsRepository =>
+      ref.read(jobApplicationReferentsRepositoryProvider);
 }
 
 final clientCompanyApplicationsProvider = AsyncNotifierProvider.autoDispose

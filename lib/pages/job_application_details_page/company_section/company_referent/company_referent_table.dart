@@ -25,16 +25,16 @@ class CompanyReferentTable extends ConsumerWidget {
             ],
             dataRow: buildColoredRow(
               list: data,
-              cells: (referent, _) {
+              cells: (r, _) {
                 return [
-                  DataCell(CompanyReferentBadge(referent)),
+                  DataCell(CompanyReferentBadge(r)),
                   DataCell(
                     SizedBox(
                       width: 100.0,
                       child: Tooltip(
-                        message: referent.role.displaName,
+                        message: r.role.displaName,
                         child: Text(
-                          referent.role.displaName,
+                          r.role.displaName,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -43,8 +43,9 @@ class CompanyReferentTable extends ConsumerWidget {
                   DataCell(
                     PopupMenuButtonWidget<String>(
                       popupMenuEntry: [
-                        _editButton(context, referent.id!, ref),
-                        _deleteButton(ref, referent.id!, context),
+                        _editButton(context, r.id!, ref),
+                        _removeReferentFromJobApplication(ref, r.id!, context),
+                        _deleteButton(ref, r.id!, context),
                       ],
                     ),
                   ),
@@ -91,6 +92,26 @@ class CompanyReferentTable extends ConsumerWidget {
         if (!context.mounted) return;
 
         delete.handleErrorResult(context: context, ref: ref);
+      },
+    );
+  }
+
+  PopupMenuItem<String> _removeReferentFromJobApplication(
+    WidgetRef ref,
+    int id,
+    BuildContext context,
+  ) {
+    return PopupMenuItem<String>(
+      value: "removeReferentFromJobApplication",
+      child: Center(child: Icon(Icons.link_off, color: Colors.indigo.shade500)),
+      onTap: () async {
+        final notifier = ref.read(companyReferentsProvider.notifier);
+
+        final result = await notifier.removeReferentFromJobApplication(id);
+
+        if (!context.mounted) return;
+
+        result.handleErrorResult(context: context, ref: ref);
       },
     );
   }

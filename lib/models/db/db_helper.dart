@@ -298,9 +298,10 @@ class DbHelper {
         
         FOREIGN KEY (${JobApplicationReferentsColumns.referentId}) 
           REFERENCES $companyReferentTableName(${CompanyReferentTableColumns.id})
+            ON DELETE CASCADE
     )''');
 
-     batch.execute('''INSERT INTO ${JobApplicationReferentsColumns.tableName} (
+    batch.execute('''INSERT INTO ${JobApplicationReferentsColumns.tableName} (
         ${JobApplicationReferentsColumns.jobApplicationId}, 
         ${JobApplicationReferentsColumns.referentId},
         ${JobApplicationReferentsColumns.involvedInInterview}

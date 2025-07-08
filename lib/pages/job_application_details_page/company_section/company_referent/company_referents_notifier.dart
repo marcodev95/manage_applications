@@ -94,9 +94,32 @@ class CompanyReferentsNotifier
     }
   }
 
+  Future<OperationResult> removeReferentFromJobApplication(
+    int referentId,
+  ) async {
+    state = const AsyncLoading();
+
+    try {
+      await _appReferentsRepository.removeReferentToJobApplication(
+        _getApplicationIdOrFailure(),
+        referentId,
+      );
+
+      final updateList =
+          _currentState.where((element) => element.id != referentId).toList();
+
+      state = AsyncData(updateList);
+
+      return Success(data: true, message: SuccessMessage.deleteMessage);
+    } catch (e, stackTrace) {
+      state = AsyncError(e, stackTrace);
+      return mapToFailure(e, stackTrace);
+    }
+  }
+
   int _getApplicationIdOrFailure() {
     if (_applicationId == null) {
-      throw MissingInformationError(error: 'ID_Application non presente!');
+      throw MissingInformationError(error: 'ID_Candidatura non presente!');
     }
 
     return _applicationId!;

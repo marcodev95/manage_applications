@@ -21,7 +21,8 @@ class ClientCompanyApplicationsSection extends ConsumerWidget {
           (applications) => JobApplicationsForCompanyTableWidget(
             applications: applications,
             button:
-                (jobApplication) => _delete(ref, jobApplication.id!, context),
+                (jobApplication) =>
+                    _delete(ref, jobApplication.id!, context, companyId),
           ),
       error: (_, __) {
         return DataLoadErrorScreenWidget(
@@ -32,11 +33,16 @@ class ClientCompanyApplicationsSection extends ConsumerWidget {
     );
   }
 
-  Future<void> _delete(WidgetRef ref, int id, BuildContext context) async {
+  Future<void> _delete(
+    WidgetRef ref,
+    int id,
+    BuildContext context,
+    int companyId,
+  ) async {
     final notifier = ref.read(
       clientCompanyApplicationsProvider(companyId).notifier,
     );
-    final result = await notifier.removeAssociation(id);
+    final result = await notifier.removeAssociation(id, companyId);
 
     if (!context.mounted) return;
 
