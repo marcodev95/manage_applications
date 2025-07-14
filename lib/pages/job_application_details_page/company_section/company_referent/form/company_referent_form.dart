@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/referent/referent.dart';
 import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/referent/referent_details.dart';
+import 'package:manage_applications/models/shared/company_option.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_barrel.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';

@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/models/referent/referent.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/referent/referent_with_company.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/client_company/client_company_form_notifier.dart';

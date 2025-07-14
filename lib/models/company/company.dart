@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:manage_applications/models/referent/referent.dart';
 import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/shared/company_option.dart';
 
 class Company extends Equatable {
   final int? id;

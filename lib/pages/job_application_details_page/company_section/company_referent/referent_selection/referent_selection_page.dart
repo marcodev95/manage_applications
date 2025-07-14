@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/models/referent/referent.dart';
+import 'package:manage_applications/models/referent/referent_with_company.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_utility.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/referent_selection/referents_selector_notifier.dart';

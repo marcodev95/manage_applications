@@ -1,5 +1,5 @@
 import 'package:manage_applications/models/company/company.dart';
-import 'package:manage_applications/models/referent/referent.dart';
+import 'package:manage_applications/models/shared/company_option.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/client_company/client_company_form_notifier.dart';
 import 'package:riverpod/riverpod.dart';
