@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application_referent.dart';
 
 class SelectedReferentsForInterview extends Equatable{
   final int? id;

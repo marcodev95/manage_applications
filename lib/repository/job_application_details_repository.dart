@@ -7,7 +7,7 @@ import 'package:manage_applications/models/db/db_helper.dart';
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/job_application_details.dart';
-import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application_referent.dart';
 import 'package:manage_applications/models/job_application/job_application.dart';
 import 'package:manage_applications/models/requirement.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';

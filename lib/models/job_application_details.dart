@@ -2,7 +2,7 @@ import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/job_application/job_application.dart';
-import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application_referent.dart';
 import 'package:manage_applications/models/requirement.dart';
 
 class JobApplicationDetails {

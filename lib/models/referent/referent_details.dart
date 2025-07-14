@@ -1,5 +1,5 @@
 import 'package:manage_applications/models/company/company.dart';
-import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application_referent.dart';
 import 'package:manage_applications/models/referent/referent.dart';
 import 'package:manage_applications/models/shared/company_option.dart';
 

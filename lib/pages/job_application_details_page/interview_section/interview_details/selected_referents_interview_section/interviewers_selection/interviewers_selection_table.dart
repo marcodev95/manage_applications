@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application_referent.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_badge.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_utility.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/is_interview_id_null_provider.dart';

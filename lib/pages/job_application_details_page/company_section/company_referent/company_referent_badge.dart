@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application_referent.dart';
 
 class CompanyReferentBadge extends StatelessWidget {
   const CompanyReferentBadge(this.referent, {super.key});

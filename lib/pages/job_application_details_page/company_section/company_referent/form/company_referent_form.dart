@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/referent/referent.dart';
-import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application_referent.dart';
 import 'package:manage_applications/models/referent/referent_details.dart';
 import 'package:manage_applications/models/shared/company_option.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';

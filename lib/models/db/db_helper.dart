@@ -7,7 +7,7 @@ import 'package:manage_applications/models/interview/interview_follow_up.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/interview/referents_interview.dart';
 import 'package:manage_applications/models/job_application/job_application.dart';
-import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application_referent.dart';
 import 'package:manage_applications/models/requirement.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';

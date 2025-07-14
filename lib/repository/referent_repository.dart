@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/db/db_helper.dart';
-import 'package:manage_applications/models/job_application/job_application_referents.dart';
+import 'package:manage_applications/models/job_application/job_application_referent.dart';
 import 'package:manage_applications/models/referent/referent.dart';
 import 'package:manage_applications/models/referent/referent_details.dart';
 import 'package:manage_applications/models/referent/referent_with_company.dart';
