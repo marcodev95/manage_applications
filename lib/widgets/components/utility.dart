@@ -85,6 +85,14 @@ T? getRouteArg<T>(BuildContext context) {
   return null;
 }
 
+List<String> buildMissingFieldsMessage(Map<String, dynamic> fields) {
+  final missing = fields.entries
+      .where((entry) => entry.value == null)
+      .map((entry) => entry.key).toList();
+
+  return missing;
+}
+
 enum ViewModel { list, form }
 
 //Utile per tipi più complessi.

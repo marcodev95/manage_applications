@@ -11,24 +11,23 @@ import 'package:manage_applications/pages/job_application_details_page/company_s
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';
 import 'package:manage_applications/repository/referent_repository.dart';
 import 'package:manage_applications/repository/job_application_referents_repository.dart';
+import 'package:manage_applications/widgets/components/utility.dart';
 
 class ReferentsSelectorNotifier
     extends AutoDisposeAsyncNotifier<List<ReferentWithCompany>> {
   @override
   FutureOr<List<ReferentWithCompany>> build() async {
+    final applicationId = ref.watch(jobApplicationProvider).value?.id;
     final mainId = ref.watch(appliedCompanyFormProvider).value?.id;
     final clientId = ref.watch(clientCompanyFormProvider).value?.id;
-    final applicationId = ref.watch(jobApplicationProvider).value?.id;
 
-    if (mainId == null || applicationId == null) {
-      final missing = [
-        if (mainId == null) 'azienda principale (mainId)',
-        if (applicationId == null) 'candidatura (applicationId)',
-      ].join(' e ');
+    if (applicationId == null || mainId == null) {
+      final missing = buildMissingFieldsMessage({
+        'ID_candidatura (applicationId)': applicationId,
+        'ID_azienda principale (mainId)': mainId,
+      });
 
-      throw MissingInformationError(
-        message: 'Mancano informazioni obbligatorie: $missing',
-      );
+      throw MissingInformationError(error: missing);
     }
 
     return await _referentRepo.getAvailableCompanyReferents(
@@ -46,14 +45,12 @@ class ReferentsSelectorNotifier
       final appliedCompanyId = ref.watch(appliedCompanyFormProvider).value?.id;
 
       if (applicationId == null || appliedCompanyId == null) {
-        final missing = [
-          if (appliedCompanyId == null) 'azienda principale (appliedCompanyId)',
-          if (applicationId == null) 'candidatura (applicationId)',
-        ].join(' e ');
+        final missing = buildMissingFieldsMessage({
+          'ID_candidatura (applicationId)': applicationId,
+          'ID_azienda principale (appliedCompanyId)': appliedCompanyId,
+        });
 
-        throw MissingInformationError(
-          message: 'Mancano informazioni obbligatorie: $missing',
-        );
+        throw MissingInformationError(error: missing);
       }
 
       final isMain = appliedCompanyId == referent.company.id;
