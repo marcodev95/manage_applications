@@ -1,29 +1,22 @@
 import 'package:equatable/equatable.dart';
-import 'package:manage_applications/models/company/company_referent.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_utility.dart';
+import 'package:manage_applications/models/job_application/job_application_referents.dart';
 
 class SelectedReferentsForInterview extends Equatable{
   final int? id;
-  final CompanyReferentUi referent;
+  final JobApplicationReferent referent;
 
   const SelectedReferentsForInterview({this.id, required this.referent});
 
   SelectedReferentsForInterview.fromJson(Map<String, dynamic> json)
     : id = json[ReferentsInterviewTableColumns.id],
-      referent = CompanyReferentUi(
-        id: json[CompanyReferentTableColumns.id],
-        name: json[CompanyReferentTableColumns.name],
-        role: roleTypeFromString(json[CompanyReferentTableColumns.role]),
-        email: json[CompanyReferentTableColumns.email],
-        companyType: fromStringToCompanyType(json[CompanyReferentTableColumns.companyType])
-      );
+      referent = JobApplicationReferent.fromJson(json);
 
   static Map<String, dynamic> toJson(int interviewId, int referentId) => {
     ReferentsInterviewTableColumns.interviewId: interviewId,
     ReferentsInterviewTableColumns.referentId: referentId,
   };
 
-  SelectedReferentsForInterview copyWith({int? id, CompanyReferentUi? referent}) {
+  SelectedReferentsForInterview copyWith({int? id, JobApplicationReferent? referent}) {
     return SelectedReferentsForInterview(
       id: id ?? this.id,
       referent: referent ?? this.referent,

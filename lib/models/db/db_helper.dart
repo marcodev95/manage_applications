@@ -1,5 +1,5 @@
 import 'package:manage_applications/models/company/company.dart';
-import 'package:manage_applications/models/company/company_referent.dart';
+import 'package:manage_applications/models/referent/referent.dart';
 import 'package:manage_applications/models/contract/benefit.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/interview/interview.dart';
@@ -99,31 +99,29 @@ class DbHelper {
   }
 
   void _createCompanyReferentTable(Batch batch) {
-    batch.execute('''CREATE TABLE $companyReferentTableName ( 
-        ${CompanyReferentTableColumns.id} $_idType, 
-        ${CompanyReferentTableColumns.name} $_textType,
-        ${CompanyReferentTableColumns.email} $_textType,
-        ${CompanyReferentTableColumns.phoneNumber} $_textType,
-        ${CompanyReferentTableColumns.companyType} $_textType,
-        ${CompanyReferentTableColumns.role} $_textType,
-        ${CompanyReferentTableColumns.companyId} $_intType,
+    batch.execute('''CREATE TABLE $referentTableName ( 
+        ${ReferentTableColumns.id} $_idType, 
+        ${ReferentTableColumns.name} $_textType,
+        ${ReferentTableColumns.email} $_textType,
+        ${ReferentTableColumns.phoneNumber} $_textType,
+        ${ReferentTableColumns.role} $_textType,
+        ${ReferentTableColumns.companyId} $_intType,
 
-        FOREIGN KEY (${CompanyReferentTableColumns.companyId}) 
+        FOREIGN KEY (${ReferentTableColumns.companyId}) 
           REFERENCES $companyTable (${CompanyTableColumns.id}) 
             ON DELETE CASCADE
 
       )''');
 
-    batch.execute('''INSERT INTO $companyReferentTableName (
-          ${CompanyReferentTableColumns.name},
-          ${CompanyReferentTableColumns.email},
-          ${CompanyReferentTableColumns.phoneNumber},
-          ${CompanyReferentTableColumns.role},
-          ${CompanyReferentTableColumns.companyType},
-          ${CompanyReferentTableColumns.companyId}
+    batch.execute('''INSERT INTO $referentTableName (
+          ${ReferentTableColumns.name},
+          ${ReferentTableColumns.email},
+          ${ReferentTableColumns.phoneNumber},
+          ${ReferentTableColumns.role},
+          ${ReferentTableColumns.companyId}
         ) VALUES 
-          ('Referente Demo 1', 'referente1@example.com', '1234556', 'hr', 'main', 1),
-          ('Referente Demo 2', 'referente2@example.com', '1234556', 'dev', 'client', 1)
+          ('Referente Demo 1', 'referente1@example.com', '1234556', 'hr', 1),
+          ('Referente Demo 2', 'referente2@example.com', '1234556', 'dev', 2)
         ''');
   }
 
@@ -240,7 +238,7 @@ class DbHelper {
             ON DELETE CASCADE,
         
         FOREIGN KEY (${ReferentsInterviewTableColumns.referentId}) 
-          REFERENCES $companyReferentTableName (${CompanyReferentTableColumns.id}) 
+          REFERENCES $referentTableName (${ReferentTableColumns.id}) 
             ON DELETE CASCADE
     )''');
   }
@@ -286,6 +284,8 @@ class DbHelper {
         ${JobApplicationReferentsColumns.jobApplicationId} $_intType, 
         ${JobApplicationReferentsColumns.referentId} $_intType,
         ${JobApplicationReferentsColumns.involvedInInterview} $_intType,
+        ${JobApplicationReferentsColumns.referentAffiliation} $_textType,
+
 
         PRIMARY KEY (
           ${JobApplicationReferentsColumns.jobApplicationId}, 
@@ -297,16 +297,18 @@ class DbHelper {
             ON DELETE CASCADE,
         
         FOREIGN KEY (${JobApplicationReferentsColumns.referentId}) 
-          REFERENCES $companyReferentTableName(${CompanyReferentTableColumns.id})
+          REFERENCES $referentTableName(${ReferentTableColumns.id})
             ON DELETE CASCADE
     )''');
 
     batch.execute('''INSERT INTO ${JobApplicationReferentsColumns.tableName} (
         ${JobApplicationReferentsColumns.jobApplicationId}, 
         ${JobApplicationReferentsColumns.referentId},
-        ${JobApplicationReferentsColumns.involvedInInterview}
+        ${JobApplicationReferentsColumns.involvedInInterview},
+        ${JobApplicationReferentsColumns.referentAffiliation}
+
         ) VALUES 
-          (1, 1, 1), (1, 2, 0)
+          (1, 1, 1, 'main'), (1, 2, 0, 'client')
         ''');
   }
 
@@ -386,9 +388,12 @@ class DbHelper {
 
   /* RawQuery */
 
-  Future<List<Map<String, Object?>>> rawQuery({required String sql}) async {
+  Future<List<Map<String, Object?>>> rawQuery({
+    required String sql,
+    List<Object?>? arguments,
+  }) async {
     final db = await instance.database;
-    final maps = await db.rawQuery(sql);
+    final maps = await db.rawQuery(sql, arguments);
 
     return maps;
   }
@@ -405,5 +410,10 @@ class DbHelper {
   Future<int> rawUpdate({required String sql, List<Object?>? arguments}) async {
     final db = await instance.database;
     return await db.rawUpdate(sql, arguments);
+  }
+
+  Future<int> rawDelete({required String sql, List<Object?>? arguments}) async {
+    final db = await instance.database;
+    return await db.rawDelete(sql, arguments);
   }
 }

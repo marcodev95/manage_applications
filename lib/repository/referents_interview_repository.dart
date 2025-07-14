@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/models/company/company_referent.dart';
+import 'package:manage_applications/models/referent/referent.dart';
 import 'package:manage_applications/models/db/db_helper.dart';
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/interview/interview_follow_up.dart';
+import 'package:manage_applications/models/job_application/job_application_referents.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/models/interview/referents_interview.dart';
 import 'package:manage_applications/models/interview/interview_details.dart';
@@ -38,18 +39,23 @@ class ReferentsInterviewRepository {
 
       final referentsQuery = '''
       SELECT 
-          ${CompanyReferentTableColumns.id}, 
-          ${CompanyReferentTableColumns.name},
-          ${CompanyReferentTableColumns.email},
-          ${CompanyReferentTableColumns.companyType},
-          ${CompanyReferentTableColumns.role},
+          cr.${ReferentTableColumns.id}, 
+          cr.${ReferentTableColumns.name},
+          cr.${ReferentTableColumns.email},
+          cr.${ReferentTableColumns.role},
 
-          ${ReferentsInterviewTableColumns.id}
-      FROM $companyReferentTableName
-        LEFT JOIN 
-          $referentsInterviewTable 
-            ON ${ReferentsInterviewTableColumns.referentId} = ${CompanyReferentTableColumns.id}
-      WHERE ${ReferentsInterviewTableColumns.interviewId} = $id
+          ri.${ReferentsInterviewTableColumns.id},
+
+          jar.${JobApplicationReferentsColumns.referentAffiliation}
+
+      FROM $referentTableName AS cr
+
+      INNER JOIN $referentsInterviewTable AS ri
+        ON ri.${ReferentsInterviewTableColumns.referentId} = cr.${ReferentTableColumns.id}
+        AND ri.${ReferentsInterviewTableColumns.interviewId} = $id
+
+      LEFT JOIN ${JobApplicationReferentsColumns.tableName} AS jar
+        ON jar.${JobApplicationReferentsColumns.referentId} = cr.${ReferentTableColumns.id}
     ''';
 
       final referents = await _db.rawQuery(sql: referentsQuery);
@@ -79,16 +85,22 @@ class ReferentsInterviewRepository {
 
   Future<OperationResult<SelectedReferentsForInterview>> associate(
     int interviewId,
-    CompanyReferentUi referent,
+    JobApplicationReferent referent,
   ) async {
     try {
       final lastId = await _db.create(
         table: referentsInterviewTable,
-        json: SelectedReferentsForInterview.toJson(interviewId, referent.id!),
+        json: SelectedReferentsForInterview.toJson(interviewId, referent.referent.id!),
       );
 
       return Success<SelectedReferentsForInterview>(
-        data: SelectedReferentsForInterview(id: lastId, referent: referent),
+        data: SelectedReferentsForInterview(
+          id: lastId,
+          referent: JobApplicationReferent(
+            referentAffiliation: referent.referentAffiliation,
+            referent: referent.referent,
+          ),
+        ),
       );
     } catch (e, stackTrace) {
       throw SaveError(error: e, stackTrace: stackTrace);

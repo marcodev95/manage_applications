@@ -1,7 +1,7 @@
 enum RoleType { hr, dev, pm, ceo, cto, ad, other }
 
 extension RoleTypeX on RoleType {
-  String get displaName {
+  String get displayName {
     switch (this) {
       case RoleType.hr:
         return 'Risorse Umane';

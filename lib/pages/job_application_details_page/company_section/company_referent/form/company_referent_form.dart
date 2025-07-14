@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/models/company/company_referent.dart';
+import 'package:manage_applications/models/referent/referent.dart';
+import 'package:manage_applications/models/job_application/job_application_referents.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_barrel.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/dropdown_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
-
 
 class CompanyReferentForm extends ConsumerWidget {
   const CompanyReferentForm({super.key});
@@ -23,19 +24,19 @@ class CompanyReferentForm extends ConsumerWidget {
     if (id == null) return CompanyReferentFormBody();
 
     ref.listenOnErrorWithoutSnackbar(
-      provider: getReferentDetailsProvider(id),
+      provider: referentDetailsProvider(id),
       context: context,
     );
 
     final asyncCompanyReferentDetails = ref.watch(
-      getReferentDetailsProvider(id),
+      referentDetailsProvider(id),
     );
 
     return asyncCompanyReferentDetails.when(
       data: (data) => CompanyReferentFormBody(referent: data),
       error:
           (_, __) => DataLoadErrorScreenWidget(
-            onPressed: () => ref.invalidate(getReferentDetailsProvider),
+            onPressed: () => ref.invalidate(referentDetailsProvider),
           ),
       loading: () => Center(child: CircularProgressIndicator()),
     );
@@ -45,7 +46,7 @@ class CompanyReferentForm extends ConsumerWidget {
 class CompanyReferentFormBody extends ConsumerStatefulWidget {
   const CompanyReferentFormBody({super.key, this.referent});
 
-  final CompanyReferentDetails? referent;
+  final ReferentDetails? referent;
 
   @override
   ConsumerState<CompanyReferentFormBody> createState() =>
@@ -68,14 +69,16 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
       ref.read(referentCompanyOptionsProvider).first,
     );
 
-    final referent = widget.referent;
+    final referentDetails = widget.referent;
 
-    if (referent != null && referent.id != null) {
+    if (referentDetails != null) {
+      final referent = referentDetails.jobApplicationReferent.referent;
+      final company = referentDetails.company;
       _nameController.text = referent.name;
       _emailController.text = referent.email;
       _phoneController.text = referent.phoneNumber ?? "";
       _roleController.value = referent.role;
-      _referentCompanyController.value = referent.company;
+      _referentCompanyController.value = company;
     }
   }
 
@@ -127,7 +130,7 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
     return Expanded(
       child: DropdownWidget(
         label: "Ruolo referente(*)",
-        items: RoleType.values.toDropdownItems((e) => e.displaName),
+        items: RoleType.values.toDropdownItems((e) => e.displayName),
         selectedValue: _roleController,
       ),
     );
@@ -155,27 +158,35 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
-      final referentsNotifier = ref.read(companyReferentsProvider.notifier);
+      final referentsNotifier = ref.read(referentsProvider.notifier);
 
-      final referent = CompanyReferentDetails(
-        id: widget.referent?.id,
+      final referentId = widget.referent?.jobApplicationReferent.referent.id;
+
+      final referent = Referent(
+        id: referentId,
         name: _nameController.text,
         role: _roleController.value,
         email: _emailController.text,
         phoneNumber: _phoneController.text,
-        company: _referentCompanyController.value,
+        companyId: _referentCompanyController.value.companyRef.id,
+      );
+
+      final jobAppReferent = JobApplicationReferent(
+        applicationId: ref.read(jobApplicationProvider).value?.id,
+        referentAffiliation: _referentCompanyController.value.companyType,
+        referent: referent,
       );
 
       final submit =
           referent.id == null
-              ? await referentsNotifier.addCompanyReferent(referent)
-              : await referentsNotifier.updateCompanyReferent(referent);
+              ? await referentsNotifier.addReferent(jobAppReferent)
+              : await referentsNotifier.updateReferent(jobAppReferent);
 
       if (!mounted) return;
 
       submit.handleResult(context: context, ref: ref);
 
-      if (widget.referent?.id == null && submit.isSuccess) {
+      if (referentId == null && submit.isSuccess) {
         _resetForm();
       }
     }
@@ -209,7 +220,7 @@ class _SaveButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = ref.watch(companyReferentsProvider).isLoading;
+    final isLoading = ref.watch(referentsProvider).isLoading;
 
     return isLoading
         ? const CircularProgressIndicator()

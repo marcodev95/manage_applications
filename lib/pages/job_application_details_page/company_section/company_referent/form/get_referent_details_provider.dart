@@ -1,10 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/models/company/company_referent.dart';
-import 'package:manage_applications/repository/company_referent_repository.dart';
+import 'package:manage_applications/models/referent/referent.dart';
+import 'package:manage_applications/models/shared/operation_result.dart';
+import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';
+import 'package:manage_applications/repository/referent_repository.dart';
 
-final getReferentDetailsProvider = FutureProvider.autoDispose
-    .family<CompanyReferentDetails, int>((ref, int id) async {
-      final repository = ref.read(companyReferentRepositoryProvider);
+final referentDetailsProvider = FutureProvider.autoDispose.family<
+  ReferentDetails,
+  int
+>((ref, int referentId) async {
+  final repository = ref.read(referentRepositoryProvider);
 
-      return await repository.getCompanyReferentDetails(id);
-    });
+  final applicationId = ref.read(jobApplicationProvider).value?.id;
+
+  if (applicationId == null) {
+    throw MissingInformationError(
+      message:
+          'ID della candidatura mancante: impossibile recuperare i dettagli del referente.',
+      error: {'missing': 'applicationId'},
+    );
+  }
+
+  return await repository.getReferentDetails(applicationId, referentId);
+});

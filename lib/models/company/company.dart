@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:manage_applications/models/company/company_referent.dart';
+import 'package:manage_applications/models/referent/referent.dart';
+import 'package:manage_applications/models/job_application/job_application_referents.dart';
 
 class Company extends Equatable {
   final int? id;
@@ -123,16 +124,16 @@ extension CompanyX on Company {
     return CompanyRef(id: id!, name: name);
   }
 
-  CompanyOption _buildCompanyOption(CompanyType type) {
+  CompanyOption _buildCompanyOption(ReferentAffiliation type) {
     return CompanyOption(CompanyRef(id: id!, name: name), type);
   }
 
   CompanyOption get asMain {
-    return _buildCompanyOption(CompanyType.main);
+    return _buildCompanyOption(ReferentAffiliation.main);
   }
 
   CompanyOption get asClient {
-    return _buildCompanyOption(CompanyType.client);
+    return _buildCompanyOption(ReferentAffiliation.client);
   }
 }
 

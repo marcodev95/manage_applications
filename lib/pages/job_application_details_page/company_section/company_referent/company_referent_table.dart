@@ -11,7 +11,7 @@ class CompanyReferentTable extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final referentsAsync = ref.watch(companyReferentsProvider);
+    final referentsAsync = ref.watch(referentsProvider);
 
     return referentsAsync.when(
       skipError: true,
@@ -26,15 +26,16 @@ class CompanyReferentTable extends ConsumerWidget {
             dataRow: buildColoredRow(
               list: data,
               cells: (r, _) {
+                final referent = r.referent;
                 return [
                   DataCell(CompanyReferentBadge(r)),
                   DataCell(
                     SizedBox(
                       width: 100.0,
                       child: Tooltip(
-                        message: r.role.displaName,
+                        message: r.referent.role.displayName,
                         child: Text(
-                          r.role.displaName,
+                          r.referent.role.displayName,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -43,9 +44,13 @@ class CompanyReferentTable extends ConsumerWidget {
                   DataCell(
                     PopupMenuButtonWidget<String>(
                       popupMenuEntry: [
-                        _editButton(context, r.id!, ref),
-                        _removeReferentFromJobApplication(ref, r.id!, context),
-                        _deleteButton(ref, r.id!, context),
+                        _editButton(context, referent.id!, ref),
+                        _removeReferentFromJobApplication(
+                          ref,
+                          referent.id!,
+                          context,
+                        ),
+                        _deleteButton(ref, referent.id!, context),
                       ],
                     ),
                   ),
@@ -55,7 +60,7 @@ class CompanyReferentTable extends ConsumerWidget {
           ),
       error:
           (_, __) => DataLoadErrorScreenWidget(
-            onPressed: () => ref.invalidate(companyReferentsProvider),
+            onPressed: () => ref.invalidate(referentsProvider),
           ),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
@@ -85,9 +90,9 @@ class CompanyReferentTable extends ConsumerWidget {
       value: "delete",
       child: const Center(child: Icon(Icons.delete, color: Colors.red)),
       onTap: () async {
-        final notifier = ref.read(companyReferentsProvider.notifier);
+        final notifier = ref.read(referentsProvider.notifier);
 
-        final delete = await notifier.deleteCompanyReferent(id);
+        final delete = await notifier.deleteReferent(id);
 
         if (!context.mounted) return;
 
@@ -105,9 +110,9 @@ class CompanyReferentTable extends ConsumerWidget {
       value: "removeReferentFromJobApplication",
       child: Center(child: Icon(Icons.link_off, color: Colors.indigo.shade500)),
       onTap: () async {
-        final notifier = ref.read(companyReferentsProvider.notifier);
+        final notifier = ref.read(referentsProvider.notifier);
 
-        final result = await notifier.removeReferentFromJobApplication(id);
+        final result = await notifier.unlinkReferentFromJobApplication(id);
 
         if (!context.mounted) return;
 

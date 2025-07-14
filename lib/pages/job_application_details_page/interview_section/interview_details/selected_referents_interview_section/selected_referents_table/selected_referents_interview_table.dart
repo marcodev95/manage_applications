@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_badge.dart';
-import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/company_referent/company_referent_barrel.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/selected_referents_interview_section/selected_referents_table/selected_referents_interview_notifier.dart';
 import 'package:manage_applications/widgets/components/button/remove_button_widget.dart';
 import 'package:manage_applications/widgets/components/table_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
+import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
 class SelectedReferentsInterviewTable extends ConsumerStatefulWidget {
   const SelectedReferentsInterviewTable({super.key});
@@ -38,17 +38,19 @@ class SelectedReferentsInterviewTableState
           dataRow: buildColoredRow(
             list: selectedReferents,
             cells:
-                (referent, _) => [
-                  DataCell(CompanyReferentBadge(referent.referent)),
+                (sr, _) => [
+                  DataCell(CompanyReferentBadge(sr.referent)),
                   DataCell(
                     Text(
-                      referent.referent.role.displaName,
-                      style: TextStyle(fontSize: AppStyle.tableTextFontSize),
+                      sr.referent.referent.role.displayName,
+                      style: const TextStyle(
+                        fontSize: AppStyle.tableTextFontSize,
+                      ),
                     ),
                   ),
                   DataCell(
                     TextOverflowEllipsisWidget(
-                      referent.referent.email,
+                      sr.referent.referent.email,
                       fontSize: AppStyle.tableTextFontSize,
                     ),
                   ),
@@ -62,7 +64,7 @@ class SelectedReferentsInterviewTableState
                                 getRouteArg<int?>(context),
                               ).notifier,
                             )
-                            .removeReferent(referent.id);
+                            .removeReferent(sr.id);
                       },
                     ),
                   ),
@@ -70,8 +72,12 @@ class SelectedReferentsInterviewTableState
           ),
         );
       },
-      error: (error, stackTrace) => Text('Eventuale reload ? '),
-      loading: () => Center(child: CircularProgressIndicator()),
+      error:
+          (_, __) => DataLoadErrorScreenWidget(
+            onPressed:
+                () => ref.invalidate(selectedReferentsForInterviewProvider),
+          ),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 }

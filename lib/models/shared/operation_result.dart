@@ -49,8 +49,8 @@ class Failure<T> extends OperationResult<T> with EquatableMixin implements Excep
   List<Object?> get props => [id];
 }
 
-Failure mapToFailure(Object error, StackTrace stackTrace) {
-  if (error is Failure) return error;
+Failure<T> mapToFailure<T>(Object error, StackTrace stackTrace) {
+  if (error is Failure<T>) return error;
 
   if (error is StateError) {
     return Failure(

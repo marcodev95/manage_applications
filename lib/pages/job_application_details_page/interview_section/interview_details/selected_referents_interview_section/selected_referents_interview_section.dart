@@ -15,10 +15,9 @@ class SelectedReferentsInterviewSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final routeArg = getRouteArg<int?>(context);
     ref.listenOnErrorWithSnackbar(
-      provider: selectedReferentsForInterviewProvider(
-        getRouteArg<int?>(context),
-      ),
+      provider: selectedReferentsForInterviewProvider(routeArg),
       context: context,
     );
 
@@ -47,7 +46,7 @@ class SelectedReferentsInterviewSection extends ConsumerWidget {
               label: 'Torna alla lista dei referenti associati',
             ),
 
-            body: InterviewersSelectionTable(),
+            body: InterviewersSelectionTable(routeArg: routeArg),
           ),
         ),
       ],

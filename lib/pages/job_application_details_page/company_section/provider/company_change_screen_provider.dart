@@ -33,6 +33,7 @@ class CompanyChangeScreenNotifer<T>
       screen: CompanyScreen.referentForm,
     );
   }
+
 }
 
 final companyChangeScreenProvider = AutoDisposeNotifierProvider<

@@ -1,15 +1,15 @@
 import 'package:manage_applications/models/company/company.dart';
-import 'package:manage_applications/models/company/company_referent.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/job_application/job_application.dart';
+import 'package:manage_applications/models/job_application/job_application_referents.dart';
 import 'package:manage_applications/models/requirement.dart';
 
 class JobApplicationDetails {
   final JobApplication jobApplication;
   final Company company;
   final Company clientCompany;
-  final List<CompanyReferentUi> companyReferents;
+  final List<JobApplicationReferent> companyReferents;
   final List<InterviewUi> interviews;
   final List<ContractUI> contracts;
   final List<Requirement> requirements;
@@ -33,9 +33,9 @@ class JobApplicationDetails {
               : Company.defaultValue(),
       companyReferents =
           json["company_referents"] != null
-              ? List<CompanyReferentUi>.from(
+              ? List<JobApplicationReferent>.from(
                 json["company_referents"].map(
-                  (e) => CompanyReferentUi.fromJson(e),
+                  (e) => JobApplicationReferent.fromJson(e),
                 ),
               )
               : [],
@@ -64,7 +64,7 @@ class JobApplicationDetails {
     JobApplication? jobApplication,
     Company? company,
     Company? clientCompany,
-    List<CompanyReferentUi>? companyReferents,
+    List<JobApplicationReferent>? companyReferents,
     List<Requirement>? requirements,
     List<ContractUI>? contracts,
     List<InterviewUi>? interviews,

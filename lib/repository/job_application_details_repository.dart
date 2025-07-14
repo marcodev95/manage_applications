@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/company/company.dart';
-import 'package:manage_applications/models/company/company_referent.dart';
+import 'package:manage_applications/models/referent/referent.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/db/db_helper.dart';
 import 'package:manage_applications/models/interview/interview.dart';
@@ -107,17 +107,16 @@ class JobApplicationDetailsRepository {
   ) async {
     final sql = '''
     SELECT 
-      ${CompanyReferentTableColumns.id},
-      ${CompanyReferentTableColumns.name},
-      ${CompanyReferentTableColumns.role},
-      ${CompanyReferentTableColumns.companyType},
-      ${CompanyReferentTableColumns.email},
+      ${ReferentTableColumns.id},
+      ${ReferentTableColumns.name},
+      ${ReferentTableColumns.role},
+      ${ReferentTableColumns.email},
 
-      ${JobApplicationReferentsColumns.involvedInInterview}
+      ${JobApplicationReferentsColumns.referentAffiliation}
 
-    FROM $companyReferentTableName
+    FROM $referentTableName
       INNER JOIN ${JobApplicationReferentsColumns.tableName}
-        ON ${JobApplicationReferentsColumns.referentId} = ${CompanyReferentTableColumns.id}
+        ON ${JobApplicationReferentsColumns.referentId} = ${ReferentTableColumns.id}
 
     WHERE ${JobApplicationReferentsColumns.jobApplicationId} = $applicationId
   ''';
