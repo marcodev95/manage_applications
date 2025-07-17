@@ -74,7 +74,7 @@ class _OpenReferentsSelectionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButtonWidget(
       onPressed: () => navigatorPush(context, ReferentSelectionPage()),
-      label: 'Elenco referenti',
+      label: 'Seleziona referenti',
     );
   }
 }
