@@ -20,9 +20,7 @@ class CompanyReferentSection extends StatelessWidget {
         horizontal: AppStyle.pad24,
       ),
       title: "Lista referenti",
-      trailing: Row(
-        children: [_CompanyReferentTrailing(), _OpenReferentsSelectionButton()],
-      ),
+      trailing: _TrailingWidget(),
       body: SizedBox(
         height: 546.0,
         child: SingleChildScrollView(
@@ -34,23 +32,37 @@ class CompanyReferentSection extends StatelessWidget {
   }
 }
 
-class _CompanyReferentTrailing extends ConsumerWidget {
-  const _CompanyReferentTrailing();
+class _TrailingWidget extends ConsumerWidget {
+  const _TrailingWidget();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isActive = ref.watch(areJobApplicationIdAndCompanyIdPresent);
 
+    return isActive
+        ? const Row(
+          spacing: 20.0,
+          children: [
+            _CompanyReferentTrailing(),
+            _OpenReferentsSelectionButton(),
+          ],
+        )
+        : const SizedBox();
+  }
+}
+
+class _CompanyReferentTrailing extends ConsumerWidget {
+  const _CompanyReferentTrailing();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return TextButtonWidget(
       onPressed:
-          isActive
-              ? () =>
-                  ref
-                      .read(companyChangeScreenProvider.notifier)
-                      .goToReferentCompanyForm()
-              : () {},
+          () =>
+              ref
+                  .read(companyChangeScreenProvider.notifier)
+                  .goToReferentCompanyForm(),
       label: 'Aggiungi referente',
-      isEnable: isActive,
     );
   }
 }
@@ -60,9 +72,9 @@ class _OpenReferentsSelectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
+    return TextButtonWidget(
       onPressed: () => navigatorPush(context, ReferentSelectionPage()),
-      icon: const Icon(Icons.person_add),
+      label: 'Elenco referenti',
     );
   }
 }
