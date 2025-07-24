@@ -29,7 +29,13 @@ class InterviewCard extends ConsumerWidget {
             Row(
               spacing: 8,
               children: [
-                Icon(interviewUi.type.interviewTypeIcon, color: Colors.green),
+                Tooltip(
+                  message: 'Tipo di colloquio',
+                  child: Icon(
+                    interviewUi.type.interviewTypeIcon,
+                    color: Colors.green,
+                  ),
+                ),
                 Text(
                   interviewUi.type.displayName,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
@@ -39,7 +45,10 @@ class InterviewCard extends ConsumerWidget {
             Row(
               spacing: 8,
               children: [
-                Icon(Icons.event, color: Colors.blue),
+                Tooltip(
+                  message: 'Data e ora del colloquio',
+                  child: Icon(Icons.event, color: Colors.blue),
+                ),
                 Text(
                   _displayOriginalDateTime(context),
                   style: TextStyle(
@@ -59,7 +68,10 @@ class InterviewCard extends ConsumerWidget {
                   child: Row(
                     spacing: 8,
                     children: [
-                      Icon(Icons.info_outline, color: Colors.grey),
+                      Tooltip(
+                        message: 'Tempo di risposta',
+                        child: Icon(Icons.access_time, color: Colors.grey),
+                      ),
                       Text(
                         interviewUi.answerTime ?? 'Da definire',
                         style: TextStyle(
