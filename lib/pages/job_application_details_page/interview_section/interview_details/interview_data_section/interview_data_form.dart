@@ -120,8 +120,10 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
 
                         Flexible(
                           child: Row(
+                            spacing: 20.0,
                             children: [
                               Expanded(
+                                flex: 2,
                                 child: DropdownWidget(
                                   label: 'Svolgimento colloquio(*)',
                                   items: InterviewsFormat.values
@@ -129,7 +131,6 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
                                   selectedValue: _interviewFormatNotifier,
                                 ),
                               ),
-                              const SizedBox(width: 20.0),
                               Expanded(
                                 flex: 2,
                                 child: InterviewPlaceField(

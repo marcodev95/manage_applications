@@ -232,5 +232,9 @@ class _GoToInterviewDetailsButton extends StatelessWidget {
 }
 
 String _interviewPlace(InterviewUi interview, WidgetRef ref) {
+  if (interview.interviewFormat == InterviewsFormat.telefono) {
+    return interview.interviewFormat.displayName;
+  }
+
   return '${interview.interviewFormat.displayName} - ${interview.interviewPlace}';
 }

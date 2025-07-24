@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
-enum InterviewTypes { conoscitivo, telefonico, tecnico, gruppo, finale }
+enum InterviewTypes { conoscitivo, tecnico, gruppo, finale }
 
 extension InterviewTypesExtension on InterviewTypes {
   String get displayName {
     switch (this) {
       case InterviewTypes.conoscitivo:
         return 'Conoscitivo';
-      case InterviewTypes.telefonico:
-        return 'Telefonico';
       case InterviewTypes.tecnico:
         return 'Tecnico';
       case InterviewTypes.finale:
@@ -22,8 +20,6 @@ extension InterviewTypesExtension on InterviewTypes {
     switch (this) {
       case InterviewTypes.conoscitivo:
         return Icons.chat_bubble_outline;
-      case InterviewTypes.telefonico:
-        return Icons.phone;
       case InterviewTypes.tecnico:
         return Icons.code;
       case InterviewTypes.finale:
@@ -44,8 +40,6 @@ InterviewTypes getInterviewTypeFromString(String value) {
       return InterviewTypes.finale;
     case 'gruppo':
       return InterviewTypes.gruppo;
-    case 'telefonico':
-      return InterviewTypes.telefonico;
     default:
       return InterviewTypes.conoscitivo;
   }
@@ -66,7 +60,7 @@ extension InterviewsFormatExtension on InterviewsFormat {
         return 'Altro';
     }
   }
-
+  
   IconData get iconInterview {
     switch (this) {
       case InterviewsFormat.online:

@@ -31,8 +31,6 @@ class _InterviewPlaceFieldState extends ConsumerState<InterviewPlaceField> {
       if (format == InterviewsFormat.presenza) {
         final company = ref.read(appliedCompanyFormProvider).value;
         widget.controller.text = '${company?.address} - ${company?.city}';
-      } else if (format == InterviewsFormat.telefono) {
-        widget.controller.text = 'Telefono';
       } else {
         widget.controller.clear();
       }
@@ -53,13 +51,18 @@ class _InterviewPlaceFieldState extends ConsumerState<InterviewPlaceField> {
       valueListenable: widget.notifier,
       builder: (_, format, __) {
         final isOnline = format == InterviewsFormat.online;
-        final changeLabel =
+        final isPhone = format == InterviewsFormat.telefono;
+        final fieldLabel =
             isOnline ? 'Piattaforma del colloquio' : 'Luogo del colloquio';
+
+        if (isPhone) {
+          return const SizedBox.shrink();
+        }
 
         return FormFieldWidget(
           controller: widget.controller,
-          label: isOnline ? 'Piattaforma del colloquio' : 'Luogo del colloquio',
-          validator: (v) => baseValidator(v, changeLabel),
+          label: fieldLabel,
+          validator: (v) => baseValidator(v, fieldLabel),
         );
       },
     );
