@@ -8,12 +8,14 @@ class DropdownWidget<T> extends StatelessWidget {
     required this.items,
     required this.selectedValue,
     this.border,
+    this.onChanged,
   });
 
   final String label;
   final List<DropdownMenuItem<T>> items;
   final ValueNotifier<T?> selectedValue;
   final InputBorder? border;
+  final void Function(T?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,13 @@ class DropdownWidget<T> extends StatelessWidget {
           decoration: AppStyle.baseInputDecoration(label),
           value: value,
           items: items,
-          onChanged: (T? v) => selectedValue.value = v,
+          onChanged: (T? v) {
+            selectedValue.value = v;
+
+            if (onChanged != null) {
+              onChanged!(v);
+            }
+          },
         );
       },
     );
