@@ -52,6 +52,7 @@ class _InterviewPlaceFieldState extends ConsumerState<InterviewPlaceField> {
       builder: (_, format, __) {
         final isOnline = format == InterviewsFormat.online;
         final isPhone = format == InterviewsFormat.telefono;
+        final isReadOnly = format == InterviewsFormat.presenza || format == InterviewsFormat.altro;
         final fieldLabel =
             isOnline ? 'Piattaforma del colloquio' : 'Luogo del colloquio';
 
@@ -62,6 +63,7 @@ class _InterviewPlaceFieldState extends ConsumerState<InterviewPlaceField> {
         return FormFieldWidget(
           controller: widget.controller,
           label: fieldLabel,
+          readOnly: isReadOnly,
           validator: (v) => baseValidator(v, fieldLabel),
         );
       },

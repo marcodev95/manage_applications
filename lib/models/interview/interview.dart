@@ -11,6 +11,8 @@ class Interview {
   final InterviewTypes type;
   final InterviewsFormat interviewFormat;
   final InterviewStatus status;
+  final bool placeUpdated;
+  final String? previousInterviewPlace;
   final String? notes;
   final String? answerTime;
   final String? followUpType;
@@ -26,6 +28,8 @@ class Interview {
     required this.interviewFormat,
     required this.status,
     required this.interviewPlace,
+    this.placeUpdated = false,
+    this.previousInterviewPlace,
     this.answerTime,
     this.notes,
     this.followUpType,
@@ -41,6 +45,9 @@ class Interview {
       interviewFormat = getInterviewFormatFromString(
         json[InterviewTableColumns.interviewFormat],
       ),
+      previousInterviewPlace =
+          json[InterviewTableColumns.previousInterviewPlace],
+      placeUpdated = fromIntToBool(json[InterviewTableColumns.placeUpdated]),
       status = getInterviewStatusFromString(json[InterviewTableColumns.status]),
       notes = json[InterviewTableColumns.notes],
       answerTime = json[InterviewTableColumns.answerTime],
@@ -59,7 +66,9 @@ class Interview {
     InterviewTypes? type,
     InterviewsFormat? interviewFormat,
     InterviewStatus? status,
+    bool? placeUpdated,
     String? answerTime,
+    String? previousInterviewPlace,
     String? followUpType,
     String? notes,
     DateTime? followUpDate,
@@ -72,8 +81,11 @@ class Interview {
       time: time ?? this.time,
       type: type ?? this.type,
       interviewFormat: interviewFormat ?? this.interviewFormat,
+      placeUpdated: placeUpdated ?? this.placeUpdated,
       status: status ?? this.status,
       notes: notes ?? this.notes,
+      previousInterviewPlace:
+          previousInterviewPlace ?? this.previousInterviewPlace,
       answerTime: answerTime ?? this.answerTime,
       followUpType: followUpType ?? this.followUpType,
       followUpDate: followUpDate ?? this.followUpDate,
@@ -88,8 +100,10 @@ class Interview {
     InterviewTableColumns.type: type.name,
     InterviewTableColumns.interviewFormat: interviewFormat.name,
     InterviewTableColumns.answerTime: answerTime,
+    InterviewTableColumns.placeUpdated: fromBoolToInt(placeUpdated),
     InterviewTableColumns.followUpType: followUpType,
     InterviewTableColumns.notes: notes,
+    InterviewTableColumns.previousInterviewPlace: previousInterviewPlace,
     InterviewTableColumns.status: status.name,
     InterviewTableColumns.interviewPlace: interviewPlace,
     InterviewTableColumns.jobApplicationId: jobApplicationId,
@@ -118,6 +132,7 @@ class Interview {
       status: $status
       followUpType: $followUpType
       followUpDate: ${followUpDate.toString()}
+      previousInterviewPlace: $previousInterviewPlace
       interviewPlace: $interviewPlace
       notes: $notes
       jobApplicationId: $jobApplicationId
@@ -133,7 +148,9 @@ class InterviewTableColumns {
   static String time = "time";
   static String type = "type";
   static String interviewFormat = "interview_format";
+  static String placeUpdated = "place_updated";
   static String notes = "notes";
+  static String previousInterviewPlace = 'previous_interview_place';
   static String status = "status";
   static String answerTime = "answer_time";
   static String followUpType = "follow_up_type";
@@ -148,7 +165,9 @@ class InterviewUi extends Equatable {
   final TimeOfDay time;
   final InterviewTypes type;
   final InterviewsFormat interviewFormat;
+  final String? previousInterviewPlace;
   final String? answerTime;
+  final bool placeUpdated;
   final String? interviewPlace;
   final DateTime? rescheduleDateTime;
   final DateTime? followUpDate;
@@ -161,6 +180,8 @@ class InterviewUi extends Equatable {
     required this.type,
     required this.interviewFormat,
     required this.status,
+    this.placeUpdated = false,
+    this.previousInterviewPlace,
     this.answerTime,
     this.interviewPlace,
     this.rescheduleDateTime,
@@ -175,11 +196,16 @@ class InterviewUi extends Equatable {
       interviewFormat = getInterviewFormatFromString(
         json[InterviewTableColumns.interviewFormat],
       ),
+      previousInterviewPlace =
+          json[InterviewTableColumns.previousInterviewPlace],
+      placeUpdated = fromIntToBool(json[InterviewTableColumns.placeUpdated]),
       status = getInterviewStatusFromString(json[InterviewTableColumns.status]),
       answerTime = json[InterviewTableColumns.answerTime],
       interviewPlace = json[InterviewTableColumns.interviewPlace],
 
-      rescheduleDateTime = parseDateTimeOrNull(json[InterviewTimelineTable.newDateTime]),
+      rescheduleDateTime = parseDateTimeOrNull(
+        json[InterviewTimelineTable.newDateTime],
+      ),
 
       followUpDate =
           json[InterviewTableColumns.followUpDate] != null
@@ -191,6 +217,8 @@ class InterviewUi extends Equatable {
     InterviewTypes? type,
     InterviewsFormat? interviewFormat,
     InterviewStatus? status,
+    bool? placeUpdated,
+    String? previousInterviewPlace,
     String? answerTime,
     String? interviewPlace,
     DateTime? rescheduleDateTime,
@@ -200,8 +228,10 @@ class InterviewUi extends Equatable {
       date: date,
       time: time,
       type: type ?? this.type,
+      placeUpdated: placeUpdated ?? this.placeUpdated,
       interviewFormat: interviewFormat ?? this.interviewFormat,
       interviewPlace: interviewPlace ?? this.interviewPlace,
+      previousInterviewPlace: previousInterviewPlace ?? this.previousInterviewPlace,
       status: status ?? this.status,
       answerTime: answerTime ?? this.answerTime,
       rescheduleDateTime: rescheduleDateTime ?? this.rescheduleDateTime,
@@ -216,7 +246,9 @@ class InterviewUi extends Equatable {
       Time: ${time.toString()}
       Type: $type
       Place: $interviewFormat
+      placeUpdated: $placeUpdated
       answerTime: $answerTime
+      previousInterviewPlace: $previousInterviewPlace
       RescheduleDate; $rescheduleDateTime
       status: $status
       followUpDate: ${followUpDate.toString()}
@@ -225,5 +257,11 @@ class InterviewUi extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, type, interviewFormat, status, interviewPlace];
+  List<Object?> get props => [
+    id,
+    type,
+    interviewFormat,
+    status,
+    interviewPlace,
+  ];
 }

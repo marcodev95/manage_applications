@@ -3,26 +3,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_provider.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timelines_provider.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 
 import 'package:manage_applications/widgets/components/utility.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
-class InterviewTimelineList extends ConsumerWidget {
-  const InterviewTimelineList({super.key, required this.onEdit});
+class InterviewTimelineList extends ConsumerStatefulWidget {
+  const InterviewTimelineList({super.key, this.routeID});
 
-  final void Function() onEdit;
+  final int? routeID;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final routeID = getRouteArg<int?>(context);
+  ConsumerState<InterviewTimelineList> createState() =>
+      _InterviewTimelineListState();
+}
 
-    final reschedulesAsync = ref.watch(interviewTimelineProvider(routeID));
+class _InterviewTimelineListState extends ConsumerState<InterviewTimelineList> {
+  @override
+  Widget build(BuildContext context) {
+    final timelineAsync = ref.watch(
+      interviewTimelinesProvider(widget.routeID),
+    );
 
-    return reschedulesAsync.when(
+    return timelineAsync.when(
       skipError: true,
+      skipLoadingOnReload: true,
       data: (data) {
         return ListView.builder(
           itemCount: data.length,
@@ -38,7 +45,10 @@ class InterviewTimelineList extends ConsumerWidget {
       error:
           (_, __) => DataLoadErrorScreenWidget(
             errorMessage: ErrorsMessage.dataLoading,
-            onPressed: () => ref.invalidate(interviewTimelineProvider),
+            onPressed:
+                () => ref.invalidate(
+                  interviewTimelinesProvider(widget.routeID),
+                ),
           ),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
@@ -46,15 +56,13 @@ class InterviewTimelineList extends ConsumerWidget {
 
   Widget _timelineCardWidget(InterviewTimeline timeline) {
     return switch (timeline.eventType) {
-      InterviewTimelineEvent.done => _DoneCardWidget(timeline),
+      InterviewStatus.completed => _DoneCardWidget(timeline),
 
-      InterviewTimelineEvent.postponed => _PostponedCard(timeline),
+      InterviewStatus.postponed => _PostponedCard(timeline),
 
-      InterviewTimelineEvent.cancelled => _CancelledCardWidget(timeline),
+      InterviewStatus.cancelled => _CancelledCardWidget(timeline),
 
-      InterviewTimelineEvent.relocated => _RelocatedCard(timeline),
-
-      InterviewTimelineEvent.followUpSent => _FollowUpSentCard(timeline),
+      InterviewStatus.toDo => const SizedBox(),
     };
   }
 }

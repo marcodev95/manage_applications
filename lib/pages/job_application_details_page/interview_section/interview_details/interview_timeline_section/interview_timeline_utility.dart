@@ -1,4 +1,5 @@
 enum InterviewTimelineEvent {
+  toDo,
   done,
   postponed,
   cancelled,
@@ -9,6 +10,8 @@ enum InterviewTimelineEvent {
 extension InterviewTimelineEventX on InterviewTimelineEvent {
   String get displayName {
     switch (this) {
+      case InterviewTimelineEvent.toDo:
+        return 'Da fare';
       case InterviewTimelineEvent.done:
         return 'Svolto';
       case InterviewTimelineEvent.postponed:
@@ -25,10 +28,16 @@ extension InterviewTimelineEventX on InterviewTimelineEvent {
   bool get isPostponed {
     return this == InterviewTimelineEvent.postponed;
   }
+
+  bool get isRelocatedPlace {
+    return this == InterviewTimelineEvent.relocated;
+  }
 }
 
 InterviewTimelineEvent getInterviewTimelineFromString(String value) {
   switch (value) {
+    case 'toDo': 
+      return InterviewTimelineEvent.toDo;
     case 'done':
       return InterviewTimelineEvent.done;
     case 'postponed':

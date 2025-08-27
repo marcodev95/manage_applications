@@ -18,6 +18,7 @@ class FormFieldWidget extends StatelessWidget {
     this.alignLabelWithHint,
     this.prefixIcon,
     this.isRequired = false,
+    this.initialValue,
   });
 
   final TextEditingController controller;
@@ -33,11 +34,13 @@ class FormFieldWidget extends StatelessWidget {
   final bool? alignLabelWithHint;
   final Widget? prefixIcon;
   final bool isRequired;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      initialValue: initialValue,
       decoration: _buildDecoration(isRequired, label),
       validator: validator,
       keyboardType: keyboardType,
@@ -117,6 +120,29 @@ class DateFormFieldWidget extends StatelessWidget {
     );
   }
 }
+
+class ReadOnlyTextFormField extends StatelessWidget {
+  const ReadOnlyTextFormField({
+    super.key,
+    required this.initialValue,
+    required this.label,
+    required this.suffixIcon
+  });
+
+  final String initialValue;
+  final String label;
+  final Widget suffixIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      initialValue: initialValue,
+      readOnly: true,      
+      decoration: _buildDecoration(false, label).copyWith(suffixIcon: suffixIcon),
+    );
+  }
+}
+
 
 /// Validator
 

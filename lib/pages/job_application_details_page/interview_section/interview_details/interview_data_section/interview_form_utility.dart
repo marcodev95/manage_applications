@@ -105,6 +105,10 @@ extension InterviewStatusX on InterviewStatus {
         return 'Annullato';
     }
   }
+  
+  bool get isPostponed {
+    return this == InterviewStatus.postponed;
+  }
 
   Color get iconColor {
     switch (this) {

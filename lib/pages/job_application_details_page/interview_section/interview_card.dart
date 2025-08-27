@@ -92,33 +92,13 @@ class InterviewCard extends ConsumerWidget {
                   child: Row(
                     spacing: 100,
                     children: [
-                      Flexible(
-                        child: Column(
-                          spacing: 12,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Luogo del colloquio',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            Text(
-                              _interviewPlace(interviewUi, ref),
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
-                      ),
+                      _BuildPlaceSection(interviewUi),
 
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 12,
                         children: [
-                          Text('Status', style: TextStyle(fontSize: 16)),
+                          Text('Stato', style: TextStyle(fontSize: 16)),
                           Row(
                             spacing: 8,
                             children: [
@@ -250,3 +230,85 @@ String _interviewPlace(InterviewUi interview, WidgetRef ref) {
 
   return '${interview.interviewFormat.displayName} - ${interview.interviewPlace}';
 }
+
+class ReschedulePlace extends StatelessWidget {
+  const ReschedulePlace(this.newPlace, {super.key});
+
+  final String newPlace;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(Icons.place, color: Colors.redAccent),
+        SizedBox(width: 4),
+        Tooltip(
+          message: 'Il luogo del colloquio è stato aggiornato',
+          child: Text(newPlace),
+        ),
+        SizedBox(width: 8),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: Colors.orange[200],
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Text(
+            "Luogo aggiornato",
+            style: TextStyle(fontSize: 10, color: Colors.black),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BuildPlaceSection extends ConsumerWidget {
+  const _BuildPlaceSection(this.iu);
+
+  final InterviewUi iu;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      spacing: 12,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Luogo del colloquio', style: TextStyle(fontSize: 16)),
+        iu.placeUpdated
+            ? ReschedulePlace(iu.interviewPlace!)
+            : Text(
+              _interviewPlace(iu, ref),
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+      ],
+    );
+  }
+}
+
+
+/* Row(
+  children: [
+    Icon(Icons.place, color: Colors.redAccent),
+    SizedBox(width: 4),
+    Tooltip(
+      message: 'Il luogo del colloquio è stato aggiornato',
+      child: Text("Via Roma 12, Milano"),
+    ),
+    SizedBox(width: 8),
+    Container(
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.orange[200],
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        "Luogo aggiornato",
+        style: TextStyle(fontSize: 10, color: Colors.black),
+      ),
+    )
+  ],
+)
+ */

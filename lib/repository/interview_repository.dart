@@ -71,4 +71,46 @@ class InterviewRepository {
       throw DeleteError(error: e, stackTrace: stackTrace);
     }
   }
+
+  Future<void> updateInterviewStatus(int id, String status) async {
+    try {
+      final result = await _db.update(
+        table: interviewTable,
+        json: {InterviewTableColumns.status: status},
+        where: "${InterviewTableColumns.id} = ?",
+        whereArgs: [id],
+      );
+
+      if (result == 0) throw ItemNotFound();
+    } catch (e, stackTrace) {
+      if (e is ItemNotFound) rethrow;
+
+      throw SaveError(error: e, stackTrace: stackTrace);
+    }
+  }
+
+  Future<void> updateReschedulePlace(
+    int id,
+    String oldPlace,
+    String newPlace,
+  ) async {
+    try {
+      final result = await _db.update(
+        table: interviewTable,
+        json: {
+          InterviewTableColumns.placeUpdated: 1,
+          InterviewTableColumns.previousInterviewPlace: oldPlace,
+          InterviewTableColumns.interviewPlace: newPlace,
+        },
+        where: "${InterviewTableColumns.id} = ?",
+        whereArgs: [id],
+      );
+
+      if (result == 0) throw ItemNotFound();
+    } catch (e, stackTrace) {
+      if (e is ItemNotFound) rethrow;
+
+      throw SaveError(error: e, stackTrace: stackTrace);
+    }
+  }
 }

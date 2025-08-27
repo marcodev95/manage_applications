@@ -32,7 +32,7 @@ class Failure<T> extends OperationResult<T> with EquatableMixin implements Excep
   final DateTime errorDate;
 
   Failure({
-    required this.error,
+    this.error,
     this.message = ErrorsMessage.genericMessage,
     StackTrace? stackTrace,
   }) : id =

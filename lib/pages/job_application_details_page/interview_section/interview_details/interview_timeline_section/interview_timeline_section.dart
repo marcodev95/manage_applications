@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_form.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_list.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/is_interview_id_null_provider.dart';
 import 'package:manage_applications/widgets/components/button/text_button_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
+
+/* Ricapitolando il flow ideale:
+
+Tutta la modifica dello stato avviene tramite la timeline, 
+che rimane la fonte ufficiale e storicizzata degli eventi,
+
+Nei dettagli del colloquio mostri un campo readonly che indica lo stato attuale, 
+derivato dall’ultimo evento della timeline,
+
+Gli eventi una volta inseriti sono immodificabili per garantire integrità e tracciabilità. */
 
 class InterviewTimelineSection extends StatefulWidget {
   const InterviewTimelineSection({super.key});
@@ -31,7 +42,18 @@ class _InterviewTimelineSectionState extends State<InterviewTimelineSection> {
   Widget build(BuildContext context) {
     final routeArg = getRouteArg<int?>(context);
 
-    return ValueListenableBuilder<ViewModel>(
+    return Padding(
+      padding: EdgeInsets.all(AppStyle.pad16),
+      child: Column(
+        children: [
+          SectionTitle('Timeline'),
+          const Divider(thickness: 1),
+          Flexible(child: InterviewTimelineList(routeID: routeArg,)),
+        ],
+      ),
+    );
+
+    /* return ValueListenableBuilder<ViewModel>(
       valueListenable: _screenNotifer,
       builder: (context, value, _) {
         return switch (value) {
@@ -54,17 +76,19 @@ class _InterviewTimelineSectionState extends State<InterviewTimelineSection> {
               onPressed: () => goToList(),
               label: 'Torna allo storico',
             ),
-            body: Padding(
+            body: const SizedBox() /* Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: InterviewTimelineForm(
+              child: InterviewTimelineForm<InterviewStatus>(
                 routeID: routeArg,
                 goToList: goToList,
+                value: InterviewStatus.toDo,
+                eventType: InterviewStatus.toDo.displayName,
               ),
-            ),
+            ), */,
           ),
         };
       },
-    );
+    ); */
   }
 }
 

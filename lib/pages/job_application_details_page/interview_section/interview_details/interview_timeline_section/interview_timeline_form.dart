@@ -1,47 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_notifier.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_provider.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timelines_provider.dart';
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/date_picker_widget.dart';
 import 'package:manage_applications/widgets/components/dropdown_widget.dart';
+import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
+import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/time_picker_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
-class InterviewTimelineForm extends ConsumerStatefulWidget {
-  const InterviewTimelineForm({
-    super.key,
-    this.routeID,
-    required this.goToList,
-  });
+class InterviewTimelineForm extends StatelessWidget {
+  const InterviewTimelineForm({super.key, this.routeID, this.interview});
 
   final int? routeID;
-  final void Function() goToList;
+  final Interview? interview;
 
   @override
-  ConsumerState<InterviewTimelineForm> createState() =>
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Modifica stato'),
+        actions: const [ErrorsPanelButtonWidget()],
+      ),
+
+      body: AppCard(
+        child: InterviewTimelineFormBody(
+          routeID: routeID,
+          interview: interview,
+        ),
+      ),
+    );
+  }
+}
+
+class InterviewTimelineFormBody extends ConsumerStatefulWidget {
+  const InterviewTimelineFormBody({super.key, this.routeID, this.interview});
+
+  final int? routeID;
+  final Interview? interview;
+
+  @override
+  ConsumerState<InterviewTimelineFormBody> createState() =>
       _InterviewTimelineFormState();
 }
 
-class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
+class _InterviewTimelineFormState
+    extends ConsumerState<InterviewTimelineFormBody> {
   final _formKey = GlobalKey<FormState>();
 
-  final _eventTypeNotifier = ValueNotifier(InterviewTimelineEvent.done);
+  final _eventTypeNotifier = ValueNotifier(InterviewStatus.toDo);
   final _eventDateNotifier = ValueNotifier<DateTime>(DateTime.now());
   final _eventTimeNotifier = ValueNotifier<TimeOfDay>(TimeOfDay.now());
 
   final _newDateNotifier = ValueNotifier<DateTime>(DateTime.now());
   final _newTimeNotifier = ValueNotifier<TimeOfDay>(TimeOfDay.now());
-
-  final _relocatedAddress = TextEditingController();
-
-  final _followUpSentAtDate = ValueNotifier<DateTime>(DateTime.now());
-  final _followUpSentAtTime = ValueNotifier<TimeOfDay>(TimeOfDay.now());
-  final _followUpSentTo = TextEditingController();
 
   final _reasonController = TextEditingController();
   final _requesterController = TextEditingController();
@@ -57,6 +75,7 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
     if (interview != null) {
       _newDateNotifier.value = interview.date;
       _newTimeNotifier.value = interview.time;
+      _eventTypeNotifier.value = interview.status;
     }
   }
 
@@ -65,6 +84,7 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
     return Form(
       key: _formKey,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         spacing: 25.0,
         children: [
           Row(
@@ -73,8 +93,8 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
               Expanded(
                 child: DropdownWidget(
                   label: 'Evento dello storico',
-                  items: InterviewTimelineEvent.values.toDropdownItems(
-                    (tl) => tl.displayName,
+                  items: InterviewStatus.values.toDropdownItems(
+                    (e) => e.displayName,
                   ),
                   selectedValue: _eventTypeNotifier,
                 ),
@@ -96,32 +116,7 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
             ],
           ),
 
-          ValueListenableBuilder<InterviewTimelineEvent>(
-            valueListenable: _eventTypeNotifier,
-            builder: (_, value, __) {
-              return switch (value) {
-                InterviewTimelineEvent.done => const SizedBox.shrink(),
-                InterviewTimelineEvent.postponed => _PostponedFields(
-                  newDateNotifier: _newDateNotifier,
-                  newTimeNotifier: _newTimeNotifier,
-                  reasonController: _reasonController,
-                  requesterController: _requesterController,
-                ),
-                InterviewTimelineEvent.cancelled => _CancelledFields(
-                  reasonController: _reasonController,
-                  requesterController: _requesterController,
-                ),
-                InterviewTimelineEvent.relocated => _RelocatedField(
-                  _relocatedAddress,
-                ),
-                InterviewTimelineEvent.followUpSent => _FollowUpSentFields(
-                  followUpSentAtDate: _followUpSentAtDate,
-                  followUpSentAtTime: _followUpSentAtTime,
-                  followUpSentTo: _followUpSentTo,
-                ),
-              };
-            },
-          ),
+          _buildFormBody(),
 
           FormFieldWidget(
             controller: _noteController,
@@ -134,7 +129,7 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
               builder: (_, ref, __) {
                 final isLoading =
                     ref
-                        .watch(interviewTimelineProvider(widget.routeID))
+                        .watch(interviewTimelinesProvider(widget.routeID))
                         .isLoading;
 
                 return isLoading
@@ -148,25 +143,45 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
     );
   }
 
+  Widget _buildFormBody() {
+    return ValueListenableBuilder(
+      valueListenable: _eventTypeNotifier,
+      builder: (context, event, _) {
+        return switch (event) {
+          InterviewStatus.toDo => const SizedBox(),
+          InterviewStatus.completed => const SizedBox(),
+          InterviewStatus.postponed => _PostponedFields(
+            newDateNotifier: _newDateNotifier,
+            newTimeNotifier: _newTimeNotifier,
+            reasonController: _reasonController,
+            requesterController: _requesterController,
+          ),
+          InterviewStatus.cancelled => _CancelledFields(
+            reasonController: _reasonController,
+            requesterController: _requesterController,
+          ),
+        };
+      },
+    );
+  }
+
   void submit() async {
     if (_formKey.currentState!.validate()) {
       final notifier = ref.read(
-        interviewTimelineProvider(widget.routeID).notifier,
+        interviewTimelinesProvider(widget.routeID).notifier,
       );
 
       final submit = await notifier.addTimeline(_toUI());
       if (!mounted) return;
 
-      submit.handleResult(context: context, ref: ref);
-
-      if (submit.isSuccess) widget.goToList();
+      submit.handleErrorResult(context: context, ref: ref);
     }
   }
 
   InterviewTimeline _toUI() {
-    final isPostponed = _eventTypeNotifier.value.isPostponed;
+    final isPostponed = _eventTypeNotifier.value == InterviewStatus.postponed;
 
-    final interview = ref.read(interviewFormProvider(widget.routeID)).value!;
+    final interview = ref.read(interviewFormProvider(widget.routeID)).value;
 
     return InterviewTimeline(
       eventType: _eventTypeNotifier.value,
@@ -176,20 +191,14 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
       ),
       note: _noteController.text,
       originalDateTime:
-          isPostponed ? buildDateTime(interview.date, interview.time) : null,
+          isPostponed ? buildDateTime(interview!.date, interview.time) : null,
       newDateTime:
           isPostponed
               ? buildDateTime(_newDateNotifier.value, _newTimeNotifier.value)
               : null,
-      followUpSentTo: _followUpSentTo.text,
-      followUpSentAt: buildDateTime(
-        _followUpSentAtDate.value,
-        _followUpSentAtTime.value,
-      ),
-      relocatedAddress: _relocatedAddress.text,
       reason: _reasonController.text,
       requester: _requesterController.text,
-      interviewId: interview.id,
+      interviewId: interview!.id,
     );
   }
 
@@ -202,65 +211,8 @@ class _InterviewTimelineFormState extends ConsumerState<InterviewTimelineForm> {
     _requesterController.dispose();
     _newDateNotifier.dispose();
     _newTimeNotifier.dispose();
-    _followUpSentAtDate.dispose();
-    _followUpSentAtTime.dispose();
-    _followUpSentTo.dispose();
-    _relocatedAddress.dispose();
     _noteController.dispose();
     super.dispose();
-  }
-}
-
-class _FollowUpSentFields extends StatelessWidget {
-  const _FollowUpSentFields({
-    required this.followUpSentAtDate,
-    required this.followUpSentAtTime,
-    required this.followUpSentTo,
-  });
-
-  final ValueNotifier<DateTime> followUpSentAtDate;
-  final ValueNotifier<TimeOfDay> followUpSentAtTime;
-  final TextEditingController followUpSentTo;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: 20.0,
-      children: [
-        Expanded(
-          child: DatePickerWidget(
-            label: 'Data invio',
-            selectedDate: followUpSentAtDate,
-          ),
-        ),
-        Expanded(
-          child: TimePickerWidget(
-            label: 'Ora invio',
-            selectedTime: followUpSentAtTime,
-          ),
-        ),
-        Expanded(
-          child: RequiredFormFieldWidget(
-            label: 'Inviato a ',
-            controller: followUpSentTo,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _RelocatedField extends StatelessWidget {
-  const _RelocatedField(this.relocatedAddress);
-
-  final TextEditingController relocatedAddress;
-
-  @override
-  Widget build(BuildContext context) {
-    return RequiredFormFieldWidget(
-      controller: relocatedAddress,
-      label: 'Nuovo indirizzo',
-    );
   }
 }
 
@@ -282,14 +234,14 @@ class _CancelledFields extends StatelessWidget {
           children: [
             Expanded(
               child: RequiredFormFieldWidget(
-                label: 'Chi ha chiesto il rinvio',
+                label: 'Chi ha chiesto annullamento',
                 controller: requesterController,
               ),
             ),
             Expanded(
               child: RequiredFormFieldWidget(
                 controller: reasonController,
-                label: 'Motivazioni per il rinvio del colloquio',
+                label: 'Motivazioni per annullamento',
               ),
             ),
           ],

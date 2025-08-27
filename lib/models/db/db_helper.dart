@@ -166,6 +166,8 @@ class DbHelper {
         ${InterviewTableColumns.type} $_textType,
         ${InterviewTableColumns.interviewFormat} $_textType,
         ${InterviewTableColumns.answerTime} $_textType,
+        ${InterviewTableColumns.placeUpdated} $_intType,
+        ${InterviewTableColumns.previousInterviewPlace} $_textType,
         ${InterviewTableColumns.notes} $_textType,
         ${InterviewTableColumns.status} $_textType,
         ${InterviewTableColumns.interviewPlace} $_textType,

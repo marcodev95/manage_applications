@@ -27,7 +27,7 @@ class InterviewDetailsPage extends ConsumerWidget {
           bottom: TabBar(
             onTap: (int? index) {
               if (index != null) {
-                ref.read(_currentIndexProvider.notifier).state = index;
+                ref.read(currentIndexProvider.notifier).state = index;
               }
             },
             tabs: _tabs,
@@ -58,7 +58,7 @@ class InterviewDetailsPageBody extends ConsumerWidget {
     if (routeArg == null) {
       return Padding(
         padding: EdgeInsets.all(AppStyle.pad24),
-        child: _PageTabsWidget(InterviewDetails.defaultValue()),
+        child: _PageTabsWidget(InterviewDetails.defaultValue(), routeArg),
       );
     }
 
@@ -74,7 +74,7 @@ class InterviewDetailsPageBody extends ConsumerWidget {
       data:
           (result) => Padding(
             padding: EdgeInsets.all(AppStyle.pad24),
-            child: _PageTabsWidget(result),
+            child: _PageTabsWidget(result, routeArg),
           ),
       error:
           (_, __) => DataLoadErrorScreenWidget(
@@ -89,16 +89,17 @@ class InterviewDetailsPageBody extends ConsumerWidget {
 }
 
 class _PageTabsWidget extends ConsumerWidget {
-  const _PageTabsWidget(this.details);
+  const _PageTabsWidget(this.details, this.routeArg);
 
   final InterviewDetails details;
+  final int? routeArg;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return IndexedStack(
-      index: ref.watch(_currentIndexProvider),
+      index: ref.watch(currentIndexProvider),
       children: [
-        AppCard(child: InterviewDataForm(details.interview)),
+        AppCard(child: InterviewDataForm(details.interview, routeId: routeArg, )),
         SelectedReferentsInterviewSection(),
         InterviewFollowUpsSection(),
         InterviewTimelineSection(),
@@ -107,4 +108,4 @@ class _PageTabsWidget extends ConsumerWidget {
   }
 }
 
-final _currentIndexProvider = StateProvider.autoDispose((_) => 0);
+final currentIndexProvider = StateProvider.autoDispose((_) => 0);

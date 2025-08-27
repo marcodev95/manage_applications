@@ -6,6 +6,7 @@ import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_place_field.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_form.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/calendar_widget.dart';
@@ -15,9 +16,10 @@ import 'package:manage_applications/widgets/components/time_picker_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class InterviewDataForm extends ConsumerStatefulWidget {
-  const InterviewDataForm(this.interview, {super.key});
+  const InterviewDataForm(this.interview, {super.key, this.routeId});
 
   final Interview interview;
+  final int? routeId;
 
   @override
   ConsumerState<InterviewDataForm> createState() => _InterviewDataFormState();
@@ -36,9 +38,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
   final _interviewFormatNotifier = ValueNotifier<InterviewsFormat>(
     InterviewsFormat.online,
   );
-  final _interviewStatusNotifier = ValueNotifier<InterviewStatus>(
-    InterviewStatus.toDo,
-  );
+  final _interviewStatusController = TextEditingController();
   final _interviewNotesController = TextEditingController();
 
   @override
@@ -51,11 +51,13 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
       _interviewDateNotifier.value = interview.date;
       _interviewTimeNotifier.value = interview.time;
       _interviewNotesController.text = interview.notes ?? '';
-      _interviewStatusNotifier.value = interview.status;
+      _interviewStatusController.text = interview.status.displayName;
       _interviewAnswerController.text = interview.answerTime ?? 'Da definire';
 
       _interviewFormatNotifier.value = interview.interviewFormat;
       _interviewPlaceController.text = interview.interviewPlace;
+    } else {
+      _interviewStatusController.text = InterviewStatus.toDo.displayName;
     }
 
     debugPrint('Interview DatFormInitState => $interview');
@@ -102,17 +104,27 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
                                 ),
                               ),
                               Expanded(
-                                child: DropdownWidget(
-                                  label: "Stato del colloquio(*)",
-                                  items: InterviewStatus.values.toDropdownItems(
-                                    (e) => e.displayName,
-                                  ),
-                                  selectedValue: _interviewStatusNotifier,
+                                child: Row(
+                                  spacing: 10.0,
+                                  children: [
+                                    UpdateInterviewStatus(
+                                      routeID: routeArg,
+                                      callback:
+                                          () => navigatorPush(
+                                            context,
+                                            InterviewTimelineForm(
+                                              routeID: routeArg,
+                                              interview: widget.interview,
+                                            ),
+                                          ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
+
                         TimePickerWidget(
                           label: "Ora del colloquio(*)",
                           selectedTime: _interviewTimeNotifier,
@@ -141,6 +153,11 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
                             ],
                           ),
                         ),
+                        widget.interview.previousInterviewPlace != null
+                            ? _PreviousPlaceField(
+                              widget.interview.previousInterviewPlace!,
+                            )
+                            : const SizedBox.shrink(),
                         FormFieldWidget(
                           controller: _interviewAnswerController,
                           label: 'Tempo stimato per la risposta',
@@ -167,12 +184,19 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
   void submit(int? routeArg) async {
     if (_formKey.currentState!.validate()) {
       final notifier = ref.read(interviewFormProvider(routeArg).notifier);
-      final interviewId = ref.read(interviewFormProvider(routeArg)).value?.id;
+      final resultOrInterview = _buildInterview(routeArg);
+
+      if (resultOrInterview.isFailure) {
+        resultOrInterview.handleErrorResult(context: context, ref: ref);
+        return;
+      }
+
+      final interview = resultOrInterview.data;
 
       final result =
-          interviewId == null
-              ? await notifier.createInterview(_buildInterview(routeArg))
-              : await notifier.updateInterview(_buildInterview(routeArg));
+          interview.id == null
+              ? await notifier.createInterview(interview)
+              : await notifier.updateInterview(interview);
 
       if (!mounted) return;
 
@@ -180,18 +204,29 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
     }
   }
 
-  Interview _buildInterview(int? routeArg) {
-    return Interview(
-      id: ref.read(interviewFormProvider(routeArg)).value?.id,
-      type: _interviewTypeNotifier.value,
-      date: _interviewDateNotifier.value,
-      time: _interviewTimeNotifier.value,
-      status: _interviewStatusNotifier.value,
-      interviewFormat: _interviewFormatNotifier.value,
-      answerTime: _interviewAnswerController.text,
-      interviewPlace: _interviewPlaceController.text,
-      notes: _interviewNotesController.text,
-      jobApplicationId: ref.read(jobApplicationProvider).value?.id,
+  OperationResult<Interview> _buildInterview(int? routeArg) {
+    final currentInterview = ref.read(interviewFormProvider(routeArg)).value;
+
+    if (currentInterview == null) {
+      return Failure(
+        error: "Dati dell'intervista non disponibili per routeArg: $routeArg",
+        message: 'Dati dell\'intervista non disponibili',
+      );
+    }
+
+    return Success(
+      data: Interview(
+        id: currentInterview.id,
+        type: _interviewTypeNotifier.value,
+        date: _interviewDateNotifier.value,
+        time: _interviewTimeNotifier.value,
+        status: currentInterview.status,
+        interviewFormat: _interviewFormatNotifier.value,
+        answerTime: _interviewAnswerController.text,
+        interviewPlace: _interviewPlaceController.text,
+        notes: _interviewNotesController.text,
+        jobApplicationId: ref.read(jobApplicationProvider).value?.id,
+      ),
     );
   }
 
@@ -204,8 +239,44 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
     _interviewNotesController.dispose();
     _interviewFormatNotifier.dispose();
     _interviewAnswerController.dispose();
-    _interviewStatusNotifier.dispose();
+    _interviewStatusController.dispose();
     super.dispose();
+  }
+}
+
+class UpdateInterviewStatus extends ConsumerWidget {
+  const UpdateInterviewStatus({
+    super.key,
+    this.routeID,
+    required this.callback,
+  });
+
+  final int? routeID;
+  final VoidCallback callback;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final status = ref.watch(
+      interviewFormProvider(
+        routeID,
+      ).select((value) => value.hasValue ? value.value!.status : null),
+    );
+
+    if (status == null) return SizedBox();
+
+    return Expanded(
+      child: ReadOnlyTextFormField(
+        initialValue: status.displayName,
+        label: 'Stato del colloquio(*)',
+        suffixIcon: Tooltip(
+          message: 'Modifica stato colloquio',
+          child: IconButton(
+            onPressed: callback,
+            icon: const Icon(Icons.edit, color: Colors.amber),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -275,6 +346,30 @@ class _InterviewCalendar extends ConsumerWidget {
         label: 'Data colloquio',
         selectedDate: interviewDateNotifier,
       ),
+    );
+  }
+}
+
+class _PreviousPlaceField extends StatelessWidget {
+  const _PreviousPlaceField(this.previousPlace);
+
+  final String previousPlace;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(
+        'Luogo precedente',
+        style: TextStyle(color: Colors.grey[300], fontWeight: FontWeight.w500),
+      ),
+      subtitle: Text(
+        previousPlace,
+        style: TextStyle(color: Colors.white, fontSize: 16),
+      ),
+      leading: Icon(Icons.location_on, color: Colors.lightBlueAccent),
+      tileColor: Colors.grey[850],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     );
   }
 }

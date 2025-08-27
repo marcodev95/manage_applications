@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_utility.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class InterviewTimeline extends Equatable {
   final int? id;
-  final InterviewTimelineEvent eventType;
+  final InterviewStatus eventType;
   final DateTime eventDateTime;
   final DateTime? originalDateTime;
   final DateTime? newDateTime;
@@ -52,7 +53,7 @@ class InterviewTimeline extends Equatable {
     : id = json[InterviewTimelineTable.id],
 
       eventDateTime = DateTime.parse(json[InterviewTimelineTable.eventDateTime]),
-      eventType = getInterviewTimelineFromString(
+      eventType = getInterviewStatusFromString(
         json[InterviewTimelineTable.eventType],
       ),
 
