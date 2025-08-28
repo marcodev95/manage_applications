@@ -187,19 +187,19 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
   void submit(int? routeArg) async {
     if (_formKey.currentState!.validate()) {
       final notifier = ref.read(interviewFormProvider(routeArg).notifier);
-      final resultOrInterview = _buildInterview(routeArg);
+      final currentInterview = buildInterviewResult(ref, routeArg);
 
-      if (resultOrInterview.isFailure) {
-        resultOrInterview.handleErrorResult(context: context, ref: ref);
+      if (currentInterview.isFailure) {
+        currentInterview.handleErrorResult(context: context, ref: ref);
         return;
       }
 
-      final interview = resultOrInterview.data;
+      final interview = currentInterview.data;
 
       final result =
           interview.id == null
-              ? await notifier.createInterview(interview)
-              : await notifier.updateInterview(interview);
+              ? await notifier.createInterview(_buildInterview(interview))
+              : await notifier.updateInterview(_buildInterview(interview));
 
       if (!mounted) return;
 
@@ -207,29 +207,18 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
     }
   }
 
-  OperationResult<Interview> _buildInterview(int? routeArg) {
-    final currentInterview = ref.read(interviewFormProvider(routeArg)).value;
-
-    if (currentInterview == null) {
-      return Failure(
-        error: "Dati dell'intervista non disponibili per routeArg: $routeArg",
-        message: 'Dati dell\'intervista non disponibili',
-      );
-    }
-
-    return Success(
-      data: Interview(
-        id: currentInterview.id,
-        type: _interviewTypeNotifier.value,
-        date: _interviewDateNotifier.value,
-        time: _interviewTimeNotifier.value,
-        status: currentInterview.status,
-        interviewFormat: _interviewFormatNotifier.value,
-        answerTime: _interviewAnswerController.text,
-        interviewPlace: _interviewPlaceController.text,
-        notes: _interviewNotesController.text,
-        jobApplicationId: ref.read(jobApplicationProvider).value?.id,
-      ),
+  Interview _buildInterview(Interview currentInterview) {
+    return Interview(
+      id: currentInterview.id,
+      type: _interviewTypeNotifier.value,
+      date: _interviewDateNotifier.value,
+      time: _interviewTimeNotifier.value,
+      status: currentInterview.status,
+      interviewFormat: _interviewFormatNotifier.value,
+      answerTime: _interviewAnswerController.text,
+      interviewPlace: _interviewPlaceController.text,
+      notes: _interviewNotesController.text,
+      jobApplicationId: ref.read(jobApplicationProvider).value?.id,
     );
   }
 
