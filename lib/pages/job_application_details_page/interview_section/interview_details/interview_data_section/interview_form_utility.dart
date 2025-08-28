@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:manage_applications/models/interview/interview.dart';
+import 'package:manage_applications/models/shared/operation_result.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form/interview_form_field_barrel.dart';
 
 enum InterviewTypes { conoscitivo, tecnico, gruppo, finale }
 
@@ -60,7 +64,7 @@ extension InterviewsFormatExtension on InterviewsFormat {
         return 'Altro';
     }
   }
-  
+
   IconData get iconInterview {
     switch (this) {
       case InterviewsFormat.online:
@@ -105,7 +109,7 @@ extension InterviewStatusX on InterviewStatus {
         return 'Annullato';
     }
   }
-  
+
   bool get isPostponed {
     return this == InterviewStatus.postponed;
   }
@@ -137,4 +141,20 @@ InterviewStatus getInterviewStatusFromString(String value) {
     default:
       return InterviewStatus.toDo;
   }
+}
+
+OperationResult<Interview> buildInterviewResult(
+  WidgetRef ref,
+  int? routeArg,
+) {
+  final currentInterview = ref.read(interviewFormProvider(routeArg)).value;
+
+  if (currentInterview == null) {
+    return Failure(
+      error: "Dati dell'intervista non disponibili per routeArg: $routeArg",
+      message: 'Dati dell\'intervista non disponibili',
+    );
+  }
+
+  return Success(data: currentInterview);
 }
