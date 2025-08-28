@@ -99,7 +99,7 @@ class _PageTabsWidget extends ConsumerWidget {
     return IndexedStack(
       index: ref.watch(currentIndexProvider),
       children: [
-        AppCard(child: InterviewDataForm(details.interview, routeId: routeArg, )),
+        AppCard(child: InterviewDataForm(details.interview, routeId: routeArg)),
         SelectedReferentsInterviewSection(),
         InterviewFollowUpsSection(),
         InterviewTimelineSection(),
