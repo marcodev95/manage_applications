@@ -124,25 +124,27 @@ class DateFormFieldWidget extends StatelessWidget {
 class ReadOnlyTextFormField extends StatelessWidget {
   const ReadOnlyTextFormField({
     super.key,
-    required this.initialValue,
+    required this.controller,
     required this.label,
-    required this.suffixIcon
+    required this.suffixIcon,
   });
 
-  final String initialValue;
+  final TextEditingController controller;
   final String label;
   final Widget suffixIcon;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: initialValue,
-      readOnly: true,      
-      decoration: _buildDecoration(false, label).copyWith(suffixIcon: suffixIcon),
+      controller: controller,
+      readOnly: true,
+      decoration: _buildDecoration(
+        false,
+        label,
+      ).copyWith(suffixIcon: suffixIcon),
     );
   }
 }
-
 
 /// Validator
 
@@ -154,82 +156,8 @@ String? baseValidator(String? v, String label) {
   }
 }
 
-/* import 'package:flutter/material.dart';
 
-class DarkTextFormField extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final String? Function(String?)? validator;
-  final TextInputType keyboardType;
-  final bool obscureText;
-  final String? hintText;
-
-  const DarkTextFormField({
-    Key? key,
-    required this.controller,
-    required this.label,
-    this.validator,
-    this.keyboardType = TextInputType.text,
-    this.obscureText = false,
-    this.hintText,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // Colori personalizzati per dark mode
-    final borderColor = Colors.white24;
-    final focusedColor = Colors.blueAccent;
-    final errorColor = Colors.red.shade400;
-    final errorFocusedColor = Colors.red.shade600;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFormField(
-          controller: controller,
-          keyboardType: keyboardType,
-          obscureText: obscureText,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            labelText: label,
-            hintText: hintText,
-            labelStyle: const TextStyle(color: Colors.white70),
-            hintStyle: const TextStyle(color: Colors.white38),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: focusedColor, width: 2),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: errorColor),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: errorFocusedColor, width: 2),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            errorStyle: TextStyle(
-              color: errorColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-            // Mantieni sempre lo spazio per il messaggio errore
-            // evitando "salti" di layout
-            helperText: ' ',
-            helperStyle: const TextStyle(fontSize: 12),
-          ),
-          validator: validator,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-        ),
-      ],
-    );
-  }
-}
-
-Extra: evitare spostamenti di layout
+/*Extra: evitare spostamenti di layout
 Se il messaggio di errore è lungo, la form potrebbe “saltare” quando appare/scompare il testo.
 
 Per evitarlo:

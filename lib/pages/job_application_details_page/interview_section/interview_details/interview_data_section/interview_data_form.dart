@@ -44,7 +44,6 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
   final _interviewFormatNotifier = ValueNotifier<InterviewsFormat>(
     InterviewsFormat.online,
   );
-  final _interviewStatusController = TextEditingController();
   final _interviewNotesController = TextEditingController();
 
   @override
@@ -57,13 +56,9 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
       _interviewDateNotifier.value = interview.date;
       _interviewTimeNotifier.value = interview.time;
       _interviewNotesController.text = interview.notes ?? '';
-      _interviewStatusController.text = interview.status.displayName;
       _interviewAnswerController.text = interview.answerTime ?? 'Da definire';
-
       _interviewFormatNotifier.value = interview.interviewFormat;
       _interviewPlaceController.text = interview.interviewPlace;
-    } else {
-      _interviewStatusController.text = InterviewStatus.toDo.displayName;
     }
 
     debugPrint('Interview DatFormInitState => $interview');
@@ -122,7 +117,6 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
                                             context,
                                             InterviewTimelineForm(
                                               routeID: routeArg,
-                                              interview: widget.interview,
                                             ),
                                           ),
                                     ),
@@ -231,7 +225,6 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
     _interviewNotesController.dispose();
     _interviewFormatNotifier.dispose();
     _interviewAnswerController.dispose();
-    _interviewStatusController.dispose();
     super.dispose();
   }
 }

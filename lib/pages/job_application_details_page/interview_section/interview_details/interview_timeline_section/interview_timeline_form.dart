@@ -16,10 +16,9 @@ import 'package:manage_applications/widgets/components/time_picker_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class InterviewTimelineForm extends StatelessWidget {
-  const InterviewTimelineForm({super.key, this.routeID, this.interview});
+  const InterviewTimelineForm({super.key, this.routeID});
 
   final int? routeID;
-  final Interview? interview;
 
   @override
   Widget build(BuildContext context) {
@@ -29,21 +28,15 @@ class InterviewTimelineForm extends StatelessWidget {
         actions: const [ErrorsPanelButtonWidget()],
       ),
 
-      body: AppCard(
-        child: InterviewTimelineFormBody(
-          routeID: routeID,
-          interview: interview,
-        ),
-      ),
+      body: AppCard(child: InterviewTimelineFormBody(routeID)),
     );
   }
 }
 
 class InterviewTimelineFormBody extends ConsumerStatefulWidget {
-  const InterviewTimelineFormBody({super.key, this.routeID, this.interview});
+  const InterviewTimelineFormBody(this.routeID, {super.key});
 
   final int? routeID;
-  final Interview? interview;
 
   @override
   ConsumerState<InterviewTimelineFormBody> createState() =>
@@ -75,7 +68,11 @@ class _InterviewTimelineFormState
     if (interview != null) {
       _newDateNotifier.value = interview.date;
       _newTimeNotifier.value = interview.time;
-      _eventTypeNotifier.value = interview.status;
+
+      _eventTypeNotifier.value =
+          interview.status == InterviewStatus.toDo
+              ? InterviewStatus.completed
+              : interview.status;
     }
   }
 
@@ -93,9 +90,10 @@ class _InterviewTimelineFormState
               Expanded(
                 child: DropdownWidget(
                   label: 'Evento dello storico',
-                  items: InterviewStatus.values.toDropdownItems(
-                    (e) => e.displayName,
-                  ),
+                  items: InterviewStatus.values
+                      .where((status) => status != InterviewStatus.toDo)
+                      .toList()
+                      .toDropdownItems((e) => e.displayName),
                   selectedValue: _eventTypeNotifier,
                 ),
               ),
@@ -171,17 +169,24 @@ class _InterviewTimelineFormState
         interviewTimelinesProvider(widget.routeID).notifier,
       );
 
-      final submit = await notifier.addTimeline(_toUI());
+      final currentInterview = buildInterviewResult(ref, widget.routeID);
+
+      if (currentInterview.isFailure) {
+        currentInterview.handleErrorResult(context: context, ref: ref);
+        return;
+      }
+
+      final interview = currentInterview.data;
+
+      final submit = await notifier.addTimeline(_toUI(interview));
       if (!mounted) return;
 
       submit.handleErrorResult(context: context, ref: ref);
     }
   }
 
-  InterviewTimeline _toUI() {
+  InterviewTimeline _toUI(Interview interview) {
     final isPostponed = _eventTypeNotifier.value == InterviewStatus.postponed;
-
-    final interview = ref.read(interviewFormProvider(widget.routeID)).value;
 
     return InterviewTimeline(
       eventType: _eventTypeNotifier.value,
@@ -191,14 +196,14 @@ class _InterviewTimelineFormState
       ),
       note: _noteController.text,
       originalDateTime:
-          isPostponed ? buildDateTime(interview!.date, interview.time) : null,
+          isPostponed ? buildDateTime(interview.date, interview.time) : null,
       newDateTime:
           isPostponed
               ? buildDateTime(_newDateNotifier.value, _newTimeNotifier.value)
               : null,
       reason: _reasonController.text,
       requester: _requesterController.text,
-      interviewId: interview!.id,
+      interviewId: interview.id,
     );
   }
 

@@ -23,11 +23,11 @@ class InterviewTimelineList extends ConsumerStatefulWidget {
 class _InterviewTimelineListState extends ConsumerState<InterviewTimelineList> {
   @override
   Widget build(BuildContext context) {
-    final timelineAsync = ref.watch(
+    final asyncTimelines = ref.watch(
       interviewTimelinesProvider(widget.routeID),
     );
 
-    return timelineAsync.when(
+    return asyncTimelines.when(
       skipError: true,
       skipLoadingOnReload: true,
       data: (data) {
@@ -195,41 +195,6 @@ class _NoteWidget extends StatelessWidget {
     return Text(
       note,
       style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15),
-    );
-  }
-}
-
-class _RelocatedCard extends StatelessWidget {
-  const _RelocatedCard(this.timeline);
-
-  final InterviewTimeline timeline;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppCard(
-      externalPadding: EdgeInsets.symmetric(vertical: AppStyle.pad8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 8,
-        children: [
-          Row(
-            spacing: 10.0,
-            children: [
-              Icon(Icons.sync_alt, color: Colors.blue),
-              _EventDateTimeBadge(
-                dateTimeFormatUI.format(timeline.eventDateTime),
-              ),
-              Text(
-                '- Colloquio spostato ad un nuovo indirizzo',
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-          Text('Nuovo indirizzo: ${timeline.relocatedAddress}'),
-          if (timeline.note != null && timeline.note!.isNotEmpty)
-            _NoteWidget(timeline.note!),
-        ],
-      ),
     );
   }
 }
