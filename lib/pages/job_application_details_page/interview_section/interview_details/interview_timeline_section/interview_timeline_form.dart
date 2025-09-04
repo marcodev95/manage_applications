@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/interview/interview.dart';
-import 'package:manage_applications/models/interview/interview_timeline.dart';
+import 'package:manage_applications/models/timeline/timeline_event/interview_timeline_event.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timelines_provider.dart';
+import 'package:manage_applications/models/timeline/interview_timeline_event_type.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/provider/interview_timeline_events_provider.dart';
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/date_picker_widget.dart';
 import 'package:manage_applications/widgets/components/dropdown_widget.dart';
@@ -127,7 +128,7 @@ class _InterviewTimelineFormState
               builder: (_, ref, __) {
                 final isLoading =
                     ref
-                        .watch(interviewTimelinesProvider(widget.routeID))
+                        .watch(interviewEventsProvider(widget.routeID))
                         .isLoading;
 
                 return isLoading
@@ -166,7 +167,7 @@ class _InterviewTimelineFormState
   void submit() async {
     if (_formKey.currentState!.validate()) {
       final notifier = ref.read(
-        interviewTimelinesProvider(widget.routeID).notifier,
+        interviewEventsProvider(widget.routeID).notifier,
       );
 
       final currentInterview = buildInterviewResult(ref, widget.routeID);
@@ -177,19 +178,20 @@ class _InterviewTimelineFormState
       }
 
       final interview = currentInterview.data;
+      final submit = await notifier.addEvent(_toUI(interview));
 
-      final submit = await notifier.addTimeline(_toUI(interview));
       if (!mounted) return;
 
       submit.handleErrorResult(context: context, ref: ref);
     }
   }
 
-  InterviewTimeline _toUI(Interview interview) {
+  InterviewTimelineEvent _toUI(Interview interview) {
     final isPostponed = _eventTypeNotifier.value == InterviewStatus.postponed;
 
-    return InterviewTimeline(
-      eventType: _eventTypeNotifier.value,
+    return InterviewTimelineEvent(
+      event: _eventTypeNotifier.value,
+      eventType: InterviewTimelineEventType.interviewEvent,
       eventDateTime: buildDateTime(
         _eventDateNotifier.value,
         _eventTimeNotifier.value,
