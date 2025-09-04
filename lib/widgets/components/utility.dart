@@ -16,7 +16,15 @@ String formatDateTimeForDb(DateTime date, TimeOfDay time) {
 }
 
 DateTime buildDateTime(DateTime date, TimeOfDay time) {
-  return DateTime(date.year, date.month, date.day, time.hour, time.minute);
+  return DateTime(
+    date.year,
+    date.month,
+    date.day,
+    time.hour,
+    time.minute,
+    date.second,
+    date.millisecond,
+  );
 }
 
 DateTime? parseDateTimeOrNull(String? dateTime) {
@@ -86,9 +94,11 @@ T? getRouteArg<T>(BuildContext context) {
 }
 
 List<String> buildMissingFieldsMessage(Map<String, dynamic> fields) {
-  final missing = fields.entries
-      .where((entry) => entry.value == null)
-      .map((entry) => entry.key).toList();
+  final missing =
+      fields.entries
+          .where((entry) => entry.value == null)
+          .map((entry) => entry.key)
+          .toList();
 
   return missing;
 }
