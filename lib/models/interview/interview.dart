@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:manage_applications/models/interview/interview_timeline.dart';
+import 'package:manage_applications/models/timeline/interview_timeline.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_utility.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 import 'package:flutter/material.dart';
