@@ -143,10 +143,7 @@ InterviewStatus getInterviewStatusFromString(String value) {
   }
 }
 
-OperationResult<Interview> buildInterviewResult(
-  WidgetRef ref,
-  int? routeArg,
-) {
+OperationResult<Interview> buildInterviewResult(WidgetRef ref, int? routeArg) {
   final currentInterview = ref.read(interviewFormProvider(routeArg)).value;
 
   if (currentInterview == null) {
