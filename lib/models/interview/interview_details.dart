@@ -1,7 +1,8 @@
 import 'package:manage_applications/models/interview/interview.dart';
-import 'package:manage_applications/models/interview/interview_timeline.dart';
 import 'package:manage_applications/models/interview/interview_follow_up.dart';
 import 'package:manage_applications/models/interview/referents_interview.dart';
+import 'package:manage_applications/models/timeline/interview_timeline.dart';
+import 'package:manage_applications/models/timeline/timeline_event/interview_timeline_event.dart';
 
 class InterviewDetails {
   final Interview interview;
@@ -57,7 +58,7 @@ class InterviewDetails {
     List<SelectedReferentsForInterview>? referents,
     List<InterviewFollowUp>? followUps,
     List<InterviewTimeline>? reschedules,
-    List<InterviewTimeline>? timeline,
+    List<InterviewTimelineEvent>? timeline,
   }) {
     return InterviewDetails(
       interview: interview ?? this.interview,
