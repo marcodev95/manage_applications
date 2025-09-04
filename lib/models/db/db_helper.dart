@@ -4,7 +4,7 @@ import 'package:manage_applications/models/contract/benefit.dart';
 import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/interview/interview_follow_up.dart';
-import 'package:manage_applications/models/interview/interview_timeline.dart';
+import 'package:manage_applications/models/timeline/interview_timeline.dart';
 import 'package:manage_applications/models/interview/referents_interview.dart';
 import 'package:manage_applications/models/job_application/job_application.dart';
 import 'package:manage_applications/models/job_application/job_application_referent.dart';
@@ -263,6 +263,7 @@ class DbHelper {
   void _createInterviewTimelineTable(Batch batch) {
     batch.execute('''CREATE TABLE ${InterviewTimelineTable.tableName}( 
         ${InterviewTimelineTable.id} $_idType, 
+        ${InterviewTimelineTable.event} $_textType,
         ${InterviewTimelineTable.eventType} $_textType,
         ${InterviewTimelineTable.eventDateTime} $_textType,
         ${InterviewTimelineTable.originalDateTime} $_textType,
