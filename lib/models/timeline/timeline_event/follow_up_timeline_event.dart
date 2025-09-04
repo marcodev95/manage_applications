@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:manage_applications/models/timeline/interview_timeline.dart';
-import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_follow_ups_section/interview_followup_utility.dart';
+import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_follow_ups_section/interview_follow_up_utility.dart';
 
 class FollowUpTimelineEvent extends InterviewTimeline
     implements EquatableMixin {
