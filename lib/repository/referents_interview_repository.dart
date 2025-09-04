@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/models/referent/referent.dart';
 import 'package:manage_applications/models/db/db_helper.dart';
 import 'package:manage_applications/models/interview/interview.dart';
-import 'package:manage_applications/models/interview/interview_timeline.dart';
-import 'package:manage_applications/models/interview/interview_follow_up.dart';
-import 'package:manage_applications/models/job_application/job_application_referent.dart';
-import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/models/interview/referents_interview.dart';
 import 'package:manage_applications/models/interview/interview_details.dart';
+import 'package:manage_applications/models/interview/interview_follow_up.dart';
+import 'package:manage_applications/models/interview/referents_interview.dart';
+import 'package:manage_applications/models/job_application/job_application_referent.dart';
+import 'package:manage_applications/models/referent/referent.dart';
+import 'package:manage_applications/models/shared/operation_result.dart';
+import 'package:manage_applications/models/timeline/interview_timeline.dart';
 
 final referentsInterviewRepository = Provider(
   (_) => ReferentsInterviewRepository(DbHelper.instance),
@@ -127,44 +127,4 @@ class ReferentsInterviewRepository {
       throw DeleteError(error: e, stackTrace: stackTrace);
     }
   }
-
-  /* Future<List<SelectedReferentsForInterview>> addMultipleReferentsToInterview(
-    List<CompanyReferentUi> referents,
-    int interviewId,
-  ) async {
-    final List<SelectedReferentsForInterview> tempList = [];
-
-    final database = await _db.database;
-
-    await database.transaction((txn) async {
-      for (var referent in referents) {
-        final lastId = await txn.insert(
-          referentsInterviewTable,
-          SelectedReferentsForInterview.toJson(interviewId, referent.id!),
-        );
-
-        tempList.add(
-          SelectedReferentsForInterview(id: lastId, referent: referent),
-        );
-      }
-    });
-
-    return tempList;
-  }
-
-  Future<void> removeMultipleReferentsFromInterview(
-    List<SelectedReferentsForInterview> allSelectedReferents,
-  ) async {
-    final database = await _db.database;
-
-    await database.transaction((txn) async {
-      for (var referentInterview in allSelectedReferents) {
-        await txn.delete(
-          referentsInterviewTable,
-          where: '${ReferentsInterviewTableColumns.id} = ?',
-          whereArgs: [referentInterview.id],
-        );
-      }
-    });
-  } */
 }
