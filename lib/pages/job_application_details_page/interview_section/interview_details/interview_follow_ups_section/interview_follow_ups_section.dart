@@ -32,6 +32,7 @@ class _InterviewFollowUpsSectionState extends State<InterviewFollowUpsSection> {
 
   @override
   Widget build(BuildContext context) {
+    final int? routeID = getRouteArg<int?>(context);
     return ValueListenableBuilder(
       valueListenable: _screenNotifer,
       builder: (_, value, __) {
@@ -60,6 +61,7 @@ class _InterviewFollowUpsSectionState extends State<InterviewFollowUpsSection> {
                 body: InterviewFollowUpForm(
                   followUp: value.data,
                   goToList: goToList,
+                  routeID: routeID,
                 ),
               ),
             ),
