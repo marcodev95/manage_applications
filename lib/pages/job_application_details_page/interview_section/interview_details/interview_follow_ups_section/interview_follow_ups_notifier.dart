@@ -71,9 +71,9 @@ class InterviewFollowUpsNotifier
 
   Future<OperationResult> createOrUpdate(InterviewFollowUp followUp) async {
     if (followUp.interviewId == null) {
-      return MissingInformationError(
-        error: 'ID_Colloquio non presente',
-        stackTrace: StackTrace.current,
+      return mapToFailure(
+        MissingInformationError(error: 'ID_Colloquio non presente'),
+        StackTrace.current,
       );
     }
 
@@ -85,7 +85,7 @@ class InterviewFollowUpsNotifier
       return mapToFailure(state.error!, state.stackTrace!);
     }
 
-    return Success(data: null, message: SuccessMessage.saveMessage);
+    return Success(data: true, message: SuccessMessage.saveMessage);
   }
 
   InterviewFollowUpsRepository get _repository =>
