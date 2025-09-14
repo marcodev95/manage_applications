@@ -90,7 +90,10 @@ class ReferentsInterviewRepository {
     try {
       final lastId = await _db.create(
         table: referentsInterviewTable,
-        json: SelectedReferentsForInterview.toJson(interviewId, referent.referent.id!),
+        json: SelectedReferentsForInterview.toJson(
+          interviewId,
+          referent.referent.id!,
+        ),
       );
 
       return Success<SelectedReferentsForInterview>(
@@ -107,7 +110,7 @@ class ReferentsInterviewRepository {
     }
   }
 
-  Future<OperationResult<void>> removeAssociate(int referentInterviewId) async {
+  Future<OperationResult<bool>> removeAssociate(int referentInterviewId) async {
     try {
       final result = await _db.delete(
         table: referentsInterviewTable,
@@ -120,7 +123,7 @@ class ReferentsInterviewRepository {
         throw ItemNotFound(stackTrace: StackTrace.current);
       }
 
-      return Success(data: null);
+      return Success(data: true);
     } catch (e, stackTrace) {
       if (e is ItemNotFound) rethrow;
 
