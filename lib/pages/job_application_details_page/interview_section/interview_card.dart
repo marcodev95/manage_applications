@@ -214,11 +214,7 @@ class _GoToInterviewDetailsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return DetailsButtonWidget(
       onPressed:
-          () => navigatorPush(
-            context,
-            InterviewDetailsPage(),
-            RouteSettings(arguments: id),
-          ),
+          () => navigatorPush(context, InterviewDetailsPage(routeID: id)),
     );
   }
 }
