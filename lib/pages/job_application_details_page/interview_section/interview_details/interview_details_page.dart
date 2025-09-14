@@ -10,11 +10,12 @@ import 'package:manage_applications/pages/job_application_details_page/interview
 import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
-import 'package:manage_applications/widgets/components/utility.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
 class InterviewDetailsPage extends ConsumerWidget {
-  const InterviewDetailsPage({super.key});
+  const InterviewDetailsPage({super.key, this.routeID});
+
+  final int? routeID;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,6 +23,14 @@ class InterviewDetailsPage extends ConsumerWidget {
       length: _tabs.length,
       child: Scaffold(
         appBar: AppBar(
+          leading: BackButton(
+            onPressed: () {
+              Navigator.pop(context);
+              if (routeID != null) {
+                ref.invalidate(getInterviewDetailsProvider(routeID!));
+              }
+            },
+          ),
           actions: [ErrorsPanelButtonWidget()],
           title: const Text('Dettagli del colloquio'),
           bottom: TabBar(
@@ -33,7 +42,7 @@ class InterviewDetailsPage extends ConsumerWidget {
             tabs: _tabs,
           ),
         ),
-        body: InterviewDetailsPageBody(),
+        body: InterviewDetailsPageBody(routeID),
       ),
     );
   }
@@ -47,26 +56,25 @@ class InterviewDetailsPage extends ConsumerWidget {
 }
 
 class InterviewDetailsPageBody extends ConsumerWidget {
-  const InterviewDetailsPageBody({super.key});
+  const InterviewDetailsPageBody(this.routeID, {super.key});
+
+  final int? routeID;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routeArg = getRouteArg<int?>(context);
-
-    debugPrint('routeArg => $routeArg');
-
-    if (routeArg == null) {
+    if (routeID == null) {
       return Padding(
         padding: EdgeInsets.all(AppStyle.pad24),
-        child: _PageTabsWidget(InterviewDetails.defaultValue(), routeArg),
+        child: _PageTabsWidget(InterviewDetails.defaultValue(), routeID),
       );
     }
 
-    final interviewDetailsAsync = ref.watch(
-      getInterviewDetailsProvider(routeArg),
-    );
+    final int id = routeID!;
+
+    final interviewDetailsAsync = ref.watch(getInterviewDetailsProvider(id));
+
     ref.listenOnErrorWithoutSnackbar(
-      provider: getInterviewDetailsProvider(routeArg),
+      provider: getInterviewDetailsProvider(id),
       context: context,
     );
 
@@ -74,12 +82,12 @@ class InterviewDetailsPageBody extends ConsumerWidget {
       data:
           (result) => Padding(
             padding: EdgeInsets.all(AppStyle.pad24),
-            child: _PageTabsWidget(result, routeArg),
+            child: _PageTabsWidget(result, id),
           ),
       error:
           (_, __) => DataLoadErrorScreenWidget(
             onPressed: () {
-              ref.invalidate(getInterviewDetailsProvider(routeArg));
+              ref.invalidate(getInterviewDetailsProvider(id));
             },
           ),
 
@@ -89,20 +97,20 @@ class InterviewDetailsPageBody extends ConsumerWidget {
 }
 
 class _PageTabsWidget extends ConsumerWidget {
-  const _PageTabsWidget(this.details, this.routeArg);
+  const _PageTabsWidget(this.details, this.routeID);
 
   final InterviewDetails details;
-  final int? routeArg;
+  final int? routeID;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return IndexedStack(
       index: ref.watch(currentIndexProvider),
       children: [
-        AppCard(child: InterviewDataForm(details.interview, routeId: routeArg)),
-        SelectedReferentsInterviewSection(),
-        InterviewFollowUpsSection(),
-        InterviewTimelineSection(),
+        AppCard(child: InterviewDataForm(details.interview, routeId: routeID)),
+        SelectedReferentsInterviewSection(routeID),
+        InterviewFollowUpsSection(routeID),
+        InterviewTimelineSection(routeID),
       ],
     );
   }
