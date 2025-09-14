@@ -8,15 +8,15 @@ import 'package:manage_applications/widgets/components/table_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class InterviewFollowUpsTable extends ConsumerWidget {
-  const InterviewFollowUpsTable(this.onEdit, {super.key});
+  const InterviewFollowUpsTable(this.onEdit, {super.key, this.routeID});
 
   final void Function(InterviewFollowUp) onEdit;
+  final int? routeID;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routeId = getRouteArg<int?>(context);
 
-    final asyncFollowUps = ref.watch(interviewFollowUpsProvider(routeId));
+    final asyncFollowUps = ref.watch(interviewFollowUpsProvider(routeID));
 
     return asyncFollowUps.when(
       skipError: true,
@@ -71,7 +71,7 @@ class InterviewFollowUpsTable extends ConsumerWidget {
                       Wrap(
                         children: [
                           _EditFollowUpButton(() => onEdit(followUp)),
-                          _DeleteFollowUpButton(followUp, routeId),
+                          _DeleteFollowUpButton(followUp, routeID),
                         ],
                       ),
                     ),
