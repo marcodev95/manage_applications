@@ -16,13 +16,6 @@ class SelectedReferentsForInterview extends Equatable{
     ReferentsInterviewTableColumns.referentId: referentId,
   };
 
-  SelectedReferentsForInterview copyWith({int? id, JobApplicationReferent? referent}) {
-    return SelectedReferentsForInterview(
-      id: id ?? this.id,
-      referent: referent ?? this.referent,
-    );
-  }
-
   @override
   String toString() {
     return '''__ReferentsInterview {
