@@ -10,7 +10,9 @@ import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class InterviewFollowUpsSection extends StatefulWidget {
-  const InterviewFollowUpsSection({super.key});
+  const InterviewFollowUpsSection(this.routeID, {super.key});
+
+  final int? routeID;
 
   @override
   State<InterviewFollowUpsSection> createState() =>
@@ -32,7 +34,6 @@ class _InterviewFollowUpsSectionState extends State<InterviewFollowUpsSection> {
 
   @override
   Widget build(BuildContext context) {
-    final int? routeID = getRouteArg<int?>(context);
     return ValueListenableBuilder(
       valueListenable: _screenNotifer,
       builder: (_, value, __) {
@@ -42,12 +43,13 @@ class _InterviewFollowUpsSectionState extends State<InterviewFollowUpsSection> {
               offstage: value.screen != ViewModel.list,
               child: SectionWidget(
                 title: 'Elenco dei follow-ups',
-                trailing: _OpenFollowUpDailogButton(goToForm),
+                trailing: _OpenFollowUpDailogButton(goToForm, widget.routeID),
                 body: SizedBox(
                   height: 345.0,
                   child: SingleChildScrollView(
                     child: InterviewFollowUpsTable(
                       (followUp) => goToForm(followUp),
+                      routeID: widget.routeID,
                     ),
                   ),
                 ),
@@ -61,7 +63,7 @@ class _InterviewFollowUpsSectionState extends State<InterviewFollowUpsSection> {
                 body: InterviewFollowUpForm(
                   followUp: value.data,
                   goToList: goToList,
-                  routeID: routeID,
+                  routeID: widget.routeID,
                 ),
               ),
             ),
@@ -77,15 +79,14 @@ class _InterviewFollowUpsSectionState extends State<InterviewFollowUpsSection> {
 */
 
 class _OpenFollowUpDailogButton extends ConsumerWidget {
-  const _OpenFollowUpDailogButton(this.goToForm);
+  const _OpenFollowUpDailogButton(this.goToForm, this.routeID);
 
   final void Function() goToForm;
+  final int? routeID;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isInterviewIdNull = ref.watch(
-      isInterviewIdNullProvider(getRouteArg<int?>(context)),
-    );
+    final isInterviewIdNull = ref.watch(isInterviewIdNullProvider(routeID));
 
     return TextButtonWidget(
       onPressed: isInterviewIdNull ? () {} : () => goToForm(),
