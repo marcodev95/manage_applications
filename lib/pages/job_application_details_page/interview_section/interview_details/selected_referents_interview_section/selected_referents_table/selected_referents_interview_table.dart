@@ -5,11 +5,12 @@ import 'package:manage_applications/pages/job_application_details_page/company_s
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/selected_referents_interview_section/selected_referents_table/selected_referents_interview_notifier.dart';
 import 'package:manage_applications/widgets/components/button/remove_button_widget.dart';
 import 'package:manage_applications/widgets/components/table_widget.dart';
-import 'package:manage_applications/widgets/components/utility.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
 class SelectedReferentsInterviewTable extends ConsumerStatefulWidget {
-  const SelectedReferentsInterviewTable({super.key});
+  const SelectedReferentsInterviewTable(this.routeID, {super.key});
+
+  final int? routeID;
 
   @override
   ConsumerState<SelectedReferentsInterviewTable> createState() =>
@@ -21,7 +22,7 @@ class SelectedReferentsInterviewTableState
   @override
   Widget build(BuildContext context) {
     final selectedReferentsAsync = ref.watch(
-      selectedReferentsForInterviewProvider(getRouteArg<int?>(context)),
+      selectedReferentsForInterviewProvider(widget.routeID),
     );
 
     return selectedReferentsAsync.when(
@@ -61,7 +62,7 @@ class SelectedReferentsInterviewTableState
                         ref
                             .read(
                               selectedReferentsForInterviewProvider(
-                                getRouteArg<int?>(context),
+                                widget.routeID,
                               ).notifier,
                             )
                             .removeReferent(sr.id);
