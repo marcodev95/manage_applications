@@ -8,16 +8,16 @@ import 'package:manage_applications/pages/job_application_details_page/interview
 import 'package:manage_applications/widgets/components/button/text_button_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
-import 'package:manage_applications/widgets/components/utility.dart';
 
 class SelectedReferentsInterviewSection extends ConsumerWidget {
-  const SelectedReferentsInterviewSection({super.key});
+  const SelectedReferentsInterviewSection(this.routeID, {super.key});
+
+  final int? routeID;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routeArg = getRouteArg<int?>(context);
     ref.listenOnErrorWithSnackbar(
-      provider: selectedReferentsForInterviewProvider(routeArg),
+      provider: selectedReferentsForInterviewProvider(routeID),
       context: context,
     );
 
@@ -28,8 +28,8 @@ class SelectedReferentsInterviewSection extends ConsumerWidget {
           offstage: screen != ScreenReferentsTable.selected,
           child: SectionWidget(
             title: 'Lista dei referenti associati al colloquio',
-            trailing: const _AssociateButton(),
-            body: SelectedReferentsInterviewTable(),
+            trailing: _AssociateButton(routeID),
+            body: SelectedReferentsInterviewTable(routeID),
           ),
         ),
 
@@ -46,7 +46,7 @@ class SelectedReferentsInterviewSection extends ConsumerWidget {
               label: 'Torna alla lista dei referenti associati',
             ),
 
-            body: InterviewersSelectionTable(routeArg: routeArg),
+            body: InterviewersSelectionTable(routeArg: routeID),
           ),
         ),
       ],
@@ -55,13 +55,13 @@ class SelectedReferentsInterviewSection extends ConsumerWidget {
 }
 
 class _AssociateButton extends ConsumerWidget {
-  const _AssociateButton();
+  const _AssociateButton(this.routeID);
+
+  final int? routeID;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isInterviewIdNull = ref.watch(
-      isInterviewIdNullProvider(getRouteArg<int?>(context)),
-    );
+    final isInterviewIdNull = ref.watch(isInterviewIdNullProvider(routeID));
 
     return TextButtonWidget(
       onPressed:
