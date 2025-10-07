@@ -59,7 +59,10 @@ class JobApplicationReferentsRepository {
         json: appReferent.toUpdatableJson(),
         where:
             '${JobApplicationReferentsColumns.jobApplicationId} = ? AND ${JobApplicationReferentsColumns.referentId} = ?',
-        whereArgs: [applicationId, appReferent.referent.id],
+        whereArgs: [
+          applicationId,
+          appReferent.referentWithAffiliation.referent.id,
+        ],
       );
 
       if (result == 0) throw ItemNotFound();
