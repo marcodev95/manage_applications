@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/models/referent/referent.dart';
+import 'package:manage_applications/models/interview/referent_with_affiliation.dart';
 import 'package:manage_applications/models/job_application/job_application_referent.dart';
+import 'package:manage_applications/models/referent/referent.dart';
 import 'package:manage_applications/models/referent/referent_details.dart';
 import 'package:manage_applications/models/shared/company_option.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
@@ -30,9 +31,7 @@ class CompanyReferentForm extends ConsumerWidget {
       context: context,
     );
 
-    final asyncCompanyReferentDetails = ref.watch(
-      referentDetailsProvider(id),
-    );
+    final asyncCompanyReferentDetails = ref.watch(referentDetailsProvider(id));
 
     return asyncCompanyReferentDetails.when(
       data: (data) => CompanyReferentFormBody(referent: data),
@@ -74,7 +73,11 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
     final referentDetails = widget.referent;
 
     if (referentDetails != null) {
-      final referent = referentDetails.jobApplicationReferent.referent;
+      final referent =
+          referentDetails
+              .jobApplicationReferent
+              .referentWithAffiliation
+              .referent;
       final company = referentDetails.company;
       _nameController.text = referent.name;
       _emailController.text = referent.email;
@@ -162,7 +165,13 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
     if (_formKey.currentState!.validate()) {
       final referentsNotifier = ref.read(referentsProvider.notifier);
 
-      final referentId = widget.referent?.jobApplicationReferent.referent.id;
+      final referentId =
+          widget
+              .referent
+              ?.jobApplicationReferent
+              .referentWithAffiliation
+              .referent
+              .id;
 
       final referent = Referent(
         id: referentId,
@@ -175,8 +184,10 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
 
       final jobAppReferent = JobApplicationReferent(
         applicationId: ref.read(jobApplicationProvider).value?.id,
-        referentAffiliation: _referentCompanyController.value.companyType,
-        referent: referent,
+        referentWithAffiliation: ReferentWithAffiliation(
+          referent: referent,
+          affiliation: _referentCompanyController.value.companyType,
+        ),
       );
 
       final submit =
