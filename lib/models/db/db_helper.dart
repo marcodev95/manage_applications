@@ -5,7 +5,7 @@ import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/interview/interview_follow_up.dart';
 import 'package:manage_applications/models/timeline/interview_timeline.dart';
-import 'package:manage_applications/models/interview/referents_interview.dart';
+import 'package:manage_applications/models/interview/selected_referent_for_interview.dart';
 import 'package:manage_applications/models/job_application/job_application.dart';
 import 'package:manage_applications/models/job_application/job_application_referent.dart';
 import 'package:manage_applications/models/requirement.dart';
