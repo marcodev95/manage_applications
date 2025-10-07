@@ -109,7 +109,7 @@ class _PageTabsWidget extends ConsumerWidget {
       children: [
         AppCard(child: InterviewDataForm(details.interview, routeId: routeID)),
         SelectedReferentsInterviewSection(routeID),
-        InterviewFollowUpsSection(routeID),
+        SingleChildScrollView(child: InterviewFollowUpsSection(routeID),),
         InterviewTimelineSection(routeID),
       ],
     );
