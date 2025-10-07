@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manage_applications/models/job_application/job_application_referent.dart';
+import 'package:manage_applications/models/interview/referent_with_affiliation.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/models/interview/referents_interview.dart';
+import 'package:manage_applications/models/interview/selected_referent_for_interview.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/provider/get_interview_details_provider.dart';
 import 'package:manage_applications/repository/referents_interview_repository.dart';
@@ -26,7 +26,7 @@ class SelectedReferentsForInterviewNotifier
   ReferentsInterviewRepository get _repository =>
       ref.read(referentsInterviewRepository);
 
-  Future<void> addReferent(JobApplicationReferent referent) async {
+  Future<void> addReferent(ReferentWithAffiliation referent) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
