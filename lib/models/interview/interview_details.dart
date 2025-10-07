@@ -1,6 +1,6 @@
 import 'package:manage_applications/models/interview/interview.dart';
 import 'package:manage_applications/models/interview/interview_follow_up.dart';
-import 'package:manage_applications/models/interview/referents_interview.dart';
+import 'package:manage_applications/models/interview/selected_referent_for_interview.dart';
 import 'package:manage_applications/models/timeline/interview_timeline.dart';
 import 'package:manage_applications/models/timeline/timeline_event/interview_timeline_event.dart';
 
