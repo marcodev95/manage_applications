@@ -62,6 +62,34 @@ List<DataRow> buildColoredRow<T>({
   return rows;
 }
 
+List<DataRow> buildSelectableRow<T>({
+  required List<T> list,
+  required List<DataCell> Function(T, int) cells,
+  void Function(bool?, T)? onSelectChanged,
+  bool Function(T)? selected,
+}) {
+  final rows = <DataRow>[];
+  for (int i = 0; i < list.length; i++) {
+    final item = list[i];
+
+    rows.add(
+      DataRow(
+        selected: selected != null ? selected(item) : false,
+        cells: cells(item, i),
+        color: WidgetStatePropertyAll<Color?>(
+          i.isOdd ? Color(0xFF203040) : Colors.transparent,
+        ),
+        onSelectChanged:
+            onSelectChanged != null
+                ? (bool? v) => onSelectChanged(v, item)
+                : null,
+      ),
+    );
+  }
+
+  return rows;
+}
+
 DataColumn dataColumnWidget(String label) {
   return DataColumn(
     label: Text(label, style: TextStyle(fontSize: AppStyle.tableTitleFontSize)),
