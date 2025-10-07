@@ -26,7 +26,9 @@ class ReferentsNotifier
     state = const AsyncLoading();
 
     try {
-      final result = await _repository.addReferent(appReferent.referent);
+      final result = await _repository.addReferent(
+        appReferent.referentWithAffiliation.referent,
+      );
 
       final updateReferent = appReferent.copyWith(referent: result);
 
@@ -53,7 +55,9 @@ class ReferentsNotifier
     state = const AsyncLoading();
 
     try {
-      await _repository.updateReferent(referent.referent);
+      await _repository.updateReferent(
+        referent.referentWithAffiliation.referent,
+      );
 
       await _appReferentsRepository.updateJobApplicationReferent(
         _getApplicationIdOrFailure(),
@@ -61,9 +65,12 @@ class ReferentsNotifier
       );
 
       final updateList =
-          _currentState
-              .map((e) => e.referent.id == referent.referent.id ? referent : e)
-              .toList();
+          _currentState.map((e) {
+            final isTheSame =
+                e.referentWithAffiliation.referent.id ==
+                referent.referentWithAffiliation.referent.id;
+            return isTheSame ? referent : e;
+          }).toList();
 
       state = AsyncData(updateList);
 
@@ -82,7 +89,11 @@ class ReferentsNotifier
       await _repository.deleteReferent(id);
 
       final updateList =
-          _currentState.where((element) => element.referent.id != id).toList();
+          _currentState
+              .where(
+                (element) => element.referentWithAffiliation.referent.id != id,
+              )
+              .toList();
 
       state = AsyncData(updateList);
 
@@ -108,7 +119,10 @@ class ReferentsNotifier
 
       final updateList =
           _currentState
-              .where((element) => element.referent.id != referentId)
+              .where(
+                (element) =>
+                    element.referentWithAffiliation.referent.id != referentId,
+              )
               .toList();
 
       state = AsyncData(updateList);
@@ -132,8 +146,7 @@ class ReferentsNotifier
     return _applicationId!;
   }
 
-  ReferentRepository get _repository =>
-      ref.read(referentRepositoryProvider);
+  ReferentRepository get _repository => ref.read(referentRepositoryProvider);
   JobApplicationReferentsRepository get _appReferentsRepository =>
       ref.read(jobApplicationReferentsRepositoryProvider);
   int? get _applicationId => ref.read(jobApplicationProvider).value?.id;
