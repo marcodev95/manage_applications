@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
+import 'package:manage_applications/models/interview/referent_with_affiliation.dart';
 import 'package:manage_applications/models/job_application/job_application_referent.dart';
 import 'package:manage_applications/models/referent/referent_with_company.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
@@ -56,9 +57,11 @@ class ReferentsSelectorNotifier
       final isMain = appliedCompanyId == referent.company.id;
 
       final appReferent = JobApplicationReferent(
-        referentAffiliation:
-            isMain ? ReferentAffiliation.main : ReferentAffiliation.client,
-        referent: referent.referent,
+        referentWithAffiliation: ReferentWithAffiliation(
+          referent: referent.referent,
+          affiliation:
+              isMain ? ReferentAffiliation.main : ReferentAffiliation.client,
+        ),
       );
 
       await _jaRepository.addReferentToJobApplication(
