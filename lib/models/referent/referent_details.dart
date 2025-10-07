@@ -22,12 +22,14 @@ class ReferentDetails {
       );
 
   static Referent toDB(ReferentDetails details) {
+    final referent =
+        details.jobApplicationReferent.referentWithAffiliation.referent;
     return Referent(
-      id: details.jobApplicationReferent.referent.id,
-      name: details.jobApplicationReferent.referent.name,
-      role: details.jobApplicationReferent.referent.role,
-      email: details.jobApplicationReferent.referent.email,
-      phoneNumber: details.jobApplicationReferent.referent.phoneNumber,
+      id: referent.id,
+      name: referent.name,
+      role: referent.role,
+      email: referent.email,
+      phoneNumber: referent.phoneNumber,
       companyId: details.company.companyRef.id,
     );
   }
