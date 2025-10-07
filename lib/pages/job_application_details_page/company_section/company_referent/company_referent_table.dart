@@ -26,16 +26,16 @@ class CompanyReferentTable extends ConsumerWidget {
             dataRow: buildColoredRow(
               list: data,
               cells: (r, _) {
-                final referent = r.referent;
+                final referent = r.referentWithAffiliation.referent;
                 return [
-                  DataCell(CompanyReferentBadge(r)),
+                  DataCell(CompanyReferentBadge(r.referentWithAffiliation)),
                   DataCell(
                     SizedBox(
                       width: 100.0,
                       child: Tooltip(
-                        message: r.referent.role.displayName,
+                        message: referent.role.displayName,
                         child: Text(
-                          r.referent.role.displayName,
+                          referent.role.displayName,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
