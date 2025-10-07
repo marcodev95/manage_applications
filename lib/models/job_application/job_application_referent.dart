@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:manage_applications/models/interview/referent_with_affiliation.dart';
 import 'package:manage_applications/models/referent/referent.dart';
 import 'package:manage_applications/models/job_application/job_application.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class JobApplicationReferent {
   final int? applicationId;
-  final ReferentAffiliation referentAffiliation;
-  final Referent referent;
+  final ReferentWithAffiliation referentWithAffiliation;
   final bool involvedInInterview;
 
   JobApplicationReferent({
     this.applicationId,
-    required this.referentAffiliation,
-    required this.referent,
+    required this.referentWithAffiliation,
     this.involvedInInterview = true,
   });
 
   Map<String, dynamic> toJson(int applicationId) {
     return {
       JobApplicationReferentsColumns.jobApplicationId: applicationId,
-      JobApplicationReferentsColumns.referentId: referent.id,
+      JobApplicationReferentsColumns.referentId:
+          referentWithAffiliation.referent.id,
       JobApplicationReferentsColumns.involvedInInterview: fromBoolToInt(
         involvedInInterview,
       ),
       JobApplicationReferentsColumns.referentAffiliation:
-          referentAffiliation.name,
+          referentWithAffiliation.affiliation.name,
     };
   }
 
@@ -34,7 +34,7 @@ class JobApplicationReferent {
         involvedInInterview,
       ),
       JobApplicationReferentsColumns.referentAffiliation:
-          referentAffiliation.name,
+          referentWithAffiliation.affiliation.name,
     };
   }
 
@@ -47,9 +47,11 @@ class JobApplicationReferent {
     };
     return JobApplicationReferent(
       applicationId: map[JobApplicationsTableColumns.id],
-      referent: Referent.fromJson(referentJson),
-      referentAffiliation: fromStringToReferentAffiliation(
-        map[JobApplicationReferentsColumns.referentAffiliation],
+      referentWithAffiliation: ReferentWithAffiliation(
+        referent: Referent.fromJson(referentJson),
+        affiliation: fromStringToReferentAffiliation(
+          map[JobApplicationReferentsColumns.referentAffiliation],
+        ),
       ),
       involvedInInterview: fromIntToBool(
         map[JobApplicationReferentsColumns.involvedInInterview],
@@ -58,24 +60,26 @@ class JobApplicationReferent {
   }
 
   JobApplicationReferent copyWith({
-    ReferentAffiliation? referentAffiliation,
-    bool? involvedInInterview,
     Referent? referent,
+    ReferentAffiliation? affiliation,
+    bool? involvedInInterview,
     int? applicationId,
   }) {
     return JobApplicationReferent(
+      referentWithAffiliation: referentWithAffiliation.copyWith(
+        referent: referent ?? referentWithAffiliation.referent,
+        affiliation: affiliation ?? referentWithAffiliation.affiliation
+      ),
       applicationId: applicationId ?? this.applicationId,
-      referentAffiliation: referentAffiliation ?? this.referentAffiliation,
       involvedInInterview: involvedInInterview ?? this.involvedInInterview,
-      referent: referent ?? this.referent,
     );
   }
 
   @override
   String toString() {
     return ''' {
-        Referent: $referent
-        referentAffiliation: $referentAffiliation
+        Id: $applicationId
+        referentAffiliation: $referentWithAffiliation
         involvedInInterview: $involvedInInterview
       }
     ''';
