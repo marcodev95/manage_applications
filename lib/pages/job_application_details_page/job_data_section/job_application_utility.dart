@@ -14,6 +14,10 @@ extension JobDataWorkTypeX on JobDataWorkType {
         return 'Presenza';
     }
   }
+
+  bool get isRemote {
+    return this == JobDataWorkType.remote;
+  }
 }
 
 JobDataWorkType workTypeFromString(String value) {
