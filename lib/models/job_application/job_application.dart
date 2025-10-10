@@ -11,6 +11,7 @@ class JobApplication extends Equatable {
   final String websiteUrl;
   final String? dayInOffice;
   final String? experience;
+  final String? workPlace;
 
   const JobApplication({
     this.id,
@@ -21,6 +22,7 @@ class JobApplication extends Equatable {
     required this.websiteUrl,
     this.dayInOffice,
     this.experience,
+    this.workPlace,
   });
 
   JobApplication.fromJson(Map<String, dynamic> json)
@@ -31,7 +33,8 @@ class JobApplication extends Equatable {
         dayInOffice = json[JobApplicationsTableColumns.dayInOffice],
         workType = workTypeFromString(json[JobApplicationsTableColumns.workType]),
         websiteUrl = json[JobApplicationsTableColumns.websiteUrl],
-        experience = json[JobApplicationsTableColumns.experience];
+        experience = json[JobApplicationsTableColumns.experience],
+        workPlace = json[JobApplicationsTableColumns.workPlace];
 
   JobApplication copyWith({
     int? id,
@@ -42,6 +45,7 @@ class JobApplication extends Equatable {
     String? dayInOffice,
     JobDataWorkType? workType,
     String? experience,
+    String? workPlace,
   }) {
     return JobApplication(
       id: id ?? this.id,
@@ -52,6 +56,7 @@ class JobApplication extends Equatable {
       websiteUrl: websiteUrl ?? this.websiteUrl,
       workType: workType ?? this.workType,
       experience: experience ?? this.experience,
+      workPlace: workPlace ?? this.workPlace,
     );
   }
 
@@ -63,6 +68,7 @@ class JobApplication extends Equatable {
         JobApplicationsTableColumns.workType: workType.name,
         JobApplicationsTableColumns.dayInOffice: dayInOffice,
         JobApplicationsTableColumns.experience: experience,
+        JobApplicationsTableColumns.workPlace: workPlace,
       };
 
   @override
@@ -75,6 +81,7 @@ class JobApplication extends Equatable {
       Url => $websiteUrl
       WorkType => $workType
       DayInOffice => $dayInOffice
+      WorkPlace => $workPlace
       ''';
   } 
 
@@ -103,6 +110,7 @@ class JobApplicationsTableColumns {
   static String workType = "work_type";
   static String dayInOffice = "day_in_office";
   static String experience = "experience";
+  static String workPlace = "work_place";
   static String companyId = "fk_company_id";
   static String clientCompanyId = "client_company_id";
 }
