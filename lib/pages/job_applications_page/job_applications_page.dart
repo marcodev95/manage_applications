@@ -22,7 +22,7 @@ class JobApplicationsPage extends StatelessWidget {
         children: [
           Row(
             spacing: 20,
-            children: [Expanded(child: _FlterButtonsWidget()), _AddNewButton()],
+            children: [Expanded(child: _FlterButtons()), _AddNewApplicationBtn()],
           ),
 
           Expanded(
@@ -38,8 +38,8 @@ class JobApplicationsPage extends StatelessWidget {
   }
 }
 
-class _AddNewButton extends ConsumerWidget {
-  const _AddNewButton();
+class _AddNewApplicationBtn extends ConsumerWidget {
+  const _AddNewApplicationBtn();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,15 +54,15 @@ class _AddNewButton extends ConsumerWidget {
   }
 }
 
-class _FlterButtonsWidget extends ConsumerStatefulWidget {
-  const _FlterButtonsWidget();
+class _FlterButtons extends ConsumerStatefulWidget {
+  const _FlterButtons();
 
   @override
-  ConsumerState<_FlterButtonsWidget> createState() =>
-      _FlterButtonsWidgetState();
+  ConsumerState<_FlterButtons> createState() =>
+      _FlterButtonsState();
 }
 
-class _FlterButtonsWidgetState extends ConsumerState<_FlterButtonsWidget> {
+class _FlterButtonsState extends ConsumerState<_FlterButtons> {
   final ValueNotifier<ApplicationFilter> selectedFilter = ValueNotifier(
     ApplicationFilter.all,
   );
