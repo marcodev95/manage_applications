@@ -23,35 +23,6 @@ class JobApplicationRepository {
     return List.from(result.map((e) => JobApplication.fromJson(e)));
   }
 
-  Future<List<JobApplicationUi>> fetchJobApplicationsWithCompany() async {
-    final String sql = '''
-    SELECT 
-      jd.${JobApplicationsTableColumns.id}, 
-      jd.${JobApplicationsTableColumns.applyDate}, 
-      jd.${JobApplicationsTableColumns.position}, 
-      jd.${JobApplicationsTableColumns.applicationStatus}, 
-      jd.${JobApplicationsTableColumns.websiteUrl}, 
-      jd.${JobApplicationsTableColumns.companyId},
-
-      c.${CompanyTableColumns.id}, 
-      c.${CompanyTableColumns.name}
-
-      FROM $_table AS jd    
-        LEFT JOIN $companyTable AS c 
-          ON jd.${JobApplicationsTableColumns.companyId} = c.${CompanyTableColumns.id}
-  ''';
-
-    try {
-      final result = await _db.rawQuery(sql: sql);
-
-      return List<JobApplicationUi>.from(
-        result.map((e) => JobApplicationUi.fromJson(e)),
-      );
-    } catch (e, stackTrace) {
-      throw DataLoadingError(error: e, stackTrace: stackTrace);
-    }
-  }
-
   Future<JobApplication> addJobApplication(
     JobApplication jobApplication,
   ) async {
@@ -152,6 +123,8 @@ class JobApplicationRepository {
         jd.${JobApplicationsTableColumns.position}, 
         jd.${JobApplicationsTableColumns.applicationStatus}, 
         jd.${JobApplicationsTableColumns.websiteUrl}, 
+        jd.${JobApplicationsTableColumns.workType}, 
+        jd.${JobApplicationsTableColumns.workPlace}, 
         jd.${JobApplicationsTableColumns.companyId},
 
         c.${CompanyTableColumns.id}, 
