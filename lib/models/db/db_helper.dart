@@ -135,6 +135,7 @@ class DbHelper {
         ${JobApplicationsTableColumns.dayInOffice} $_textType,
         ${JobApplicationsTableColumns.workType} $_textType,
         ${JobApplicationsTableColumns.experience} $_textType,
+        ${JobApplicationsTableColumns.workPlace} $_textType,
         ${JobApplicationsTableColumns.companyId} $_intType,
         ${JobApplicationsTableColumns.clientCompanyId} $_intType DEFAULT NULL,
 
@@ -151,10 +152,11 @@ class DbHelper {
           ${JobApplicationsTableColumns.workType},
           ${JobApplicationsTableColumns.dayInOffice},
           ${JobApplicationsTableColumns.experience},
+          ${JobApplicationsTableColumns.workPlace},
           ${JobApplicationsTableColumns.companyId},
           ${JobApplicationsTableColumns.clientCompanyId}
-        ) VALUES ('2023-10-11', 'Posizione Demo 1', 'apply', 'www.indeed.com', 'hybrid', '3', '', 1, 2), 
-                ('2023-11-10', 'Posizione Demo 2', 'interview', 'www.indeed.com', 'onSite', '5', '', 2, NULL)
+        ) VALUES ('2023-10-11', 'Posizione Demo 1', 'apply', 'www.indeed.com', 'hybrid', '3', '', 'Milano', 1, 2), 
+                ('2023-11-10', 'Posizione Demo 2', 'interview', 'www.indeed.com', 'onSite', '5', '', '', 2, NULL)
       ''');
   }
 
