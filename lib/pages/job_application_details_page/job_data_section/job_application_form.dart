@@ -65,6 +65,7 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
       child: Form(
         key: _formKey,
         child: Column(
+          spacing: 30.0,
           children: [
             Row(
               spacing: 20,
@@ -95,7 +96,6 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
                 ),
               ],
             ),
-            const SizedBox(height: 30.0),
             Row(
               children: [
                 Expanded(
@@ -106,7 +106,6 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
                 ),
               ],
             ),
-            const SizedBox(height: 30.0),
             Row(
               spacing: 20.0,
               children: [
@@ -126,14 +125,13 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
                   ),
                 ),
                 Expanded(
-                  child: FormFieldWidget(
-                    controller: _workPlaceController,
-                    label: "Luogo di lavoro",
+                  child: _WorkPlaceField(
+                    _workPlaceController,
+                    _workTypeNotifier,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 30.0),
             Align(
               alignment: Alignment.centerRight,
               child: Consumer(
@@ -192,6 +190,62 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
     _workTypeNotifier.dispose();
     _applicationStatus.dispose();
     _workPlaceController.dispose();
+    super.dispose();
+  }
+}
+
+class _WorkPlaceField extends StatefulWidget {
+  const _WorkPlaceField(this.controller, this.notifier);
+
+  final TextEditingController controller;
+  final ValueNotifier<JobDataWorkType> notifier;
+
+  @override
+  State<_WorkPlaceField> createState() => __WorkPlaceFieldState();
+}
+
+class __WorkPlaceFieldState extends State<_WorkPlaceField> {
+  late final VoidCallback _notifierListener;
+  final fieldLabel = "Luogo di lavoro";
+
+  @override
+  void initState() {
+    super.initState();
+
+    _notifierListener = () {
+      final value = widget.notifier.value;
+      if (value.isRemote) {
+        widget.controller.clear();
+      }
+    };
+
+    widget.notifier.addListener(_notifierListener);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<JobDataWorkType>(
+      valueListenable: widget.notifier,
+      builder: (_, value, __) {
+        final isActive = value.isRemote;
+        final isRequired = value != JobDataWorkType.remote;
+        final validator =
+            isRequired ? (String? v) => baseValidator(v, fieldLabel) : null;
+
+        return FormFieldWidget(
+          controller: widget.controller,
+          label: fieldLabel,
+          readOnly: isActive,
+          isRequired: isRequired,
+          validator: validator,
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.notifier.removeListener(_notifierListener);
     super.dispose();
   }
 }
