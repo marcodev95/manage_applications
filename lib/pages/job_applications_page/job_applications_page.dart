@@ -3,11 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_application_details_page.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
-import 'package:manage_applications/pages/job_applications_page/job_applications_table/job_applications_table.dart';
+import 'package:manage_applications/pages/job_applications_page/job_applications_grid/job_applications_grid.dart';
 import 'package:manage_applications/providers/job_application_filter.dart';
 import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
 import 'package:manage_applications/widgets/components/button/text_button_widget.dart';
-import 'package:manage_applications/widgets/components/header_card_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class JobApplicationsPage extends StatelessWidget {
@@ -18,26 +17,21 @@ class JobApplicationsPage extends StatelessWidget {
     return const Padding(
       padding: EdgeInsets.all(AppStyle.pad24),
       child: Column(
-        spacing: 40.0,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 20.0,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [_FlterButtonsWidget()],
+            spacing: 20,
+            children: [Expanded(child: _FlterButtonsWidget()), _AddNewButton()],
           ),
 
-          Flexible(
-            child: SingleChildScrollView(
-              child: HeaderCardWidget(
-                titleLabel: 'Lista candidature',
-                trailing: _AddNewButton(),
-                cardBody: Padding(
-                  padding: EdgeInsets.symmetric(vertical: AppStyle.pad16),
-                  child: JobApplicationsTable(),
-                ),
-              ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: AppStyle.pad16),
+              child: JobApplicationsGrid(),
             ),
           ),
+
         ],
       ),
     );
@@ -82,7 +76,11 @@ class _FlterButtonsWidgetState extends ConsumerState<_FlterButtonsWidget> {
           segments: const [
             ButtonSegment(
               value: ApplicationFilter.all,
-              label: Text('Tutti le candidature'),
+              label: Text(
+                'Tutte le candidature',
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
             ),
             ButtonSegment(
               value: ApplicationFilter.apply,
