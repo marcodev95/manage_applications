@@ -32,6 +32,7 @@ class JobApplicationDetailsRepository {
       ja.${JobApplicationsTableColumns.websiteUrl},
       ja.${JobApplicationsTableColumns.workType},
       ja.${JobApplicationsTableColumns.dayInOffice},
+      ja.${JobApplicationsTableColumns.workPlace},
 
       c.${CompanyTableColumns.id} AS c_id,
       c.${CompanyTableColumns.name} AS c_name,
@@ -77,6 +78,7 @@ class JobApplicationDetailsRepository {
         JobApplicationsTableColumns.websiteUrl: row[JobApplicationsTableColumns.websiteUrl],
         JobApplicationsTableColumns.workType: row[JobApplicationsTableColumns.workType],
         JobApplicationsTableColumns.dayInOffice: row[JobApplicationsTableColumns.dayInOffice],
+        JobApplicationsTableColumns.workPlace: row[JobApplicationsTableColumns.workPlace],
       },
       'company': {
         CompanyTableColumns.id: row['c_id'],
