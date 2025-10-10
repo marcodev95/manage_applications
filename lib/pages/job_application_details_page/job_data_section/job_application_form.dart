@@ -14,13 +14,15 @@ class JobApplicationForm extends ConsumerStatefulWidget {
   const JobApplicationForm({super.key});
 
   @override
-  ConsumerState<JobApplicationForm> createState() => _JobApplicationFormWidgetState();
+  ConsumerState<JobApplicationForm> createState() =>
+      _JobApplicationFormWidgetState();
 }
 
 class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
     with AutomaticKeepAliveClientMixin<JobApplicationForm> {
   final _formKey = GlobalKey<FormState>();
   final _positionController = TextEditingController();
+  final _workPlaceController = TextEditingController();
   final _linkController = TextEditingController();
   final _experienceController = TextEditingController();
   final _dayInOfficeController = TextEditingController();
@@ -48,6 +50,7 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
       _applyDateNotifier.value = jobApplication.applyDate;
       _workTypeNotifier.value = jobApplication.workType;
       _applicationStatus.value = jobApplication.applicationStatus;
+      _workPlaceController.text = jobApplication.workPlace ?? "";
     });
   }
 
@@ -64,19 +67,30 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
         child: Column(
           children: [
             Row(
+              spacing: 20,
               children: [
                 Expanded(
-                  flex: 4,
+                  flex: 6,
                   child: RequiredFormFieldWidget(
                     controller: _positionController,
-                    label: "Posizione *",
+                    label: "Posizione (*)",
                   ),
                 ),
-                const SizedBox(width: 20.0),
                 Expanded(
+                  flex: 2,
                   child: DatePickerWidget(
                     label: "Data candidatura",
                     selectedDate: _applyDateNotifier,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: DropdownWidget(
+                    label: "Stato della candidatura",
+                    items: ApplicationStatus.values.toDropdownItems(
+                      (e) => e.displayName,
+                    ),
+                    selectedValue: _applicationStatus,
                   ),
                 ),
               ],
@@ -87,24 +101,15 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
                 Expanded(
                   child: RequiredFormFieldWidget(
                     controller: _linkController,
-                    label: "Link annuncio *",
+                    label: "Link annuncio (*)",
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 30.0),
             Row(
+              spacing: 20.0,
               children: [
-                Expanded(
-                  child: DropdownWidget(
-                    label: "Stato della candidatura",
-                    items: ApplicationStatus.values.toDropdownItems(
-                      (e) => e.displayName,
-                    ),
-                    selectedValue: _applicationStatus,
-                  ),
-                ),
-                const SizedBox(width: 20.0),
                 Expanded(
                   child: DropdownWidget(
                     label: "Tipologia di lavoro",
@@ -114,11 +119,16 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
                     selectedValue: _workTypeNotifier,
                   ),
                 ),
-                const SizedBox(width: 20.0),
                 Expanded(
                   child: FormFieldWidget(
                     controller: _dayInOfficeController,
                     label: "Giorni in ufficio",
+                  ),
+                ),
+                Expanded(
+                  child: FormFieldWidget(
+                    controller: _workPlaceController,
+                    label: "Luogo di lavoro",
                   ),
                 ),
               ],
@@ -153,6 +163,7 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
         position: _positionController.text,
         experience: _experienceController.text,
         workType: _workTypeNotifier.value,
+        workPlace: _workPlaceController.text,
         dayInOffice: _dayInOfficeController.text,
         applyDate: _applyDateNotifier.value,
         applicationStatus: _applicationStatus.value,
@@ -180,6 +191,7 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
     _dayInOfficeController.dispose();
     _workTypeNotifier.dispose();
     _applicationStatus.dispose();
+    _workPlaceController.dispose();
     super.dispose();
   }
 }
