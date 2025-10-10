@@ -3,12 +3,13 @@ import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/models/job_application/job_application.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_utility.dart';
 
-abstract class JobApplicationBaseUI extends Equatable {
+/* abstract class JobApplicationBaseUI extends Equatable {
   final int? id;
   final String position;
   final DateTime applyDate;
   final ApplicationStatus applicationStatus;
   final String link;
+  final String workPlace;
 
   const JobApplicationBaseUI({
     this.id,
@@ -16,13 +17,14 @@ abstract class JobApplicationBaseUI extends Equatable {
     required this.applyDate,
     required this.applicationStatus,
     required this.link,
+    required this.workPlace,
   });
 
   @override
-  List<Object?> get props => [id, position, applyDate, applicationStatus, link];
-}
+  List<Object?> get props => [id, position, applyDate, applicationStatus, link, workPlace];
+} */
 
-class JobApplicationBase extends JobApplicationBaseUI {
+/* class JobApplicationBase extends JobApplicationBaseUI {
   const JobApplicationBase({
     super.id,
     required super.position,
@@ -43,7 +45,7 @@ class JobApplicationBase extends JobApplicationBaseUI {
     );
   }
 }
-
+ */
 class JobApplicationUi extends Equatable {
   final int? id;
   final String position;
@@ -51,6 +53,8 @@ class JobApplicationUi extends Equatable {
   final DateTime applyDate;
   final ApplicationStatus applicationStatus;
   final String link;
+  final String? workPlace;
+  final JobDataWorkType workType;
 
   const JobApplicationUi({
     this.id,
@@ -59,6 +63,8 @@ class JobApplicationUi extends Equatable {
     required this.applyDate,
     required this.applicationStatus,
     required this.link,
+    this.workPlace,
+    required this.workType,
   });
 
   JobApplicationUi.fromJson(Map<String, dynamic> json)
@@ -72,7 +78,9 @@ class JobApplicationUi extends Equatable {
       applicationStatus = applicationStatusFromString(
         json[JobApplicationsTableColumns.applicationStatus],
       ),
-      link = json[JobApplicationsTableColumns.websiteUrl];
+      link = json[JobApplicationsTableColumns.websiteUrl],
+      workPlace = json[JobApplicationsTableColumns.workPlace],
+      workType = workTypeFromString(json[JobApplicationsTableColumns.workType]);
 
   JobApplicationUi copyWith({
     int? id,
@@ -81,6 +89,8 @@ class JobApplicationUi extends Equatable {
     CompanyRef? companyRef,
     ApplicationStatus? applicationStatus,
     String? link,
+    String? workPlace,
+    JobDataWorkType? workType,
   }) {
     return JobApplicationUi(
       id: id ?? this.id,
@@ -89,6 +99,8 @@ class JobApplicationUi extends Equatable {
       applyDate: applyDate ?? this.applyDate,
       applicationStatus: applicationStatus ?? this.applicationStatus,
       link: link ?? this.link,
+      workPlace: workPlace ?? this.workPlace,
+      workType: workType ?? this.workType,
     );
   }
 
