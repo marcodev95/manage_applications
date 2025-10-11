@@ -1,15 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/pages/companies_list_page/company_details_section/company_details_page.dart';
 import 'package:manage_applications/providers/companies_paginator_notifier.dart';
-import 'package:manage_applications/widgets/components/header_card_widget.dart';
+import 'package:manage_applications/widgets/components/divider_widget.dart';
 import 'package:manage_applications/widgets/components/paginator_widget.dart';
+import 'package:manage_applications/widgets/components/pop_up_menu_button_widget.dart';
+import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
-import 'package:manage_applications/widgets/components/table_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
 class CompaniesPage extends ConsumerWidget {
@@ -29,31 +30,24 @@ class CompaniesPage extends ConsumerWidget {
       skipError: true,
       data:
           (paginator) => Padding(
-            padding: const EdgeInsets.all(AppStyle.pad24),
-            child: HeaderCardWidget(
-              titleLabel: 'Lista aziende',
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              cardBody: Padding(
-                padding: EdgeInsets.symmetric(vertical: AppStyle.pad16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      height: 490,
-                      child: CompaniesList(paginator.items),
-                    ),
+            padding: EdgeInsets.all(AppStyle.pad16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 10.0,
+              children: [
+                Expanded(child: CompaniesGrid(paginator.items)),
 
-                    PaginatorWidget(
-                      paginatorState: paginator,
-                      previousPage: () => _previousPage(ref),
-                      nextPage: () => _nextPage(ref),
-                    ),
-                  ],
+                const DividerWidget(),
+
+                PaginatorWidget(
+                  paginatorState: paginator,
+                  previousPage: () => _previousPage(ref),
+                  nextPage: () => _nextPage(ref),
                 ),
-              ),
+              ],
             ),
           ),
+
       error: (e, stackTrace) {
         return DataLoadErrorScreenWidget(
           onPressed: () => ref.invalidate(companiesPaginatorProvider),
@@ -69,100 +63,135 @@ class CompaniesPage extends ConsumerWidget {
       ref.read(companiesPaginatorProvider.notifier).nextPage();
 }
 
-class CompaniesList extends ConsumerWidget {
-  const CompaniesList(this.companies, {super.key});
+class CompaniesGrid extends ConsumerWidget {
+  const CompaniesGrid(this.companies, {super.key});
 
   final List<Company> companies;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return TableWidget(
-      columns: [
-        dataColumnWidget('Nome'),
-        dataColumnWidget('Città'),
-        dataColumnWidget('Email'),
-        dataColumnWidget('Azioni'),
-      ],
-      dataRow: buildColoredRow(
-        list: companies,
-        cells:
-            (c, index) => [
-              DataCell(
-                SizedBox(
-                  width: 250.0,
-                  child: TextOverflowEllipsisWidget(
-                    c.name,
-                    fontSize: AppStyle.tableTextFontSize,
-                  ),
-                ),
-              ),
-              DataCell(
-                SizedBox(
-                  width: 150.0,
-                  child: TextOverflowEllipsisWidget(
-                    c.city,
-                    fontSize: AppStyle.tableTextFontSize,
-                  ),
-                ),
-              ),
-              DataCell(
-                SizedBox(
-                  width: 150.0,
-                  child: InkWell(
-                    onTap: () {
-                      if (c.email.isNotEmpty) {
-                        Clipboard.setData(ClipboardData(text: c.email));
-                        showSuccessSnackBar(
-                          message: 'Testo copiato negli appunti',
-                          context: context,
-                        );
-                      }
-                    },
-                    child: Text(
-                      c.email,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: AppStyle.tableTextFontSize,
-                        color: Colors.lightBlueAccent,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              DataCell(
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.language,
-                        color: index.isOdd ? Colors.white70 : Colors.blueAccent,
-                      ),
-                      tooltip: c.website,
-                      onPressed: () async {
-                        await tryToLaunchUrl(context: context, link: c.website);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.info,
-                        color: index.isOdd ? Colors.white70 : Colors.blueAccent,
-                      ),
-                      onPressed: () {
-                        navigatorPush(
-                          context,
-                          CompanyDetailsPage(),
-                          RouteSettings(arguments: c.id),
-                        );
-                      },
-                      tooltip: 'Dettagli',
-                    ),
-                  ],
-                ),
-              ),
-            ],
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 2.7,
       ),
+      itemCount: companies.length,
+      itemBuilder: (context, index) {
+        final company = companies[index];
+
+        return AppCard(
+          externalPadding: const EdgeInsets.all(AppStyle.pad16),
+          child: Column(
+            spacing: 10,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    company.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  _popupMenuButtonWidget(company, context, ref),
+                ],
+              ),
+              Row(
+                spacing: 10,
+                children: [
+                  Icon(Icons.location_on_sharp, color: Colors.deepOrange),
+                  Text(
+                    '${company.address}, ${company.city}',
+                    style: const TextStyle(
+                      fontSize: AppStyle.tableTextFontSize,
+                    ),
+                  ),
+                ],
+              ),
+              EmailClipBoardWidget(company.email),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+PopupMenuButtonWidget _popupMenuButtonWidget(
+  Company company,
+  BuildContext context,
+  WidgetRef ref,
+) {
+  return PopupMenuButtonWidget<String>(
+    popupMenuEntry: [
+      PopupMenuItem(
+        value: "details",
+        child: const Row(
+          spacing: 10,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.description_sharp, color: Colors.amber),
+            Text('Dettagli dell\'azienda'),
+          ],
+        ),
+        onTap:
+            () => navigatorPush(
+              context,
+              CompanyDetailsPage(),
+              RouteSettings(arguments: company.id),
+            ),
+      ),
+      PopupMenuItem<String>(
+        value: "url",
+        child: const Row(
+          spacing: 10,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [Icon(Icons.link, color: Colors.blue), Text('Sito web')],
+        ),
+        onTap:
+            () async =>
+                await tryToLaunchUrl(context: context, link: company.website),
+      ),
+    ],
+  );
+}
+
+class EmailClipBoardWidget extends StatelessWidget {
+  const EmailClipBoardWidget(this.email, {super.key});
+
+  final String email;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 10,
+      children: [
+        Icon(Icons.email, color: Colors.blue),
+        InkWell(
+          onTap: () {
+            if (email.isNotEmpty) {
+              Clipboard.setData(ClipboardData(text: email));
+              showSuccessSnackBar(
+                message: 'Testo copiato negli appunti',
+                context: context,
+              );
+            }
+          },
+          child: Text(
+            email,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: AppStyle.tableTextFontSize,
+              color: Colors.lightBlueAccent,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
