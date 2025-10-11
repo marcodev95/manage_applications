@@ -22,16 +22,13 @@ class JobApplicationsPage extends StatelessWidget {
         children: [
           Row(
             spacing: 20,
-            children: [Expanded(child: _FlterButtons()), _AddNewApplicationBtn()],
+            children: [
+              Expanded(child: _FlterButtons()),
+              _AddNewApplicationBtn(),
+            ],
           ),
 
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: AppStyle.pad16),
-              child: JobApplicationsGrid(),
-            ),
-          ),
-
+          Expanded(child: JobApplicationsGrid()),
         ],
       ),
     );
@@ -58,8 +55,7 @@ class _FlterButtons extends ConsumerStatefulWidget {
   const _FlterButtons();
 
   @override
-  ConsumerState<_FlterButtons> createState() =>
-      _FlterButtonsState();
+  ConsumerState<_FlterButtons> createState() => _FlterButtonsState();
 }
 
 class _FlterButtonsState extends ConsumerState<_FlterButtons> {
