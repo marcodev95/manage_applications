@@ -95,6 +95,7 @@ class CompanyRepository {
         ${CompanyTableColumns.id},
         ${CompanyTableColumns.name},
         ${CompanyTableColumns.city},
+        ${CompanyTableColumns.address},
         ${CompanyTableColumns.email},
         ${CompanyTableColumns.website}
 
