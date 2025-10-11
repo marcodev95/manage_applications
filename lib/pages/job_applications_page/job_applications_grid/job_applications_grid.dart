@@ -32,7 +32,7 @@ class JobApplicationsGrid extends ConsumerWidget {
       skipError: true,
       data:
           (paginator) => Column(
-            spacing: 30.0,
+            spacing: 10.0,
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(child: _JobApplicationsBody(paginator.items)),
@@ -73,7 +73,7 @@ class _JobApplicationsBody extends ConsumerWidget {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2, // 2 item per riga
-        childAspectRatio: 2, // Rapporto tra larghezza e altezza della card
+        childAspectRatio: 2.3, // Rapporto tra larghezza e altezza della card
       ),
       itemCount: applicationsUI.length,
       itemBuilder: (context, index) {
@@ -114,6 +114,8 @@ class _JobApplicationsBody extends ConsumerWidget {
               ),
               Text(
                 application.position,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
