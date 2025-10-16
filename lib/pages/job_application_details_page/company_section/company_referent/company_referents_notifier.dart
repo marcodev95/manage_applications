@@ -149,7 +149,7 @@ class ReferentsNotifier
   ReferentRepository get _repository => ref.read(referentRepositoryProvider);
   JobApplicationReferentsRepository get _appReferentsRepository =>
       ref.read(jobApplicationReferentsRepositoryProvider);
-  int? get _applicationId => ref.read(jobApplicationProvider).value?.id;
+  int? get _applicationId => ref.read(jobApplicationProvider).value?.jobEntry.id;
   List<JobApplicationReferent> get _currentState => state.value ?? [];
 }
 
