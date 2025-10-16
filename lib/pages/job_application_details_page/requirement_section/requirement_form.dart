@@ -63,7 +63,7 @@ class _RequirementFormWidgetState extends ConsumerState<RequirementFormWidget>
 
   void submit() async {
     if (_formKey.currentState!.validate()) {
-      final jobApplicationId = ref.read(jobApplicationProvider).value?.id;
+      final jobApplicationId = ref.read(jobApplicationProvider).value?.jobEntry.id;
 
       final requirement = Requirement(
         id: widget.requirement?.id,
