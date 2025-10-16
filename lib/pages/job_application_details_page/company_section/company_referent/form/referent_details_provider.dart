@@ -8,7 +8,7 @@ final referentDetailsProvider = FutureProvider.autoDispose
     .family<ReferentDetails, int>((ref, int referentId) async {
       final repository = ref.read(referentRepositoryProvider);
 
-      final applicationId = ref.read(jobApplicationProvider).value?.id;
+      final applicationId = ref.read(jobApplicationProvider).value?.jobEntry.id;
 
       if (applicationId == null) {
         throw MissingInformationError(error: {'missing': 'applicationId'});
