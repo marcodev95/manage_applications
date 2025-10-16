@@ -183,7 +183,7 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
       );
 
       final jobAppReferent = JobApplicationReferent(
-        applicationId: ref.read(jobApplicationProvider).value?.id,
+        applicationId: ref.read(jobApplicationProvider).value?.jobEntry.id,
         referentWithAffiliation: ReferentWithAffiliation(
           referent: referent,
           affiliation: _referentCompanyController.value.companyType,
