@@ -32,7 +32,9 @@ class JobApplicationRepository {
         json: jobApplication.toJson(),
       );
 
-      return jobApplication.copyWith(id: lastId);
+      return jobApplication.copyWith(
+        jobEntry: jobApplication.jobEntry.copyWith(id: lastId),
+      );
     } catch (e, stackTrace) {
       throw SaveError(error: e, stackTrace: stackTrace);
     }
@@ -44,7 +46,7 @@ class JobApplicationRepository {
         table: _table,
         json: jobApplication.toJson(),
         where: "${JobApplicationsTableColumns.id} = ?",
-        whereArgs: [jobApplication.id],
+        whereArgs: [jobApplication.jobEntry.id],
       );
 
       if (result == 0) throw ItemNotFound();
