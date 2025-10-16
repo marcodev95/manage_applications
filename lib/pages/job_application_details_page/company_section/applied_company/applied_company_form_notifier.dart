@@ -53,7 +53,7 @@ class AppliedCompanyFormNotifier extends AutoDisposeAsyncNotifier<Company> {
   }
 
   Future<void> _updateJobApplicationCompany(Company company) async {
-    final jobApplicationId = ref.read(jobApplicationProvider).value?.id;
+    final jobApplicationId = ref.read(jobApplicationProvider).value?.jobEntry.id;
 
     if (jobApplicationId == null) {
       throw MissingInformationError(error: 'ID_Candidatura non presente!');
