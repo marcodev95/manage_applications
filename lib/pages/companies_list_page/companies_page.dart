@@ -99,19 +99,21 @@ class CompaniesGrid extends ConsumerWidget {
                   _popupMenuButtonWidget(company, context, ref),
                 ],
               ),
-              Row(
-                spacing: 10,
-                children: [
-                  Icon(Icons.location_on_sharp, color: Colors.deepOrange),
-                  Text(
-                    '${company.address}, ${company.city}',
-                    style: const TextStyle(
-                      fontSize: AppStyle.tableTextFontSize,
+              Flexible(
+                child: Row(
+                  spacing: 10,
+                  children: [
+                    Icon(Icons.location_on_sharp, color: Colors.deepOrange),
+                    Text(
+                      '${company.address}, ${company.city}',
+                      style: const TextStyle(
+                        fontSize: AppStyle.tableTextFontSize,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              EmailClipBoardWidget(company.email),
+              Flexible(child: EmailClipBoardWidget(company.email)),
             ],
           ),
         );
