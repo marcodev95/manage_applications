@@ -131,7 +131,7 @@ class _ContractFormWidgetState extends ConsumerState<ContractFormWidget>
         isOvertimePresent: _overTimeNotifier.value,
         isProductionBonusPresent: _productionBonusNotifier.value,
       ),
-      jobApplicationId: ref.read(jobApplicationProvider).value?.id,
+      jobApplicationId: ref.read(jobApplicationProvider).value?.jobEntry.id,
     );
   }
 
