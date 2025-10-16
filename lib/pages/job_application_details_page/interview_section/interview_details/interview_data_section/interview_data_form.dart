@@ -212,7 +212,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
       answerTime: _interviewAnswerController.text,
       interviewPlace: _interviewPlaceController.text,
       notes: _interviewNotesController.text,
-      jobApplicationId: ref.read(jobApplicationProvider).value?.id,
+      jobApplicationId: ref.read(jobApplicationProvider).value?.jobEntry.id,
     );
   }
 
