@@ -73,7 +73,7 @@ class _JobApplicationsBody extends ConsumerWidget {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2, // 2 item per riga
-        childAspectRatio: 2.3, // Rapporto tra larghezza e altezza della card
+        childAspectRatio: 2.2, // Rapporto tra larghezza e altezza della card
       ),
       itemCount: applicationsUI.length,
       itemBuilder: (context, index) {
@@ -112,28 +112,36 @@ class _JobApplicationsBody extends ConsumerWidget {
                   _popupMenuButtonWidget(application, context, ref),
                 ],
               ),
-              Text(
-                application.position,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              Flexible(
+                child: Text(
+                  application.position,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: 5.0),
-              Text(
-                application.companyRef?.name ?? '',
-                style: const TextStyle(fontSize: AppStyle.tableTextFontSize),
+              Flexible(
+                child: Text(
+                  application.companyRef?.name ?? '',
+                  style: const TextStyle(fontSize: AppStyle.tableTextFontSize),
+                ),
               ),
-              Text(
-                _buildWorkPlaceAndType(application),
-                style: const TextStyle(fontSize: AppStyle.tableTextFontSize),
+              Flexible(
+                child: Text(
+                  _buildWorkPlaceAndType(application),
+                  style: const TextStyle(fontSize: AppStyle.tableTextFontSize),
+                ),
               ),
               const SizedBox(height: 10.0),
-              Text(
-                'Candidatura inviata il: ${uiFormat.format(application.applyDate)}',
-                style: TextStyle(fontSize: 14, color: Colors.grey[400]),
+              Flexible(
+                child: Text(
+                  'Candidatura inviata il: ${uiFormat.format(application.applyDate)}',
+                  style: TextStyle(fontSize: 14, color: Colors.grey[400]),
+                ),
               ),
             ],
           ),
