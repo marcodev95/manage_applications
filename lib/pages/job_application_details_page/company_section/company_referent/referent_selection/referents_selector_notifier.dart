@@ -18,7 +18,7 @@ class ReferentsSelectorNotifier
     extends AutoDisposeAsyncNotifier<List<ReferentWithCompany>> {
   @override
   FutureOr<List<ReferentWithCompany>> build() async {
-    final applicationId = ref.watch(jobApplicationProvider).value?.id;
+    final applicationId = ref.watch(jobApplicationProvider).value?.jobEntry.id;
     final mainId = ref.watch(appliedCompanyFormProvider).value?.id;
     final clientId = ref.watch(clientCompanyFormProvider).value?.id;
 
@@ -42,7 +42,7 @@ class ReferentsSelectorNotifier
     state = const AsyncLoading();
 
     try {
-      final applicationId = ref.watch(jobApplicationProvider).value?.id;
+      final applicationId = ref.watch(jobApplicationProvider).value?.jobEntry.id;
       final appliedCompanyId = ref.watch(appliedCompanyFormProvider).value?.id;
 
       if (applicationId == null || appliedCompanyId == null) {
