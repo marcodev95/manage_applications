@@ -33,6 +33,7 @@ class JobApplicationDetailsRepository {
       ja.${JobApplicationsTableColumns.workType},
       ja.${JobApplicationsTableColumns.dayInOffice},
       ja.${JobApplicationsTableColumns.workPlace},
+      ja.${JobApplicationsTableColumns.createAt},
 
       c.${CompanyTableColumns.id} AS c_id,
       c.${CompanyTableColumns.name} AS c_name,
@@ -69,16 +70,24 @@ class JobApplicationDetailsRepository {
     final row = result.first;
 
     return {
-      'job_application': {
+      'job_entry': {
         JobApplicationsTableColumns.id: row[JobApplicationsTableColumns.id],
-        JobApplicationsTableColumns.position: row[JobApplicationsTableColumns.position],
-        JobApplicationsTableColumns.applyDate: row[JobApplicationsTableColumns.applyDate],
+        JobApplicationsTableColumns.position:
+            row[JobApplicationsTableColumns.position],
+        JobApplicationsTableColumns.workType:
+            row[JobApplicationsTableColumns.workType],
+        JobApplicationsTableColumns.websiteUrl:
+            row[JobApplicationsTableColumns.websiteUrl],
+        JobApplicationsTableColumns.workPlace:
+            row[JobApplicationsTableColumns.workPlace],        
+        JobApplicationsTableColumns.createAt:
+            row[JobApplicationsTableColumns.createAt],
+      },
+      'job_application': {
+        JobApplicationsTableColumns.applyDate:
+            row[JobApplicationsTableColumns.applyDate],
         JobApplicationsTableColumns.applicationStatus:
             row[JobApplicationsTableColumns.applicationStatus],
-        JobApplicationsTableColumns.websiteUrl: row[JobApplicationsTableColumns.websiteUrl],
-        JobApplicationsTableColumns.workType: row[JobApplicationsTableColumns.workType],
-        JobApplicationsTableColumns.dayInOffice: row[JobApplicationsTableColumns.dayInOffice],
-        JobApplicationsTableColumns.workPlace: row[JobApplicationsTableColumns.workPlace],
       },
       'company': {
         CompanyTableColumns.id: row['c_id'],
@@ -190,8 +199,12 @@ class JobApplicationDetailsRepository {
   Future<JobApplicationDetails> getJobApplicationDetails(applicationId) async {
     try {
       final jobDetails = await _getJobDetailsWithCompanies(applicationId);
+      
       final Map<String, dynamic> applicationDetailsMap = {
-        'job_application': jobDetails['job_application'],
+        'job_application': {
+          'job_entry': jobDetails['job_entry'],
+          'j_a': jobDetails['job_application'],
+        },
         'company': jobDetails['company'],
         'client_company': jobDetails['client_company'],
         'company_referents': await _getCompanyReferents(applicationId),
