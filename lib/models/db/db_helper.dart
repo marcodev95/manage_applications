@@ -130,6 +130,7 @@ class DbHelper {
         ${JobApplicationsTableColumns.id} $_idType, 
         ${JobApplicationsTableColumns.applyDate} $_textType,
         ${JobApplicationsTableColumns.position} $_textType,
+        ${JobApplicationsTableColumns.createAt} $_textType,
         ${JobApplicationsTableColumns.applicationStatus} $_textType,
         ${JobApplicationsTableColumns.websiteUrl} $_textType,
         ${JobApplicationsTableColumns.dayInOffice} $_textType,
@@ -147,6 +148,7 @@ class DbHelper {
     batch.execute('''INSERT INTO $jobApplicationsTable (
           ${JobApplicationsTableColumns.applyDate},
           ${JobApplicationsTableColumns.position},
+          ${JobApplicationsTableColumns.createAt},
           ${JobApplicationsTableColumns.applicationStatus},
           ${JobApplicationsTableColumns.websiteUrl},
           ${JobApplicationsTableColumns.workType},
@@ -155,8 +157,8 @@ class DbHelper {
           ${JobApplicationsTableColumns.workPlace},
           ${JobApplicationsTableColumns.companyId},
           ${JobApplicationsTableColumns.clientCompanyId}
-        ) VALUES ('2023-10-11', 'Posizione Demo 1', 'apply', 'www.indeed.com', 'hybrid', '3', '', 'Milano', 1, 2), 
-                ('2023-11-10', 'Posizione Demo 2', 'interview', 'www.indeed.com', 'onSite', '5', '', '', 2, NULL)
+        ) VALUES ('2023-10-11', 'Posizione Demo 1', '2025-10-14', 'apply', 'www.indeed.com', 'hybrid', '3', '', 'Milano', 1, 2), 
+                ('2023-11-10', 'Posizione Demo 2', '2025-10-12', 'interview', 'www.indeed.com', 'onSite', '5', '', 'Varese', 2, NULL)
       ''');
   }
 
