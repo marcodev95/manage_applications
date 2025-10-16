@@ -11,7 +11,7 @@ final isJobApplicationIdPresent = Provider.autoDispose<bool>(
   (ref) => ref.watch(
     jobApplicationProvider.select(
       (value) =>
-          value.maybeWhen(data: (data) => data.id != null, orElse: () => false),
+          value.maybeWhen(data: (data) => data.jobEntry.id != null, orElse: () => false),
     ),
   ),
 );
