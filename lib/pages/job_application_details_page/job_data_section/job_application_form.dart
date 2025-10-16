@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/job_application/job_application.dart';
+import 'package:manage_applications/models/job_application/job_entry.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_utility.dart';
@@ -43,14 +44,15 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
 
     currentDetails.whenData((value) {
       final jobApplication = value.jobApplication;
-      _positionController.text = jobApplication.position;
-      _linkController.text = jobApplication.websiteUrl;
-      _dayInOfficeController.text = jobApplication.dayInOffice ?? "";
+      final jobEntry = jobApplication.jobEntry;
+      _positionController.text = jobEntry.position;
+      _linkController.text = jobEntry.url;
+      _dayInOfficeController.text = jobEntry.dayInOffice ?? "";
       _experienceController.text = jobApplication.experience ?? "";
       _applyDateNotifier.value = jobApplication.applyDate;
-      _workTypeNotifier.value = jobApplication.workType;
+      _workTypeNotifier.value = jobEntry.workType;
       _applicationStatus.value = jobApplication.applicationStatus;
-      _workPlaceController.text = jobApplication.workPlace ?? "";
+      _workPlaceController.text = jobEntry.workPlace ?? "";
     });
   }
 
@@ -153,16 +155,20 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
-      final newId = ref.read(jobApplicationProvider).value?.id;
+      final newId = ref.read(jobApplicationProvider).value?.jobEntry.id;
 
-      final jobApplication = JobApplication(
+      final jobEntry = JobEntry(
         id: newId,
-        websiteUrl: _linkController.text,
         position: _positionController.text,
-        experience: _experienceController.text,
         workType: _workTypeNotifier.value,
+        url: _linkController.text,
         workPlace: _workPlaceController.text,
         dayInOffice: _dayInOfficeController.text,
+      );
+
+      final jobApplication = JobApplication(
+        jobEntry: jobEntry,
+        experience: _experienceController.text,
         applyDate: _applyDateNotifier.value,
         applicationStatus: _applicationStatus.value,
       );
@@ -170,7 +176,7 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
       final notifier = ref.read(jobApplicationProvider.notifier);
 
       final submit =
-          jobApplication.id == null
+          jobEntry.id == null
               ? await notifier.addJobApplication(jobApplication)
               : await notifier.updateJobApplication(jobApplication);
 
