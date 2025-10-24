@@ -43,7 +43,7 @@ class _AddNewApplicationBtn extends ConsumerWidget {
     return TextButtonWidget(
       backgroundColor: Colors.blue,
       onPressed: () {
-        ref.read(jobApplicationId.notifier).state = 0;
+        ref.read(jobApplicationIdProvider.notifier).state = null;
         navigatorPush(context, const JobApplicationDetailsPage());
       },
       label: "Nuova candidatura",
