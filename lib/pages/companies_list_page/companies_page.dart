@@ -140,12 +140,7 @@ PopupMenuButtonWidget _popupMenuButtonWidget(
             Text('Dettagli dell\'azienda'),
           ],
         ),
-        onTap:
-            () => navigatorPush(
-              context,
-              CompanyDetailsPage(),
-              RouteSettings(arguments: company.id),
-            ),
+        onTap: () => navigatorPush(context, CompanyDetailsPage(company.id!)),
       ),
       PopupMenuItem<String>(
         value: "url",
