@@ -2,21 +2,21 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
-import 'package:manage_applications/models/job_application/job_application_ui.dart';
+import 'package:manage_applications/models/job_entry/job_entry_summary.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/repository/company_applications_repository.dart';
 import 'package:manage_applications/repository/job_application_referents_repository.dart';
 import 'package:manage_applications/repository/job_data_repository.dart';
 
 class ClientCompanyApplicationsNotifier
-    extends AutoDisposeFamilyAsyncNotifier<List<JobApplicationUi>, int> {
-  Future<List<JobApplicationUi>> _getDatas(int companyId) async {
+    extends AutoDisposeFamilyAsyncNotifier<List<JobEntrySummary>, int> {
+  Future<List<JobEntrySummary>> _getDatas(int companyId) async {
     return await _companyApplicationsRepository
         .fetchApplicationsForClientCompany(companyId);
   }
 
   @override
-  FutureOr<List<JobApplicationUi>> build(int arg) async => await _getDatas(arg);
+  FutureOr<List<JobEntrySummary>> build(int arg) async => await _getDatas(arg);
 
   Future<OperationResult> removeAssociation(
     int jobApplicationId,
@@ -52,6 +52,6 @@ class ClientCompanyApplicationsNotifier
 }
 
 final clientCompanyApplicationsProvider = AsyncNotifierProvider.autoDispose
-    .family<ClientCompanyApplicationsNotifier, List<JobApplicationUi>, int>(
+    .family<ClientCompanyApplicationsNotifier, List<JobEntrySummary>, int>(
       ClientCompanyApplicationsNotifier.new,
     );
