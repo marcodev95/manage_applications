@@ -2,21 +2,21 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/errors/ui_message.dart';
-import 'package:manage_applications/models/job_application/job_application_ui.dart';
+import 'package:manage_applications/models/job_entry/job_entry_summary.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
 import 'package:manage_applications/repository/company_applications_repository.dart';
 
 class MainCompanyApplicationsNotifier
-    extends AutoDisposeFamilyAsyncNotifier<List<JobApplicationUi>, int> {
-  Future<List<JobApplicationUi>> _getDatas(int companyId) async {
+    extends AutoDisposeFamilyAsyncNotifier<List<JobEntrySummary>, int> {
+  Future<List<JobEntrySummary>> _getDatas(int companyId) async {
     return await _companyApplicationsRepository.fetchApplicationsForMainCompany(
       companyId,
     );
   }
 
   @override
-  FutureOr<List<JobApplicationUi>> build(int arg) async => await _getDatas(arg);
+  FutureOr<List<JobEntrySummary>> build(int arg) async => await _getDatas(arg);
 
   Future<OperationResult> deleteJobApplication(int jobApplicationId) async {
     state = const AsyncLoading();
@@ -41,6 +41,6 @@ class MainCompanyApplicationsNotifier
 }
 
 final mainCompanyApplicationsProvider = AsyncNotifierProvider.autoDispose
-    .family<MainCompanyApplicationsNotifier, List<JobApplicationUi>, int>(
+    .family<MainCompanyApplicationsNotifier, List<JobEntrySummary>, int>(
       MainCompanyApplicationsNotifier.new,
     );
