@@ -1,8 +1,8 @@
-import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/companies_list_page/company_details_section/client_company_applications_section/client_company_applications_provider.dart';
-import 'package:manage_applications/pages/companies_list_page/company_details_section/widget/job_applications_for_company_table_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:manage_applications/models/shared/operation_result.dart';
+import 'package:manage_applications/pages/companies_list_page/company_details_section/client_company_applications_section/client_company_applications_provider.dart';
+import 'package:manage_applications/pages/companies_list_page/company_details_section/company_job_applications_list.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
 class ClientCompanyApplicationsSection extends ConsumerWidget {
@@ -18,22 +18,28 @@ class ClientCompanyApplicationsSection extends ConsumerWidget {
 
     return jobApplicationsAsync.when(
       data:
-          (applications) => JobApplicationsForCompanyTableWidget(
+          (applications) => CompanyJobApplicationsList(
             applications: applications,
             button:
-                (jobApplication) =>
-                    _delete(ref, jobApplication.id!, context, companyId),
+                (jobApplication) => _removeAssociation(
+                  ref,
+                  jobApplication.id,
+                  context,
+                  companyId,
+                ),
           ),
       error: (_, __) {
         return DataLoadErrorScreenWidget(
-          onPressed: () => ref.invalidate(clientCompanyApplicationsProvider),
+          onPressed:
+              () =>
+                  ref.invalidate(clientCompanyApplicationsProvider(companyId)),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 
-  Future<void> _delete(
+  Future<void> _removeAssociation(
     WidgetRef ref,
     int id,
     BuildContext context,
