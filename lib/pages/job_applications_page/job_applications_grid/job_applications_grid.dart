@@ -1,19 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
-import 'package:manage_applications/models/job_application/job_application_ui.dart';
-import 'package:manage_applications/models/shared/operation_result.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_application_details_page.dart';
-import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_utility.dart';
-import 'package:manage_applications/pages/job_application_details_page/providers/fetch_job_application_details_provider.dart';
-import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
-import 'package:manage_applications/widgets/components/divider_widget.dart';
-import 'package:manage_applications/widgets/components/paginator_widget.dart';
-import 'package:manage_applications/widgets/components/pop_up_menu_button_widget.dart';
-import 'package:manage_applications/widgets/components/section_widget.dart';
-import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
-import 'package:manage_applications/widgets/components/utility.dart';
-import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
+import 'job_applications_grid_barrel.dart';
 
 class JobApplicationsGrid extends ConsumerWidget {
   const JobApplicationsGrid({super.key});
