@@ -169,7 +169,7 @@ class _JobApplicationsBody extends ConsumerWidget {
             ],
           ),
           onTap: () {
-            ref.read(jobApplicationId.notifier).state = application.id!;
+            ref.read(jobApplicationIdProvider.notifier).state = application.id!;
             navigatorPush(context, const JobApplicationDetailsPage());
           },
         ),
