@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/models/job_application/job_application.dart';
-import 'package:manage_applications/models/job_application/job_entry.dart';
+import 'package:manage_applications/models/job_entry/job_entry.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_utility.dart';

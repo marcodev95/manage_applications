@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:manage_applications/models/job_application/job_entry.dart';
+import 'package:manage_applications/models/job_entry/job_entry.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_utility.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
