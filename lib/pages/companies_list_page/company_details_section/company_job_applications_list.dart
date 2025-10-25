@@ -9,10 +9,12 @@ class CompanyJobApplicationsList extends ConsumerWidget {
     super.key,
     required this.applications,
     required this.button,
+    this.isMainCompany = false,
   });
 
   final List<JobEntrySummary> applications;
   final void Function(JobEntrySummary) button;
+  final bool isMainCompany;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -93,8 +95,14 @@ class CompanyJobApplicationsList extends ConsumerWidget {
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    tooltip: 'Elimina candidatura',
+                    icon: Icon(
+                      isMainCompany ? Icons.delete : Icons.link_off,
+                      color: isMainCompany ? Colors.red : Colors.orange,
+                    ),
+                    tooltip:
+                        isMainCompany
+                            ? 'Elimina candidatura'
+                            : 'Rimuovi candidatura da questa azienda',
                     onPressed: () => button(application),
                   ),
                 ],
