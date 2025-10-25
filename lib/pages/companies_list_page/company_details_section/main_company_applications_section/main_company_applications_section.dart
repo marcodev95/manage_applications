@@ -22,6 +22,7 @@ class MainCompanyApplicationsSection extends ConsumerWidget {
             applications: applications,
             button:
                 (jobApplication) => _delete(ref, jobApplication.id, context),
+            isMainCompany: true,
           ),
       error: (e, st) {
         return DataLoadErrorScreenWidget(
