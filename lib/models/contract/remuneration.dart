@@ -3,7 +3,7 @@ import 'package:manage_applications/models/contract/contract.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class Remuneration extends Equatable {
-  final String? ral;
+  final int? ral;
   final double? monthlySalary;
   final int? monthlyPayments;
   final bool isProductionBonusPresent;

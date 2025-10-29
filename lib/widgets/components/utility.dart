@@ -7,6 +7,8 @@ final DateFormat uiFormat = DateFormat("dd-MM-yyyy");
 final DateFormat dbFormat = DateFormat("yyyy-MM-dd");
 final DateFormat dateTimeFormatUI = DateFormat("dd-MM-yyyy 'alle' HH:mm");
 
+final NumberFormat getRalFormatter = NumberFormat('#,###', 'it_IT');
+
 String fromTimeOfDayToString(TimeOfDay time) {
   return '${time.hour}:${time.minute}';
 }

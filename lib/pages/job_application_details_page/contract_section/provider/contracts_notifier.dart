@@ -25,7 +25,7 @@ class ContractsNotifier extends AutoDisposeAsyncNotifier<List<ContractUI>> {
     });
   }
 
-  void updateRAL(String ral, int id) {
+  void updateRAL(int ral, int id) {
     state = state.whenData((value) {
       return [
         for (final el in value)
