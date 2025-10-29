@@ -176,6 +176,8 @@ class JobApplicationDetailsRepository {
         ${ContractTableColumns.contractDuration},
         ${ContractTableColumns.workPlaceAddress},
         ${ContractTableColumns.ral},
+        ${ContractTableColumns.startDate},
+        ${ContractTableColumns.endDate},
         ${ContractTableColumns.isTrialContract}
       FROM $contractTable
       WHERE ${ContractTableColumns.jobApplicationId} = $applicationId      
