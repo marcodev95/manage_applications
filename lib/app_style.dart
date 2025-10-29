@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppStyle {
-  static const tableTitleFontSize = 18.0;
-  static const tableTextFontSize = 16.0;
+  static const headingFontSize = 18.0;
+  static const tableTextFontSize = 16.0; //bodyFontSize
 
   static const double pad8 = 8.0;
   static const double pad16 = 16.0;
@@ -19,6 +19,13 @@ class AppStyle {
     color: Colors.white70,
     fontWeight: FontWeight.w500,
   );
+
+  static const TextStyle cardTitle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
+
+  static const TextStyle cardBody = TextStyle(fontSize: 16);
 
   static InputDecoration baseInputDecoration(String label) {
     return InputDecoration(
