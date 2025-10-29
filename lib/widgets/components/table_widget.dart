@@ -92,7 +92,7 @@ List<DataRow> buildSelectableRow<T>({
 
 DataColumn dataColumnWidget(String label) {
   return DataColumn(
-    label: Text(label, style: TextStyle(fontSize: AppStyle.tableTitleFontSize)),
+    label: Text(label, style: TextStyle(fontSize: AppStyle.headingFontSize)),
   );
 }
 
@@ -118,7 +118,7 @@ class TextOverflowEllipsisWidget extends StatelessWidget {
   const TextOverflowEllipsisWidget(
     this.label, {
     super.key,
-    this.fontSize = AppStyle.tableTitleFontSize,
+    this.fontSize = AppStyle.headingFontSize,
   });
 
   final String label;
