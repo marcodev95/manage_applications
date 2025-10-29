@@ -9,7 +9,10 @@ class Contract {
   final String? ccnl;
   final bool isTrialContract;
   final String? notes;
+
   final String? contractDuration;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
   final String workingHour;
 
@@ -27,6 +30,8 @@ class Contract {
     this.isTrialContract = false,
     this.notes,
     this.contractDuration,
+    this.startDate,
+    this.endDate,
     this.workingHour = '40',
     this.remuneration,
     this.workPlaceAddress,
@@ -38,6 +43,8 @@ class Contract {
       type = getContractsTypeFromString(json[ContractTableColumns.type]),
 
       contractDuration = json[ContractTableColumns.contractDuration],
+      startDate = parseDateTimeOrNull(json[ContractTableColumns.startDate]),
+      endDate = parseDateTimeOrNull(json[ContractTableColumns.endDate]),
       ccnl = json[ContractTableColumns.ccnl],
       isTrialContract = fromIntToBool(
         json[ContractTableColumns.isTrialContract],
@@ -55,6 +62,7 @@ class Contract {
 
     json[ContractTableColumns.type] = type.name;
     json[ContractTableColumns.contractDuration] = contractDuration;
+
     json[ContractTableColumns.ccnl] = ccnl;
     json[ContractTableColumns.isTrialContract] = fromBoolToInt(isTrialContract);
     json[ContractTableColumns.notes] = notes;
@@ -74,6 +82,14 @@ class Contract {
       remuneration!.isOvertimePresent,
     );
 
+    if (startDate != null) {
+      json[ContractTableColumns.startDate] = dbFormat.format(startDate!);
+    }
+
+    if (endDate != null) {
+      json[ContractTableColumns.endDate] = dbFormat.format(endDate!);
+    }
+
     return json;
   }
 
@@ -83,6 +99,8 @@ class Contract {
     int? ral,
     int? salary,
     String? contractDuration,
+    DateTime? startDate,
+    DateTime? endDate,
     String? ccnl,
     bool? isTrialContract,
     String? notes,
@@ -98,6 +116,8 @@ class Contract {
       workPlaceAddress: workPlaceAddress ?? this.workPlaceAddress,
       remuneration: remuneration ?? this.remuneration,
       contractDuration: contractDuration ?? this.contractDuration,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
       ccnl: ccnl ?? this.ccnl,
       isTrialContract: isTrialContract ?? this.isTrialContract,
       notes: notes ?? this.notes,
@@ -122,6 +142,8 @@ class Contract {
       ${ContractTableColumns.isTrialContract} => $isTrialContract
       ${ContractTableColumns.workPlaceAddress} => $workPlaceAddress
       ${ContractTableColumns.contractDuration} => $contractDuration
+      ${ContractTableColumns.startDate} => $startDate
+      ${ContractTableColumns.endDate} => $endDate
       ${ContractTableColumns.jobApplicationId} => $jobApplicationId
       ${ContractTableColumns.workPlace} => $workPlace
       Remuneration: $remuneration
@@ -144,6 +166,8 @@ class ContractTableColumns {
   static String salary = "salary";
   static String monthlyPayments = 'monthly_payments';
   static String contractDuration = "contract_duration";
+  static String startDate = "start_date";
+  static String endDate = "end_date";
   static String ccnl = 'ccnl';
   static String isTrialContract = 'is_trial_contract';
   static String notes = 'notes';
@@ -159,9 +183,11 @@ class ContractUI extends Equatable {
   final int? id;
   final ContractsType type;
   final String? contractDuration;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final bool isTrialContract;
   final String? workPlaceAddress;
-  final String? ral;
+  final int? ral;
 
   final int? jobApplicationId;
 
@@ -169,6 +195,8 @@ class ContractUI extends Equatable {
     this.id,
     required this.type,
     this.contractDuration,
+    this.startDate,
+    this.endDate,
     this.isTrialContract = false,
     this.workPlaceAddress,
     this.ral,
@@ -179,6 +207,8 @@ class ContractUI extends Equatable {
     : id = json[ContractTableColumns.id],
       type = getContractsTypeFromString(json[ContractTableColumns.type]),
       contractDuration = json[ContractTableColumns.contractDuration],
+      startDate = parseDateTimeOrNull(json[ContractTableColumns.startDate]),
+      endDate = parseDateTimeOrNull(json[ContractTableColumns.endDate]),
       isTrialContract = fromIntToBool(
         json[ContractTableColumns.isTrialContract],
       ),
@@ -190,7 +220,9 @@ class ContractUI extends Equatable {
     int? id,
     ContractsType? type,
     String? contractDuration,
-    String? ral,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? ral,
     String? workPlaceAddress,
     bool? isTrialContract,
     int? jobApplicationId,
@@ -199,6 +231,8 @@ class ContractUI extends Equatable {
       id: id ?? this.id,
       type: type ?? this.type,
       contractDuration: contractDuration ?? this.contractDuration,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
       isTrialContract: isTrialContract ?? this.isTrialContract,
       workPlaceAddress: workPlaceAddress ?? this.workPlaceAddress,
       ral: ral ?? this.ral,
@@ -215,6 +249,8 @@ class ContractUI extends Equatable {
       ${ContractTableColumns.workPlaceAddress} => $workPlaceAddress
       ${ContractTableColumns.ral} => $ral
       ${ContractTableColumns.contractDuration} => $contractDuration
+      ${ContractTableColumns.startDate} => $startDate
+      ${ContractTableColumns.endDate} => $endDate
     ''';
   }
 
@@ -227,11 +263,13 @@ extension ContractUIX on ContractUI {
 }
 
 extension ContractX on Contract {
-  ContractUI toUI({String? ral, int? jobApplicationId}) {
+  ContractUI toUI({int? ral, int? jobApplicationId}) {
     return ContractUI(
       id: id,
       type: type,
       contractDuration: contractDuration,
+      startDate: startDate,
+      endDate: endDate,
       isTrialContract: isTrialContract,
       ral: ral,
       workPlaceAddress: workPlaceAddress,
