@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_details/contract_details_page.dart';
-import 'package:manage_applications/pages/job_application_details_page/contract_section/contract_table.dart';
+import 'package:manage_applications/pages/job_application_details_page/contract_section/contracts_grid.dart';
 import 'package:manage_applications/pages/job_application_details_page/contract_section/provider/contract_delete_undo_provider.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/are_job_application_id_and_company_id_present.dart';
 import 'package:manage_applications/widgets/components/button/text_button_widget.dart';
@@ -14,15 +15,24 @@ class ContractSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SectionWidget(
-      title: "Elenco contratti",
-      trailing: Row(
-        spacing: 20.0,
-        children: [_DetailsPageButton(), _RestoreLastDeletedContractButton()],
-      ),
-      body: SizedBox(
-        height: 440.0,
-        child: SingleChildScrollView(child: ContractTable()),
+    return const Padding(
+      padding:  EdgeInsets.all(AppStyle.pad24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SectionTitle(
+            'Elenco contratti',
+            trailing: Row(
+              spacing: 20.0,
+              children: [
+                _DetailsPageButton(),
+                _RestoreLastDeletedContractButton(),
+              ],
+            ),
+          ),
+          Divider(thickness: 1),
+          Expanded(child: ContractsGrid()),
+        ],
       ),
     );
   }
