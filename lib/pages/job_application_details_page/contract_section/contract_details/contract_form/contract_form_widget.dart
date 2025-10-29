@@ -12,6 +12,7 @@ import 'package:manage_applications/pages/job_application_details_page/job_data_
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/dropdown_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
+import 'package:manage_applications/widgets/components/nullable_date_picker_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
@@ -32,6 +33,8 @@ class _ContractFormWidgetState extends ConsumerState<ContractFormWidget>
   final _notesController = TextEditingController();
   final _contractTrialController = ValueNotifier<bool>(false);
   final _durationController = TextEditingController();
+  final _startDateNotifier = ValueNotifier<DateTime?>(null);
+  final _endDateNotifier = ValueNotifier<DateTime?>(null);
   final _workingHoursController = TextEditingController();
 
   final _workingPlaceController = TextEditingController();
@@ -70,6 +73,8 @@ class _ContractFormWidgetState extends ConsumerState<ContractFormWidget>
                 durationController: _durationController,
                 notesController: _notesController,
                 workingHoursController: _workingHoursController,
+                startDateNotifier: _startDateNotifier,
+                endDateNotifier: _endDateNotifier,
               ),
 
               _WorkPlaceSection(
@@ -118,6 +123,8 @@ class _ContractFormWidgetState extends ConsumerState<ContractFormWidget>
       id: ref.read(contractFormProvider(id)).value?.id,
       type: _typeController.value,
       contractDuration: _durationController.text,
+      startDate: _startDateNotifier.value,
+      endDate: _endDateNotifier.value,
       notes: _notesController.text,
       ccnl: _ccnlController.text,
       isTrialContract: _contractTrialController.value,
@@ -125,7 +132,7 @@ class _ContractFormWidgetState extends ConsumerState<ContractFormWidget>
       workPlace: _workingPlaceNotifier.value,
       workPlaceAddress: _workingPlaceController.text,
       remuneration: Remuneration(
-        ral: _ralController.text,
+        ral: _ralToDb(_ralController.text),
         monthlyPayments: int.tryParse(_monthlyPaymentNumberController.text),
         monthlySalary: double.tryParse(_salaryController.text),
         isOvertimePresent: _overTimeNotifier.value,
@@ -148,12 +155,21 @@ class _ContractFormWidgetState extends ConsumerState<ContractFormWidget>
     _notesController.text = contract.notes ?? '';
     _workingHoursController.text = contract.workingHour;
 
+    _startDateNotifier.value = contract.startDate;
+    _endDateNotifier.value = contract.endDate;
+
     final remuneration = contract.remuneration;
 
     _salaryController.text = "${remuneration?.monthlySalary ?? ''}";
     _monthlyPaymentNumberController.text =
         '${remuneration?.monthlyPayments ?? ''}';
-    _ralController.text = remuneration?.ral ?? '';
+
+    if (remuneration?.ral != null) {
+      _ralController.text = getRalFormatter.format(remuneration!.ral);
+    } else {
+      _ralController.clear();
+    }
+
     _overTimeNotifier.value = remuneration?.isOvertimePresent ?? false;
     _productionBonusNotifier.value =
         remuneration?.isProductionBonusPresent ?? false;
@@ -163,6 +179,8 @@ class _ContractFormWidgetState extends ConsumerState<ContractFormWidget>
   void dispose() {
     _typeController.dispose();
     _durationController.dispose();
+    _startDateNotifier.dispose();
+    _endDateNotifier.dispose();
     _salaryController.dispose();
     _ralController.dispose();
     _ccnlController.dispose();
@@ -204,6 +222,8 @@ class _ContractDetailsSection extends StatelessWidget {
     required this.durationController,
     required this.notesController,
     required this.workingHoursController,
+    required this.startDateNotifier,
+    required this.endDateNotifier,
   });
 
   final ValueNotifier<ContractsType> typeController;
@@ -212,6 +232,8 @@ class _ContractDetailsSection extends StatelessWidget {
   final ValueNotifier<bool> contractTrialController;
   final TextEditingController durationController;
   final TextEditingController workingHoursController;
+  final ValueNotifier<DateTime?> startDateNotifier;
+  final ValueNotifier<DateTime?> endDateNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -234,6 +256,7 @@ class _ContractDetailsSection extends StatelessWidget {
                 ),
               ),
               Expanded(
+                flex: 2,
                 child: FormFieldWidget(
                   controller: ccnlController,
                   label: 'CCNL',
@@ -241,12 +264,37 @@ class _ContractDetailsSection extends StatelessWidget {
               ),
               Expanded(
                 child: FormFieldWidget(
-                  controller: durationController,
-                  label: "Durata del contratto",
+                  controller: workingHoursController,
+                  label: 'Ore lavorative',
                 ),
               ),
             ],
           ),
+
+          Row(
+            spacing: 20,
+            children: [
+              Expanded(
+                child: FormFieldWidget(
+                  controller: durationController,
+                  label: "Durata del contratto",
+                ),
+              ),
+              Expanded(
+                child: NullableDatePickerWidget(
+                  label: 'Data di inzio',
+                  selectedDate: startDateNotifier,
+                ),
+              ),
+              Expanded(
+                child: NullableDatePickerWidget(
+                  label: 'Data di termine',
+                  selectedDate: endDateNotifier,
+                ),
+              ),
+            ],
+          ),
+
           Row(
             spacing: 20.0,
             children: [
@@ -367,11 +415,7 @@ class _RemunerationSection extends StatelessWidget {
                 child: FormFieldWidget(
                   controller: ralController,
                   label: "RAL",
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(
-                      RegExp(r'^\d*(\s*-\s*\d*)?$'),
-                    ),
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
                 ),
               ),
@@ -417,4 +461,9 @@ class _RemunerationSection extends StatelessWidget {
       ),
     );
   }
+}
+
+int? _ralToDb(String ral) {
+  final ralText = ral.replaceAll('.', '').replaceAll(',', '').trim();
+  return ralText.isEmpty ? null : int.tryParse(ralText);
 }
