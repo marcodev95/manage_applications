@@ -79,7 +79,7 @@ class JobApplicationDetailsRepository {
         JobApplicationsTableColumns.websiteUrl:
             row[JobApplicationsTableColumns.websiteUrl],
         JobApplicationsTableColumns.workPlace:
-            row[JobApplicationsTableColumns.workPlace],        
+            row[JobApplicationsTableColumns.workPlace],
         JobApplicationsTableColumns.createAt:
             row[JobApplicationsTableColumns.createAt],
       },
@@ -158,7 +158,7 @@ class JobApplicationDetailsRepository {
     FROM $interviewTable i
     LEFT JOIN ${InterviewTimelineTable.tableName} it
       ON it.${InterviewTimelineTable.interviewId} = i.${InterviewTableColumns.id}
-      AND it.${InterviewTimelineTable.eventType} = '${InterviewStatus.postponed.name}'
+      AND it.${InterviewTimelineTable.event} = '${InterviewStatus.postponed.name}'
     WHERE i.${InterviewTableColumns.jobApplicationId} = $applicationId
     GROUP BY i.${InterviewTableColumns.id}
     ''';
@@ -201,7 +201,6 @@ class JobApplicationDetailsRepository {
   Future<JobApplicationDetails> getJobApplicationDetails(applicationId) async {
     try {
       final jobDetails = await _getJobDetailsWithCompanies(applicationId);
-      
       final Map<String, dynamic> applicationDetailsMap = {
         'job_application': {
           'job_entry': jobDetails['job_entry'],
