@@ -48,7 +48,7 @@ class _InterviewTimelineFormState
     extends ConsumerState<InterviewTimelineFormBody> {
   final _formKey = GlobalKey<FormState>();
 
-  final _eventTypeNotifier = ValueNotifier(InterviewStatus.toDo);
+  final _eventTypeNotifier = ValueNotifier(InterviewStatus.completed);
   final _eventDateNotifier = ValueNotifier<DateTime>(DateTime.now());
   final _eventTimeNotifier = ValueNotifier<TimeOfDay>(TimeOfDay.now());
 
@@ -69,11 +69,6 @@ class _InterviewTimelineFormState
     if (interview != null) {
       _newDateNotifier.value = interview.date;
       _newTimeNotifier.value = interview.time;
-
-      _eventTypeNotifier.value =
-          interview.status == InterviewStatus.toDo
-              ? InterviewStatus.completed
-              : interview.status;
     }
   }
 
