@@ -37,6 +37,7 @@ class _ContractsGridBody extends ConsumerWidget {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 2,
+        crossAxisSpacing: 22
       ),
       itemCount: contracts.length,
       itemBuilder: (_, int index) => ContractCard(contracts[index]),
