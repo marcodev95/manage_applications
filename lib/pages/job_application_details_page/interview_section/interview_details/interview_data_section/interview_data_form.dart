@@ -2,24 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/interview/interview.dart';
-import 'package:manage_applications/models/shared/operation_result.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_data_section/interview_form/interview_form_field_barrel.dart';
 import 'package:manage_applications/pages/job_application_details_page/interview_section/interview_details/interview_timeline_section/interview_timeline_form.dart';
 import 'package:manage_applications/pages/job_application_details_page/job_data_section/job_application_notifier.dart';
+import 'package:manage_applications/pages/job_applications_page/job_applications_grid/job_applications_grid_barrel.dart';
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/dropdown_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
 import 'package:manage_applications/widgets/components/time_picker_widget.dart';
-import 'package:manage_applications/widgets/components/utility.dart';
-
-/// Refactor generale
-/// Togliere ChangePlaceInterview
-/// Gestire InterviewFollowUpTimeline e nella UI della card
-/// Sistemare InterviewTimelineForm:
-/// - Escludere DaFare nella lista della dropdown
-/// - DaFare potrebbe diventare un evento timeline x creazione colloquio
-/// - Capire come gestire lo spazio quando ho Completato
-/// - Quando premo modifica dalla InterviewDetails, partire sempre da Completato e non dal valore attuale
 
 class InterviewDataForm extends ConsumerStatefulWidget {
   const InterviewDataForm(this.interview, {super.key, this.routeId});
@@ -56,7 +46,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
       _interviewDateNotifier.value = interview.date;
       _interviewTimeNotifier.value = interview.time;
       _interviewNotesController.text = interview.notes ?? '';
-      _interviewAnswerController.text = interview.answerTime ?? 'Da definire';
+      _interviewAnswerController.text = interview.answerTime ?? '';
       _interviewFormatNotifier.value = interview.interviewFormat;
       _interviewPlaceController.text = interview.interviewPlace;
     }
@@ -106,23 +96,7 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
                                   selectedValue: _interviewTypeNotifier,
                                 ),
                               ),
-                              Expanded(
-                                child: Row(
-                                  spacing: 10.0,
-                                  children: [
-                                    InterviewStatusField(
-                                      routeID: routeArg,
-                                      callback:
-                                          () => navigatorPush(
-                                            context,
-                                            InterviewTimelineForm(
-                                              routeID: routeArg,
-                                            ),
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              _InterviewStatus(routeArg),
                             ],
                           ),
                         ),
@@ -209,7 +183,10 @@ class _InterviewDataFormState extends ConsumerState<InterviewDataForm> {
       time: _interviewTimeNotifier.value,
       status: currentInterview.status,
       interviewFormat: _interviewFormatNotifier.value,
-      answerTime: _interviewAnswerController.text,
+      answerTime:
+          _interviewAnswerController.text.isEmpty
+              ? null
+              : _interviewAnswerController.text,
       interviewPlace: _interviewPlaceController.text,
       notes: _interviewNotesController.text,
       jobApplicationId: ref.read(jobApplicationProvider).value?.jobEntry.id,
@@ -242,5 +219,48 @@ class _SaveButton extends ConsumerWidget {
     return isLoading
         ? const CircularProgressIndicator()
         : SaveButtonWidget(onPressed: callback);
+  }
+}
+
+class _InterviewStatus extends StatelessWidget {
+  const _InterviewStatus(this.routeArg);
+
+  final int? routeArg;
+
+  @override
+  Widget build(BuildContext context) {
+    return InterviewStatusField(
+      routeID: routeArg,
+      callback: () async {
+        await showDialog(
+          context: context,
+          builder: (context) => _alertDialog(context),
+        );
+      },
+    );
+  }
+
+  AlertDialog _alertDialog(BuildContext context) {
+    return AlertDialog(
+      title: Column(
+        children: [
+          SectionTitle(
+            'Stato del colloquio',
+            trailing: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: Icon(Icons.close),
+            ),
+          ),
+          DividerWidget(),
+        ],
+      ),
+      content: SizedBox(
+        width: 900.0,
+        child: Padding(
+          padding: EdgeInsets.all(AppStyle.pad16),
+          child: InterviewTimelineFormBody(routeArg),
+        ),
+      ),
+    );
   }
 }
