@@ -24,8 +24,8 @@ DateTime buildDateTime(DateTime date, TimeOfDay time) {
     date.day,
     time.hour,
     time.minute,
-    date.second,
-    date.millisecond,
+    DateTime.now().second,
+    DateTime.now().millisecond,
   );
 }
 
