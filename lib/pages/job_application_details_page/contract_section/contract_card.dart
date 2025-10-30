@@ -21,7 +21,7 @@ class ContractCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AppCard(
-      externalPadding: const EdgeInsets.all(AppStyle.pad16),
+      externalPadding: const EdgeInsets.symmetric(vertical: AppStyle.pad16),
       child: Padding(
         padding: const EdgeInsets.all(AppStyle.pad16),
         child: Column(
