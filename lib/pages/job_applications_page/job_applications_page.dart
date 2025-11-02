@@ -7,6 +7,7 @@ import 'package:manage_applications/pages/job_applications_page/job_applications
 import 'package:manage_applications/providers/job_application_filter.dart';
 import 'package:manage_applications/providers/job_applications_paginator_notifier.dart';
 import 'package:manage_applications/widgets/components/button/text_button_widget.dart';
+import 'package:manage_applications/widgets/components/pop_up_menu_button_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
 class JobApplicationsPage extends StatelessWidget {
@@ -20,17 +21,43 @@ class JobApplicationsPage extends StatelessWidget {
         spacing: 20.0,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            spacing: 20,
-            children: [
-              Expanded(child: _FlterButtons()),
-              _AddNewApplicationBtn(),
-            ],
-          ),
-
+          _ResponsiveFilterButtons(),
           Expanded(child: JobApplicationsGrid()),
         ],
       ),
+    );
+  }
+}
+
+class _ResponsiveFilterButtons extends ConsumerWidget {
+  const _ResponsiveFilterButtons();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return LayoutBuilder(
+      builder: (_, constraints) {
+        final isCompact = constraints.maxWidth < AppStyle.compactBreakpoint;
+
+        return Stack(
+          children: [
+            Offstage(
+              offstage: isCompact,
+              child: const Row(
+                spacing: 20,
+                children: [
+                  Expanded(child: _FilterButtons()),
+                  _AddNewApplicationBtn(),
+                ],
+              ),
+            ),
+
+            Offstage(
+              offstage: !isCompact,
+              child: const _CompactFilterButtons(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -51,69 +78,47 @@ class _AddNewApplicationBtn extends ConsumerWidget {
   }
 }
 
-class _FlterButtons extends ConsumerStatefulWidget {
-  const _FlterButtons();
+class _FilterButtons extends ConsumerWidget {
+  const _FilterButtons();
 
   @override
-  ConsumerState<_FlterButtons> createState() => _FlterButtonsState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filter = ref.watch(applicationFilterProvider);
 
-class _FlterButtonsState extends ConsumerState<_FlterButtons> {
-  final ValueNotifier<ApplicationFilter> selectedFilter = ValueNotifier(
-    ApplicationFilter.all,
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: selectedFilter,
-      builder: (_, value, __) {
-        return SegmentedButton<ApplicationFilter>(
-          segments: const [
-            ButtonSegment(
-              value: ApplicationFilter.all,
-              label: Text(
-                'Tutte le candidature',
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-            ),
-            ButtonSegment(
-              value: ApplicationFilter.apply,
-              label: Text('Candidato'),
-            ),
-            ButtonSegment(
-              value: ApplicationFilter.interview,
-              label: Text('Colloquio'),
-            ),
-            ButtonSegment(
-              value: ApplicationFilter.pendingResponse,
-              label: Text('In attesa'),
-            ),
-            ButtonSegment(
-              value: ApplicationFilter.bookmark,
-              label: Text('Salvati'),
-            ),
-          ],
-
-          selected: {value},
-          onSelectionChanged: (nv) {
-            selectedFilter.value = nv.first;
-            ref.read(applicationFilterProvider.notifier).state = nv.first;
-          },
-          multiSelectionEnabled: false,
-          style: SegmentedButton.styleFrom(
-            backgroundColor: Colors.grey[800],
-            foregroundColor: Colors.white70,
-            selectedBackgroundColor: _selectedBgColor(value),
-            selectedForegroundColor: Colors.white,
-            side: const BorderSide(color: Colors.white24),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+    return SegmentedButton<ApplicationFilter>(
+      segments: const [
+        ButtonSegment(
+          value: ApplicationFilter.all,
+          label: Text(
+            'Tutte le candidature',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
-        );
+        ),
+        ButtonSegment(value: ApplicationFilter.apply, label: Text('Candidato')),
+        ButtonSegment(
+          value: ApplicationFilter.interview,
+          label: Text('Colloquio'),
+        ),
+        ButtonSegment(
+          value: ApplicationFilter.pendingResponse,
+          label: Text('In attesa'),
+        ),
+      ],
+
+      selected: {filter},
+      onSelectionChanged: (nv) {
+        ref.read(applicationFilterProvider.notifier).state = nv.first;
       },
+      multiSelectionEnabled: false,
+      style: SegmentedButton.styleFrom(
+        backgroundColor: Colors.grey[800],
+        foregroundColor: Colors.white70,
+        selectedBackgroundColor: _selectedBgColor(filter),
+        selectedForegroundColor: Colors.white,
+        side: const BorderSide(color: Colors.white24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
     );
   }
 
@@ -125,5 +130,48 @@ class _FlterButtonsState extends ConsumerState<_FlterButtons> {
       ApplicationFilter.apply => FilterColor.apply,
       ApplicationFilter.bookmark => FilterColor.bookmark,
     };
+  }
+}
+
+class _CompactFilterButtons extends ConsumerWidget {
+  const _CompactFilterButtons();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filter = ref.watch(applicationFilterProvider);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const _AddNewApplicationBtn(),
+        PopupMenuButtonWidget<ApplicationFilter>(
+          popupMenuEntry: [
+            CheckedPopupMenuItem(
+              value: ApplicationFilter.all,
+              checked: filter == ApplicationFilter.all,
+              child: const Text('Tutte le candidature'),
+            ),
+            CheckedPopupMenuItem(
+              value: ApplicationFilter.apply,
+              checked: filter == ApplicationFilter.apply,
+              child: const Text('Candidato'),
+            ),
+            CheckedPopupMenuItem(
+              value: ApplicationFilter.interview,
+              checked: filter == ApplicationFilter.interview,
+              child: const Text('Colloquio'),
+            ),
+            CheckedPopupMenuItem(
+              value: ApplicationFilter.pendingResponse,
+              checked: filter == ApplicationFilter.pendingResponse,
+              child: const Text('In attesa'),
+            ),
+          ],
+          onSelected: (value) {
+            ref.read(applicationFilterProvider.notifier).state = value;
+          },
+        ),
+      ],
+    );
   }
 }
