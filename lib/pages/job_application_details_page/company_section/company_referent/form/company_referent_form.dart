@@ -12,6 +12,7 @@ import 'package:manage_applications/pages/job_application_details_page/job_data_
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/dropdown_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
+import 'package:manage_applications/widgets/components/responsive_layout_widget.dart';
 import 'package:manage_applications/widgets/components/snack_bar_widget.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
@@ -37,9 +38,9 @@ class CompanyReferentForm extends ConsumerWidget {
       data: (data) => CompanyReferentFormBody(referent: data),
       error:
           (_, __) => DataLoadErrorScreenWidget(
-            onPressed: () => ref.invalidate(referentDetailsProvider),
+            onPressed: () => ref.invalidate(referentDetailsProvider(id)),
           ),
-      loading: () => Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 }
@@ -60,13 +61,13 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _roleController = ValueNotifier<RoleType>(RoleType.hr);
-  late final ValueNotifier<CompanyOption> _referentCompanyController;
+  late final ValueNotifier<CompanyOption> _referentCompanyNotifier;
 
   @override
   void initState() {
     super.initState();
 
-    _referentCompanyController = ValueNotifier(
+    _referentCompanyNotifier = ValueNotifier(
       ref.read(referentCompanyOptionsProvider).first,
     );
 
@@ -83,7 +84,7 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
       _emailController.text = referent.email;
       _phoneController.text = referent.phoneNumber ?? "";
       _roleController.value = referent.role;
-      _referentCompanyController.value = company;
+      _referentCompanyNotifier.value = company;
     }
   }
 
@@ -94,69 +95,61 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
       child: Column(
         spacing: 40.0,
         children: [
-          Row(
-            spacing: 20.0,
-            children: [_referentName(), _referentRole(), _referentCompany()],
+          ResponsiveLayoutWidget(
+            desktop: (_, __) {
+              return Column(
+                spacing: 40.0,
+                children: [
+                  Row(
+                    spacing: 20.0,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: _ReferentNameField(_nameController),
+                      ),
+                      Expanded(
+                        child: _ReferentCompanyDropdown(
+                          _referentCompanyNotifier,
+                        ),
+                      ),
+                      Expanded(child: _ReferentRoleDropdown(_roleController)),
+                    ],
+                  ),
+                  Row(
+                    spacing: 20.0,
+                    children: [
+                      Expanded(child: _ReferentEmailField(_emailController)),
+                      Expanded(child: _ReferentPhoneField(_phoneController)),
+                    ],
+                  ),
+                ],
+              );
+            },
+            compact: (_, __) {
+              return Column(
+                spacing: 40.0,
+                children: [
+                  _ReferentNameField(_nameController),
+                  Row(
+                    spacing: 20.0,
+                    children: [
+                      Expanded(
+                        child: _ReferentCompanyDropdown(
+                          _referentCompanyNotifier,
+                        ),
+                      ),
+                      Expanded(child: _ReferentRoleDropdown(_roleController)),
+                    ],
+                  ),
+                  _ReferentEmailField(_emailController),
+
+                  _ReferentPhoneField(_phoneController),
+                ],
+              );
+            },
           ),
-          Row(spacing: 20.0, children: [_referentEmail(), _referentPhone()]),
           _SaveButton(() => _submit()),
         ],
-      ),
-    );
-  }
-
-  Expanded _referentName() {
-    return Expanded(
-      flex: 2,
-      child: RequiredFormFieldWidget(
-        controller: _nameController,
-        label: "Nome referente(*)",
-      ),
-    );
-  }
-
-  Widget _referentCompany() {
-    return Consumer(
-      builder: (_, ref, __) {
-        return Expanded(
-          child: DropdownWidget(
-            label: "Azienda a cui è associato(*)",
-            items: ref
-                .watch(referentCompanyOptionsProvider)
-                .toDropdownItems((e) => e.companyRef.name),
-            selectedValue: _referentCompanyController,
-          ),
-        );
-      },
-    );
-  }
-
-  Expanded _referentRole() {
-    return Expanded(
-      child: DropdownWidget(
-        label: "Ruolo referente(*)",
-        items: RoleType.values.toDropdownItems((e) => e.displayName),
-        selectedValue: _roleController,
-      ),
-    );
-  }
-
-  Expanded _referentEmail() {
-    return Expanded(
-      child: RequiredFormFieldWidget(
-        controller: _emailController,
-        label: "Email referente(*)",
-      ),
-    );
-  }
-
-  Expanded _referentPhone() {
-    return Expanded(
-      child: FormFieldWidget(
-        controller: _phoneController,
-        label: "Numero di telefono referente",
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       ),
     );
   }
@@ -179,14 +172,14 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
         role: _roleController.value,
         email: _emailController.text,
         phoneNumber: _phoneController.text,
-        companyId: _referentCompanyController.value.companyRef.id,
+        companyId: _referentCompanyNotifier.value.companyRef.id,
       );
 
       final jobAppReferent = JobApplicationReferent(
         applicationId: ref.read(jobApplicationProvider).value?.jobEntry.id,
         referentWithAffiliation: ReferentWithAffiliation(
           referent: referent,
-          affiliation: _referentCompanyController.value.companyType,
+          affiliation: _referentCompanyNotifier.value.companyType,
         ),
       );
 
@@ -210,7 +203,7 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
     _emailController.clear();
     _phoneController.clear();
     _roleController.value = RoleType.hr;
-    _referentCompanyController.value =
+    _referentCompanyNotifier.value =
         ref.read(referentCompanyOptionsProvider).first;
   }
 
@@ -220,9 +213,85 @@ class _CompanyReferentFormState extends ConsumerState<CompanyReferentFormBody> {
     _emailController.dispose();
     _phoneController.dispose();
     _roleController.dispose();
-    _referentCompanyController.dispose();
+    _referentCompanyNotifier.dispose();
 
     super.dispose();
+  }
+}
+
+class _ReferentCompanyDropdown extends ConsumerWidget {
+  const _ReferentCompanyDropdown(this.referentCompanyNotifier);
+
+  final ValueNotifier<CompanyOption> referentCompanyNotifier;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return DropdownWidget(
+      label: "Azienda a cui è associato(*)",
+      items: ref
+          .watch(referentCompanyOptionsProvider)
+          .toDropdownItems((e) => e.companyRef.name),
+      selectedValue: referentCompanyNotifier,
+    );
+  }
+}
+
+class _ReferentNameField extends StatelessWidget {
+  const _ReferentNameField(this.nameController);
+
+  final TextEditingController nameController;
+
+  @override
+  Widget build(BuildContext context) {
+    return RequiredFormFieldWidget(
+      controller: nameController,
+      label: "Nome referente(*)",
+    );
+  }
+}
+
+class _ReferentRoleDropdown extends StatelessWidget {
+  const _ReferentRoleDropdown(this.roleNotifier);
+
+  final ValueNotifier<RoleType> roleNotifier;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownWidget(
+      label: "Ruolo referente(*)",
+      items: RoleType.values.toDropdownItems((e) => e.displayName),
+      selectedValue: roleNotifier,
+    );
+  }
+}
+
+class _ReferentEmailField extends StatelessWidget {
+  const _ReferentEmailField(this.emailController);
+
+  final TextEditingController emailController;
+
+  @override
+  Widget build(BuildContext context) {
+    return RequiredFormFieldWidget(
+      controller: emailController,
+      label: "Email referente(*)",
+    );
+  }
+}
+
+class _ReferentPhoneField extends StatelessWidget {
+  const _ReferentPhoneField(this.phoneController);
+
+  final TextEditingController phoneController;
+
+  @override
+  Widget build(BuildContext context) {
+    return FormFieldWidget(
+      controller: phoneController,
+      label: "Numero di telefono referente",
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+    );
   }
 }
 
