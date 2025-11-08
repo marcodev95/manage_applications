@@ -10,6 +10,7 @@ import 'package:manage_applications/widgets/components/button/save_button_widget
 import 'package:manage_applications/widgets/components/date_picker_widget.dart';
 import 'package:manage_applications/widgets/components/dropdown_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
+import 'package:manage_applications/widgets/components/responsive_layout_widget.dart';
 
 class JobApplicationForm extends ConsumerStatefulWidget {
   const JobApplicationForm({super.key});
@@ -64,91 +65,37 @@ class _JobApplicationFormWidgetState extends ConsumerState<JobApplicationForm>
     super.build(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          spacing: 30.0,
-          children: [
-            Row(
-              spacing: 20,
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: RequiredFormFieldWidget(
-                    controller: _positionController,
-                    label: "Posizione (*)",
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: DatePickerWidget(
-                    label: "Data candidatura",
-                    selectedDate: _applyDateNotifier,
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: DropdownWidget(
-                    label: "Stato della candidatura",
-                    items: ApplicationStatus.values.toDropdownItems(
-                      (e) => e.displayName,
-                    ),
-                    selectedValue: _applicationStatus,
-                  ),
-                ),
-              ],
+      child: Column(
+        spacing: 30.0,
+        children: [
+          Form(
+            key: _formKey,
+            child: _ResponsiveFields(
+              positionController: _positionController,
+              workPlaceController: _workPlaceController,
+              applicationStatus: _applicationStatus,
+              applyDateNotifier: _applyDateNotifier,
+              dayInOfficeController: _dayInOfficeController,
+              experienceController: _experienceController,
+              linkController: _linkController,
+              workTypeNotifier: _workTypeNotifier,
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: RequiredFormFieldWidget(
-                    controller: _linkController,
-                    label: "Link annuncio (*)",
-                  ),
-                ),
-              ],
+          ),
+
+          Align(
+            alignment: Alignment.centerRight,
+            child: Consumer(
+              builder: (_, ref, __) {
+                return ref
+                    .watch(jobApplicationProvider)
+                    .maybeWhen(
+                      loading: () => const CircularProgressIndicator(),
+                      orElse: () => SaveButtonWidget(onPressed: _submit),
+                    );
+              },
             ),
-            Row(
-              spacing: 20.0,
-              children: [
-                Expanded(
-                  child: DropdownWidget(
-                    label: "Tipologia di lavoro",
-                    items: JobDataWorkType.values.toDropdownItems(
-                      (e) => e.displayName,
-                    ),
-                    selectedValue: _workTypeNotifier,
-                  ),
-                ),
-                Expanded(
-                  child: FormFieldWidget(
-                    controller: _dayInOfficeController,
-                    label: "Giorni in ufficio",
-                  ),
-                ),
-                Expanded(
-                  child: _WorkPlaceField(
-                    _workPlaceController,
-                    _workTypeNotifier,
-                  ),
-                ),
-              ],
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Consumer(
-                builder: (_, ref, __) {
-                  return ref
-                      .watch(jobApplicationProvider)
-                      .maybeWhen(
-                        loading: () => const CircularProgressIndicator(),
-                        orElse: () => SaveButtonWidget(onPressed: _submit),
-                      );
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -253,5 +200,174 @@ class __WorkPlaceFieldState extends State<_WorkPlaceField> {
   void dispose() {
     widget.notifier.removeListener(_notifierListener);
     super.dispose();
+  }
+}
+
+class _PositionField extends StatelessWidget {
+  const _PositionField(this.positionController);
+
+  final TextEditingController positionController;
+
+  @override
+  Widget build(BuildContext context) {
+    return RequiredFormFieldWidget(
+      controller: positionController,
+      label: "Posizione (*)",
+    );
+  }
+}
+
+class _ApplyDateField extends StatelessWidget {
+  const _ApplyDateField(this.applyDateNotifier);
+
+  final ValueNotifier<DateTime> applyDateNotifier;
+
+  @override
+  Widget build(BuildContext context) {
+    return DatePickerWidget(
+      label: "Data candidatura",
+      selectedDate: applyDateNotifier,
+    );
+  }
+}
+
+class _ApplicationStatusField extends StatelessWidget {
+  const _ApplicationStatusField(this.applicationStatus);
+
+  final ValueNotifier<ApplicationStatus> applicationStatus;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownWidget(
+      label: "Stato della candidatura",
+      items: ApplicationStatus.values.toDropdownItems((e) => e.displayName),
+      selectedValue: applicationStatus,
+    );
+  }
+}
+
+class _LinkJobEntryField extends StatelessWidget {
+  const _LinkJobEntryField(this.linkController);
+
+  final TextEditingController linkController;
+
+  @override
+  Widget build(BuildContext context) {
+    return RequiredFormFieldWidget(
+      controller: linkController,
+      label: "Link annuncio (*)",
+    );
+  }
+}
+
+class _WorkTypeField extends StatelessWidget {
+  const _WorkTypeField(this.workTypeNotifier);
+
+  final ValueNotifier<JobDataWorkType> workTypeNotifier;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownWidget(
+      label: "Tipologia di lavoro",
+      items: JobDataWorkType.values.toDropdownItems((e) => e.displayName),
+      selectedValue: workTypeNotifier,
+    );
+  }
+}
+
+class _DayInOfficeField extends StatelessWidget {
+  const _DayInOfficeField(this.dayInOfficeController);
+
+  final TextEditingController dayInOfficeController;
+
+  @override
+  Widget build(BuildContext context) {
+    return FormFieldWidget(
+      controller: dayInOfficeController,
+      label: "Giorni in ufficio",
+    );
+  }
+}
+
+class _ResponsiveFields extends StatelessWidget {
+  const _ResponsiveFields({
+    required this.positionController,
+    required this.workPlaceController,
+    required this.applicationStatus,
+    required this.applyDateNotifier,
+    required this.dayInOfficeController,
+    required this.experienceController,
+    required this.linkController,
+    required this.workTypeNotifier,
+  });
+
+  final TextEditingController positionController;
+  final TextEditingController workPlaceController;
+  final TextEditingController linkController;
+  final TextEditingController experienceController;
+  final TextEditingController dayInOfficeController;
+  final ValueNotifier<DateTime> applyDateNotifier;
+  final ValueNotifier<JobDataWorkType> workTypeNotifier;
+  final ValueNotifier<ApplicationStatus> applicationStatus;
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveLayoutWidget(
+      desktop:
+          (_, __) => Column(
+            spacing: 30.0,
+            children: [
+              Row(
+                spacing: 20.0,
+                children: [
+                  Expanded(flex: 6, child: _PositionField(positionController)),
+                  Expanded(flex: 2, child: _ApplyDateField(applyDateNotifier)),
+                  Expanded(
+                    flex: 2,
+                    child: _ApplicationStatusField(applicationStatus),
+                  ),
+                ],
+              ),
+              _LinkJobEntryField(linkController),
+              Row(
+                spacing: 20.0,
+                children: [
+                  Expanded(child: _WorkTypeField(workTypeNotifier)),
+                  Expanded(child: _DayInOfficeField(dayInOfficeController)),
+                  Expanded(
+                    child: _WorkPlaceField(
+                      workPlaceController,
+                      workTypeNotifier,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+      compact:
+          (_, __) => Column(
+            spacing: 30.0,
+            children: [
+              _PositionField(positionController),
+
+              Row(
+                spacing: 20.0,
+                children: [
+                  Expanded(child: _ApplicationStatusField(applicationStatus)),
+                  Expanded(child: _ApplyDateField(applyDateNotifier)),
+                ],
+              ),
+              _WorkPlaceField(workPlaceController, workTypeNotifier),
+              _LinkJobEntryField(linkController),
+              Row(
+                spacing: 20.0,
+                children: [
+                  Expanded(child: _WorkTypeField(workTypeNotifier)),
+                  Expanded(child: _DayInOfficeField(dayInOfficeController)),
+                ],
+              ),
+            ],
+          ),
+    );
   }
 }
