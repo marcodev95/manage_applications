@@ -4,6 +4,9 @@ class AppStyle {
   static const headingFontSize = 18.0;
   static const tableTextFontSize = 16.0; //bodyFontSize
 
+  static const double desktopBreakpoint = 1200;
+  static const double compactBreakpoint = 900;
+
   static const double pad8 = 8.0;
   static const double pad16 = 16.0;
   static const double pad24 = 24.0;
