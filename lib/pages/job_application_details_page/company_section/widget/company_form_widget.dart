@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/company/company.dart';
 import 'package:manage_applications/widgets/components/button/save_button_widget.dart';
 import 'package:manage_applications/widgets/components/form_field_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:manage_applications/widgets/components/responsive_layout_widget.dart';
 
 class CompanyFormWidget extends ConsumerStatefulWidget {
   const CompanyFormWidget({super.key, required this.submit, this.company});
@@ -60,96 +61,39 @@ class _CompanyFormWidgetState extends ConsumerState<CompanyFormWidget>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 30.0,
-        children: [
-          Row(children: [_companyNameField()]),
-          Row(
-            spacing: AppStyle.formFieldSpacing,
-            children: [_cityField(), _addressField(), _workingHoursField()],
-          ),
-          Row(
-            spacing: AppStyle.formFieldSpacing,
-            children: [_websiteField(), _emailField(), _phoneNumberField()],
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: SaveButtonWidget(
-              onPressed: () => widget.submit(_companyObj(), _formKey),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppStyle.pad16),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 30.0,
+          children: [
+            _CompanyNameField(_nameController),
+            Row(
+              spacing: AppStyle.formFieldSpacing,
+              children: [
+                Expanded(child: _CityField(_cityController)),
+                Expanded(child: _AddressField(_addressController)),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Expanded _companyNameField() {
-    return Expanded(
-      child: RequiredFormFieldWidget(
-        controller: _nameController,
-        label: "Nome azienda(*)",
-      ),
-    );
-  }
+            _WebsiteField(_websiteController),
 
-  Expanded _cityField() {
-    return Expanded(
-      child: RequiredFormFieldWidget(
-        controller: _cityController,
-        label: "Città(*)",
-      ),
-    );
-  }
-
-  Expanded _addressField() {
-    return Expanded(
-      child: RequiredFormFieldWidget(
-        controller: _addressController,
-        label: "Indirizzo(*)",
-      ),
-    );
-  }
-
-  Expanded _workingHoursField() {
-    return Expanded(
-      child: FormFieldWidget(
-        controller: _workingHoursController,
-        label: "Orario di lavoro",
-      ),
-    );
-  }
-
-  Expanded _websiteField() {
-    return Expanded(
-      flex: 2,
-      child: RequiredFormFieldWidget(
-        controller: _websiteController,
-        label: "Sito web(*)",
-        keyboardType: TextInputType.url,
-      ),
-    );
-  }
-
-  Expanded _emailField() {
-    return Expanded(
-      child: RequiredFormFieldWidget(
-        controller: _emailController,
-        label: "Email dell'azienda(*)",
-        keyboardType: TextInputType.emailAddress,
-      ),
-    );
-  }
-
-  Expanded _phoneNumberField() {
-    return Expanded(
-      child: FormFieldWidget(
-        controller: _phoneController,
-        label: "Numero di telefono dell'azienda",
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            _ResponsiveFormFields(
+              emailController: _emailController,
+              phoneController: _phoneController,
+              workingHoursController: _workingHoursController,
+            ),
+            
+            Align(
+              alignment: Alignment.centerRight,
+              child: SaveButtonWidget(
+                onPressed: () => widget.submit(_companyObj(), _formKey),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -164,6 +108,151 @@ class _CompanyFormWidgetState extends ConsumerState<CompanyFormWidget>
       website: _websiteController.text,
       email: _emailController.text,
       workingHours: _workingHoursController.text,
+    );
+  }
+}
+
+class _CompanyNameField extends StatelessWidget {
+  const _CompanyNameField(this.nameController);
+
+  final TextEditingController nameController;
+
+  @override
+  Widget build(BuildContext context) {
+    return RequiredFormFieldWidget(
+      controller: nameController,
+      label: "Nome azienda(*)",
+    );
+  }
+}
+
+class _CityField extends StatelessWidget {
+  const _CityField(this.cityController);
+
+  final TextEditingController cityController;
+
+  @override
+  Widget build(BuildContext context) {
+    return RequiredFormFieldWidget(
+      controller: cityController,
+      label: "Città(*)",
+    );
+  }
+}
+
+class _AddressField extends StatelessWidget {
+  const _AddressField(this.addressController);
+
+  final TextEditingController addressController;
+
+  @override
+  Widget build(BuildContext context) {
+    return RequiredFormFieldWidget(
+      controller: addressController,
+      label: "Indirizzo(*)",
+    );
+  }
+}
+
+class _WorkingHoursField extends StatelessWidget {
+  const _WorkingHoursField(this.workingHoursController);
+
+  final TextEditingController workingHoursController;
+
+  @override
+  Widget build(BuildContext context) {
+    return FormFieldWidget(
+      controller: workingHoursController,
+      label: "Orario di lavoro",
+    );
+  }
+}
+
+class _WebsiteField extends StatelessWidget {
+  const _WebsiteField(this.websiteController);
+  final TextEditingController websiteController;
+
+  @override
+  Widget build(BuildContext context) {
+    return RequiredFormFieldWidget(
+      controller: websiteController,
+      label: "Sito web(*)",
+      keyboardType: TextInputType.url,
+    );
+  }
+}
+
+class _EmailField extends StatelessWidget {
+  const _EmailField(this.emailController);
+
+  final TextEditingController emailController;
+
+  @override
+  Widget build(BuildContext context) {
+    return RequiredFormFieldWidget(
+      controller: emailController,
+      label: "Email(*)",
+      keyboardType: TextInputType.emailAddress,
+    );
+  }
+}
+
+class _PhoneField extends StatelessWidget {
+  const _PhoneField(this.phoneController);
+
+  final TextEditingController phoneController;
+
+  @override
+  Widget build(BuildContext context) {
+    return FormFieldWidget(
+      controller: phoneController,
+      label: "Numero di telefono",
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+    );
+  }
+}
+
+class _ResponsiveFormFields extends StatelessWidget {
+  const _ResponsiveFormFields({
+    required this.phoneController,
+    required this.workingHoursController,
+    required this.emailController,
+  });
+
+  final TextEditingController phoneController;
+  final TextEditingController workingHoursController;
+  final TextEditingController emailController;
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveLayoutWidget(
+      desktop:
+          (_, __) => Row(
+            spacing: AppStyle.formFieldSpacing,
+            children: [
+              Expanded(flex: 2, child: _EmailField(emailController)),
+              Expanded(child: _PhoneField(phoneController)),
+              Expanded(child: _WorkingHoursField(workingHoursController)),
+            ],
+          ),
+
+      compact:
+          (_, __) => Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 30.0,
+            children: [
+              _EmailField(emailController),
+
+              Row(
+                spacing: AppStyle.formFieldSpacing,
+                children: [
+                  Expanded(child: _PhoneField(phoneController)),
+                  Expanded(child: _WorkingHoursField(workingHoursController)),
+                ],
+              ),
+            ],
+          ),
     );
   }
 }
