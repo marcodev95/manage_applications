@@ -1,5 +1,7 @@
 import 'package:manage_applications/app_style.dart';
 import 'package:manage_applications/models/company/company.dart';
+import 'package:manage_applications/models/shared/operation_result.dart';
+import 'package:manage_applications/pages/job_application_details_page/company_section/client_company/client_company_form_notifier.dart';
 import 'package:manage_applications/widgets/components/button/associate_button_widget.dart';
 import 'package:manage_applications/widgets/components/errors_widget/errors_panel_button_widget.dart';
 import 'package:manage_applications/pages/job_application_details_page/company_section/applied_company/applied_company_form_notifier.dart';
@@ -12,16 +14,16 @@ import 'package:manage_applications/widgets/components/table_widget.dart';
 import 'package:manage_applications/widgets/data_load_error_screen_widget.dart';
 
 class SelectCompanyPage extends StatelessWidget {
-  const SelectCompanyPage({super.key, required this.onPressedSelectCompany});
+  const SelectCompanyPage({super.key, required this.isMainCompany});
 
-  final void Function(Company) onPressedSelectCompany;
+  final bool isMainCompany;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Selezione l'azienda"),
-        actions: const [ErrorsPanelButtonWidget ()],
+        actions: const [ErrorsPanelButtonWidget()],
       ),
       body: Padding(
         padding: const EdgeInsets.all(AppStyle.pad24),
@@ -33,7 +35,7 @@ class SelectCompanyPage extends StatelessWidget {
                   minHeight: constraints.maxHeight,
                   minWidth: double.infinity,
                 ),
-                child: _CompanyTable(onPressedSelectCompany),
+                child: _CompanyTable(isMainCompany),
               ),
             );
           },
@@ -44,9 +46,9 @@ class SelectCompanyPage extends StatelessWidget {
 }
 
 class _CompanyTable extends ConsumerWidget {
-  const _CompanyTable(this.onPressedSelectCompany);
+  const _CompanyTable(this.isMainCompany);
 
-  final void Function(Company) onPressedSelectCompany;
+  final bool isMainCompany;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -92,7 +94,11 @@ class _CompanyTable extends ConsumerWidget {
                       ),
                       DataCell(
                         AssociateButtonWidget(
-                          () => onPressedSelectCompany(company),
+                          () async => _associatedCompany(
+                            ref,
+                            context,
+                            company,
+                          ),
                           color: index.isOdd ? Colors.white : Colors.blue,
                         ),
                       ),
@@ -107,6 +113,25 @@ class _CompanyTable extends ConsumerWidget {
           ),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
+  }
+
+  Future<void> _associatedCompany(
+    WidgetRef ref,
+    BuildContext context,
+    Company company,
+  ) async {
+    final applied = ref.read(appliedCompanyFormProvider.notifier);
+    final client = ref.read(clientCompanyFormProvider.notifier);
+    final result =
+        isMainCompany
+            ? await applied.selectCompany(company)
+            : await client.selectCompany(company);
+
+    if (!context.mounted) return;
+
+    result.handleResult(context: context, ref: ref);
+
+    if (result.isSuccess) Navigator.pop(context);
   }
 }
 
