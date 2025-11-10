@@ -22,7 +22,7 @@ class CompanyReferentForm extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final id = ref.watch(
-      companyChangeScreenProvider.select((value) => value.data?.referentId),
+      companyChangeScreenProvider.select((value) => value.data),
     );
 
     if (id == null) return CompanyReferentFormBody();
