@@ -6,6 +6,7 @@ import 'package:manage_applications/pages/job_application_details_page/company_s
 import 'package:manage_applications/pages/job_application_details_page/company_section/select_company_page/select_company_page.dart';
 import 'package:manage_applications/pages/job_application_details_page/providers/are_job_application_id_and_company_id_present.dart';
 import 'package:manage_applications/widgets/components/divider_widget.dart';
+import 'package:manage_applications/widgets/components/responsive_layout_widget.dart';
 import 'package:manage_applications/widgets/components/section_widget.dart';
 import 'package:manage_applications/widgets/components/utility.dart';
 
@@ -139,13 +140,83 @@ class _CompanyDataLayout extends StatelessWidget {
           Icons.location_city,
           '${company.address}, ${company.city}',
         ),
-        _CompanyInfoRow(Icons.mail_outline, company.email),
-        _CompanyInfoRow(Icons.phone, company.phoneNumber ?? '-'),
+
+        ResponsiveLayoutWidget(
+          desktop: (_, __) {
+            return _CompanyInfoContactDesktop(
+              email: company.email,
+              website: company.website,
+              phone: company.phoneNumber,
+            );
+          },
+          compact: (_, __) {
+            return _CompanyInfoContactCompact(
+              email: company.email,
+              website: company.website,
+              phone: company.phoneNumber,
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _CompanyInfoContactDesktop extends StatelessWidget {
+  const _CompanyInfoContactDesktop({
+    required this.email,
+    required this.website,
+    this.phone,
+  });
+
+  final String email;
+  final String? phone;
+  final String website;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 20.0,
+      children: [
+        Expanded(flex: 2, child: _CompanyInfoRow(Icons.mail_outline, email)),
+        Expanded(flex: 2, child: _CompanyInfoRow(Icons.phone, phone ?? '-')),
+        Expanded(
+          flex: 2,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton.icon(
+              onPressed: () => tryToLaunchUrl(context: context, link: website),
+              icon: const Icon(Icons.language),
+              label: const Text('Visita sito'),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CompanyInfoContactCompact extends StatelessWidget {
+  const _CompanyInfoContactCompact({
+    required this.email,
+    required this.website,
+    this.phone,
+  });
+
+  final String email;
+  final String? phone;
+  final String website;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _CompanyInfoRow(Icons.mail_outline, email),
+        _CompanyInfoRow(Icons.phone, phone ?? '-'),
         Align(
           alignment: Alignment.centerRight,
           child: ElevatedButton.icon(
-            onPressed:
-                () => tryToLaunchUrl(context: context, link: company.website),
+            onPressed: () => tryToLaunchUrl(context: context, link: website),
             icon: const Icon(Icons.language),
             label: const Text('Visita sito'),
           ),
